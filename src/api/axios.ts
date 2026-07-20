@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
+import { client } from './client.gen'; // Import generated client
 
 // Xác định IP Backend tùy theo thiết bị chạy thử nghiệm
 const getBaseURL = () => {
@@ -15,3 +16,7 @@ export const api = axios.create({
   baseURL: `${getBaseURL()}/api/v1`,
   timeout: 10000,
 });
+
+// Gán instance Axios tùy biến cho Client của Hey API
+client.instance = api;
+

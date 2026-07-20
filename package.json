@@ -6,9 +6,10 @@
     "@expo-google-fonts/inter": "^0.4.2",
     "@expo/ui": "~57.0.7",
     "@gorhom/bottom-sheet": "^5.2.14",
-    "@hey-api/openapi-ts": "^0.99.0",
+    "@hey-api/client-axios": "^0.9.1",
     "@tanstack/react-query": "^5.101.2",
     "axios": "^1.18.1",
+    "d": "^1.0.2",
     "expo": "~57.0.7",
     "expo-camera": "~57.0.3",
     "expo-constants": "~57.0.6",
@@ -45,6 +46,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "^0.99.0",
     "@types/react": "~19.2.2",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~57.0.0",
@@ -56,7 +58,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "generate-api": "openapi-ts"
   },
   "private": true
 }
