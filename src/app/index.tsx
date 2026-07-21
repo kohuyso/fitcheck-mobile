@@ -1,98 +1,141 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { MapPin, Sun, Link2, Check, RefreshCw, Bot } from 'lucide-react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import {
+  getHomeDashboardApiV1DashboardHomeGetOptions,
+  wearOutfitApiV1DashboardWearOutfitPostMutation,
+} from '@/api/@tanstack/react-query.gen';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import WeatherAdvice from '@/components/dashboard/weather-advice';
+import ScheduleTag from '@/components/dashboard/schedule-tag';
+import StyleAssistantBanner from '@/components/dashboard/style-assistant-banner';
+import OutfitCarousel from '@/components/dashboard/outfit-carousel';
+import StyleInsightBento from '@/components/dashboard/style-insight-bento';
+import StyleDiscovery from '@/components/dashboard/style-discovery';
+import SwapItemSheet from '@/components/dashboard/swap-item-sheet';
 
 export default function HomeScreen() {
+  const [isWorn, setIsWorn] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  // Fetch Dashboard API Query
+  const { data: dashboardData } = useQuery(
+    getHomeDashboardApiV1DashboardHomeGetOptions({
+      query: { lat: 21.0285, lon: 105.8542 },
+    })
+  );
+
+  // Wear Outfit API Mutation
+  const wearMutation = useMutation(wearOutfitApiV1DashboardWearOutfitPostMutation());
+
+  const toggleWear = async () => {
+    try {
+      const outfitId = dashboardData?.recommended_outfits?.[0]?.outfit_id;
+      if (outfitId !== undefined) {
+        await wearMutation.mutateAsync({
+          query: { outfit_id: outfitId },
+        });
+      }
+    } catch (error) {
+      console.log('Wear outfit skipped/failed (offline fallback):', error);
+    }
+    setIsWorn(true);
+    setTimeout(() => {
+      setIsWorn(false);
+    }, 3000);
+  };
+
+  const displayLocation = dashboardData?.location ?? 'Hanoi, VN';
+  const displayTemp =
+    dashboardData?.weather?.temperature !== undefined
+      ? `${dashboardData.weather.temperature}°C`
+      : '22°C';
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <SafeAreaView className="flex-1 bg-surface w-full max-w-full overflow-hidden" edges={['top']}>
+      {/* Top Header */}
+      <View className="flex-row justify-between items-center px-margin-mobile py-4 border-b border-outline-variant/30">
+        <View className="flex-row items-center gap-2">
+          <MapPin size={22} className="text-primary" />
+          <Text className="font-sans font-bold text-title-lg text-on-surface">{displayLocation}</Text>
+        </View>
+        <View className="bg-surface-container-low px-3 py-1.5 rounded-full flex-row items-center gap-2">
+          <Sun size={16} className="text-primary fill-primary" />
+          <Text className="font-sans font-medium text-label-md text-on-surface">{displayTemp}</Text>
+        </View>
+      </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-margin-mobile pt-6 pb-28">
+          {/* Weather Advice */}
+          <WeatherAdvice
+            condition={dashboardData?.weather?.condition}
+            temperature={dashboardData?.weather?.temperature}
+            recommendation={dashboardData?.weather?.recommendation}
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+          {/* Schedule Tag */}
+          <ScheduleTag schedule={dashboardData?.schedule} />
+
+          {/* Style Assistant Card */}
+          <StyleAssistantBanner />
+
+          {/* AI Curated Daily Section */}
+          <View className="mb-4 flex-row items-end justify-between">
+            <Text className="font-sans font-bold text-headline-md text-on-surface tracking-tight">
+              AI Curated Daily
+            </Text>
+            <Text className="text-primary font-sans font-semibold text-label-md">View All</Text>
+          </View>
+
+          {/* Carousel */}
+          <OutfitCarousel outfits={dashboardData?.recommended_outfits} />
+
+          {/* Interaction Buttons */}
+          <View className="flex-col gap-3">
+            <Pressable
+              onPress={toggleWear}
+              className={`w-full h-14 rounded-xl flex-row items-center justify-center gap-2 active:scale-95 shadow-md ${
+                isWorn ? 'bg-emerald-600' : 'bg-primary shadow-primary/20'
+              }`}
+            >
+              <Text className="font-sans font-bold text-title-lg text-white">
+                {isWorn ? 'Outfit Selected' : 'Wear This Outfit'}
+              </Text>
+              {isWorn ? (
+                <Check size={20} className="text-white" />
+              ) : (
+                <Link2 size={20} className="text-white" />
+              )}
+            </Pressable>
+
+            <Pressable
+              onPress={() => setIsSheetOpen(true)}
+              className="w-full h-14 bg-surface-container rounded-xl flex-row items-center justify-center gap-2 active:scale-95 border border-outline-variant/30"
+            >
+              <Text className="font-sans font-bold text-title-lg text-on-surface">Replace Item</Text>
+              <RefreshCw size={18} className="text-on-surface" />
+            </Pressable>
+          </View>
+
+          {/* AI Style Insight Section */}
+          <StyleInsightBento />
+
+          {/* Style Discovery */}
+          <StyleDiscovery />
+        </View>
+      </ScrollView>
+
+      {/* Floating Style Assistant FAB */}
+      <Pressable className="absolute bottom-24 right-6 w-14 h-14 bg-primary rounded-full shadow-2xl items-center justify-center z-45 active:scale-90">
+        <Bot size={28} className="text-white" />
+      </Pressable>
+
+      {/* Item Swapping Bottom Sheet */}
+      <SwapItemSheet isOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)} />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});

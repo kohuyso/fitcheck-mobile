@@ -8,7 +8,8 @@
     "scheme": "fitcheckmobile",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.anonymous.fitcheck-mobile"
     },
     "android": {
       "adaptiveIcon": {
