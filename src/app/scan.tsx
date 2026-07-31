@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -21,7 +21,10 @@ import Animated, {
 import { useRouter } from 'expo-router';
 import { X, Bolt, Sparkles, CheckCircle2, RefreshCw } from 'lucide-react-native';
 
-import { approveAndSaveItemApiV1ClosetSavePostMutation } from '@/api/@tanstack/react-query.gen';
+import {
+  approveAndSaveItemApiV1ClosetSavePostMutation,
+  getScanTaskStatusApiV1ClosetScanStatusTaskIdGetOptions,
+} from '@/api/@tanstack/react-query.gen';
 
 export default function ScanScreen() {
   const router = useRouter();
@@ -30,9 +33,39 @@ export default function ScanScreen() {
   const [flash, setFlash] = useState<boolean>(false);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [scanStep, setScanStep] = useState<'scanning' | 'result'>('scanning');
+  const [taskId, setTaskId] = useState<string | null>(null);
+
+  // AI Scanner Status Query with 1s Polling
+  const { data: scanTaskData } = useQuery({
+    ...getScanTaskStatusApiV1ClosetScanStatusTaskIdGetOptions({
+      path: { task_id: taskId || '' },
+    }),
+    enabled: !!taskId && scanStep === 'scanning',
+    refetchInterval: (query) => {
+      if (query.state.data?.status === 'COMPLETED') {
+        return false;
+      }
+      return 1000;
+    },
+  });
 
   // AI Scanner Save Mutation
   const saveMutation = useMutation(approveAndSaveItemApiV1ClosetSavePostMutation());
+
+  // Extracted Scan AI Result
+  const scanResult = scanTaskData?.result as {
+    category?: string;
+    color_name?: string;
+    color_code?: string;
+    style_tag?: string;
+    processed_image_url?: string;
+  } | undefined;
+
+  const categoryResult = scanResult?.category || '';
+  const colorResult = scanResult?.color_name || scanResult?.color_code || '';
+  const colorCodeResult = scanResult?.color_code || '#000000';
+  const styleResult = scanResult?.style_tag || 'Casual';
+  const imageUrlResult = scanResult?.processed_image_url || '';
 
   // Animation Values
   const scanLineY = useSharedValue(-120);
@@ -109,11 +142,12 @@ export default function ScanScreen() {
     try {
       await saveMutation.mutateAsync({
         body: {
-          category: 'Blazer',
-          color_code: 'Navy',
-          style_tag: 'Formal',
-          image_url:
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuA_GivKnsrCtAHAeE8kYAgZm_M0bQl1L0gzabDowTYLhQ1704Gs9kT28E3YOM3ww-AS7RV7ucRkwB_NjWBncPfCMZSiDLhT7VdSbO467L2Xj4aSQs3zmCMVHd1zf-GzwuwdfcNq2es9SAItSti9z9_jLejKSkq-glySn29ZkNPmlCpLuT8aIs-0u9O1gG8NCiaUUAcNk5ObNx0gdEX8hwFkr3Vd48cevsaG4-Kz2HeLy_oLrQq1iPhubEeDOLs-pOiPR7A9IfheSxE',
+          category: categoryResult,
+          color_name: colorResult,
+          color_code: colorCodeResult,
+          style_tag: styleResult,
+          image_url: imageUrlResult,
+          is_ai_fixed: true,
         },
       });
     } catch (error) {
@@ -122,8 +156,8 @@ export default function ScanScreen() {
     setIsSaved(true);
     setTimeout(() => {
       setIsSaved(false);
-      router.replace('/');
-    }, 2000);
+      router.replace('/closet' as any);
+    }, 1500);
   };
 
   const toggleFacing = () => {
@@ -174,7 +208,7 @@ export default function ScanScreen() {
         ) : (
           /* Live Camera Simulator Fallback */
           <Image
-            source="https://lh3.googleusercontent.com/aida-public/AB6AXu_GivKnsrCtAHAeE8kYAgZm_M0bQl1L0gzabDowTYLhQ1704Gs9kT28E3YOM3ww-AS7RV7ucRkwB_NjWBncPfCMZSiDLhT7VdSbO467L2Xj4aSQs3zmCMVHd1zf-GzwuwdfcNq2es9SAItSti9z9_jLejKSkq-glySn29ZkNPmlCpLuT8aIs-0u9O1gG8NCiaUUAcNk5ObNx0gdEX8hwFkr3Vd48cevsaG4-Kz2HeLy_oLrQq1iPhubEeDOLs-pOiPR7A9IfheSxE"
+            source={imageUrlResult}
             className="flex-1 w-full h-full"
             contentFit="cover"
           />
@@ -263,17 +297,17 @@ export default function ScanScreen() {
             <View className="flex-row justify-between gap-3">
               <View className="flex-1 p-3 bg-primary/10 border border-primary/20 rounded-xl">
                 <Text className="font-sans font-bold text-label-sm text-primary uppercase mb-1">Category</Text>
-                <Text className="font-sans font-bold text-body-lg text-on-surface">Blazer</Text>
+                <Text className="font-sans font-bold text-body-lg text-on-surface">{categoryResult}</Text>
               </View>
 
               <View className="flex-1 p-3 bg-secondary-container/30 border border-secondary-container/50 rounded-xl">
                 <Text className="font-sans font-bold text-on-secondary-container uppercase mb-1">Color</Text>
-                <Text className="font-sans font-bold text-body-lg text-on-surface">Navy</Text>
+                <Text className="font-sans font-bold text-body-lg text-on-surface">{colorResult}</Text>
               </View>
 
               <View className="flex-1 p-3 bg-tertiary-fixed/20 border border-tertiary-fixed/30 rounded-xl">
                 <Text className="font-sans font-bold text-label-sm text-on-tertiary-fixed-variant uppercase mb-1">Style</Text>
-                <Text className="font-sans font-bold text-body-lg text-on-surface">Formal</Text>
+                <Text className="font-sans font-bold text-body-lg text-on-surface">{styleResult}</Text>
               </View>
             </View>
 
@@ -300,3 +334,4 @@ export default function ScanScreen() {
     </View>
   );
 }
+

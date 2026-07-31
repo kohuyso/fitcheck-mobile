@@ -4,8 +4,8 @@ import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanst
 import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
-import { AiStylist, Authentication, Closet__AiScanner, Dashboard__Recommendation, Default, type Options } from '../sdk.gen';
-import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostError, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostError, ChatAndModifyOutfitApiV1AiChatPostResponse, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetError, GetHomeDashboardApiV1DashboardHomeGetResponse, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetError, GetMyWardrobeApiV1ClosetItemsGetResponse, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostError, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetError, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetError, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponse, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponse, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostError, LoginApiV1AuthLoginPostResponse, LogoutApiV1AuthLogoutPostData, ReadRootGetData, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostError, RegisterApiV1AuthRegisterPostResponse, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostError, ScanClothingCameraApiV1ClosetScanPostResponse, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostError, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostError } from '../types.gen';
+import { AiStylist, Authentication, Closet__AiScanner, Dashboard__Recommendation, Default, Explore__Trends, type Options } from '../sdk.gen';
+import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostError, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostError, ChatAndModifyOutfitApiV1AiChatPostResponse, GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponse, GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponse, GetFashionTrendsApiV1ExploreTrendsGetData, GetFashionTrendsApiV1ExploreTrendsGetResponse, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetError, GetHomeDashboardApiV1DashboardHomeGetResponse, GetItemDetailApiV1ClosetItemsItemIdGetData, GetItemDetailApiV1ClosetItemsItemIdGetError, GetItemDetailApiV1ClosetItemsItemIdGetResponse, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetError, GetMyWardrobeApiV1ClosetItemsGetResponse, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostError, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetError, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetError, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponse, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponse, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostError, LoginApiV1AuthLoginPostResponse, LogoutApiV1AuthLogoutPostData, ReadRootGetData, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostError, RegisterApiV1AuthRegisterPostResponse, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostError, ScanClothingCameraApiV1ClosetScanPostResponse, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostError, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostError } from '../types.gen';
 
 /**
  * Register
@@ -64,6 +64,25 @@ export const logoutApiV1AuthLogoutPostMutation = (options?: Partial<Options<Logo
     return mutationOptions;
 };
 
+/**
+ * Scan Clothing Camera
+ *
+ * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Redis Queue cho Worker xử lý ngầm.
+ */
+export const scanClothingCameraApiV1ClosetScanPostMutation = (options?: Partial<Options<ScanClothingCameraApiV1ClosetScanPostData>>): UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> => {
+    const mutationOptions: UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.scanClothingCameraApiV1ClosetScanPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
@@ -95,6 +114,144 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
         params.query = options.query;
     }
     return [params];
+};
+
+export const getScanTaskStatusApiV1ClosetScanStatusTaskIdGetQueryKey = (options: Options<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData>) => createQueryKey('getScanTaskStatusApiV1ClosetScanStatusTaskIdGet', options);
+
+/**
+ * Get Scan Task Status
+ *
+ * Bước 2: Mobile gọi lại API kiểm tra kết quả xử lý từ Celery AI Worker ngầm.
+ */
+export const getScanTaskStatusApiV1ClosetScanStatusTaskIdGetOptions = (options: Options<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData>) => queryOptions<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, AxiosError<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetError>, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, ReturnType<typeof getScanTaskStatusApiV1ClosetScanStatusTaskIdGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Closet__AiScanner.getScanTaskStatusApiV1ClosetScanStatusTaskIdGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getScanTaskStatusApiV1ClosetScanStatusTaskIdGetQueryKey(options)
+});
+
+/**
+ * Approve And Save Item
+ *
+ * Bước 3: User bấm "Approve & Save". Backend lưu vào PostgreSQL.
+ */
+export const approveAndSaveItemApiV1ClosetSavePostMutation = (options?: Partial<Options<ApproveAndSaveItemApiV1ClosetSavePostData>>): UseMutationOptions<unknown, AxiosError<ApproveAndSaveItemApiV1ClosetSavePostError>, Options<ApproveAndSaveItemApiV1ClosetSavePostData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<ApproveAndSaveItemApiV1ClosetSavePostError>, Options<ApproveAndSaveItemApiV1ClosetSavePostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.approveAndSaveItemApiV1ClosetSavePost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const getMyWardrobeApiV1ClosetItemsGetQueryKey = (options?: Options<GetMyWardrobeApiV1ClosetItemsGetData>) => createQueryKey('getMyWardrobeApiV1ClosetItemsGet', options);
+
+/**
+ * Get My Wardrobe
+ *
+ * API lấy toàn bộ tủ đồ phẳng, hỗ trợ filter và search linh hoạt
+ */
+export const getMyWardrobeApiV1ClosetItemsGetOptions = (options?: Options<GetMyWardrobeApiV1ClosetItemsGetData>) => queryOptions<GetMyWardrobeApiV1ClosetItemsGetResponse, AxiosError<GetMyWardrobeApiV1ClosetItemsGetError>, GetMyWardrobeApiV1ClosetItemsGetResponse, ReturnType<typeof getMyWardrobeApiV1ClosetItemsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Closet__AiScanner.getMyWardrobeApiV1ClosetItemsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getMyWardrobeApiV1ClosetItemsGetQueryKey(options)
+});
+
+export const getItemDetailApiV1ClosetItemsItemIdGetQueryKey = (options: Options<GetItemDetailApiV1ClosetItemsItemIdGetData>) => createQueryKey('getItemDetailApiV1ClosetItemsItemIdGet', options);
+
+/**
+ * Get Item Detail
+ *
+ * API Lấy chi tiết 1 món đồ trong tủ với các chỉ số thống kê thực tế từ DB và thuật toán phối màu.
+ */
+export const getItemDetailApiV1ClosetItemsItemIdGetOptions = (options: Options<GetItemDetailApiV1ClosetItemsItemIdGetData>) => queryOptions<GetItemDetailApiV1ClosetItemsItemIdGetResponse, AxiosError<GetItemDetailApiV1ClosetItemsItemIdGetError>, GetItemDetailApiV1ClosetItemsItemIdGetResponse, ReturnType<typeof getItemDetailApiV1ClosetItemsItemIdGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Closet__AiScanner.getItemDetailApiV1ClosetItemsItemIdGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getItemDetailApiV1ClosetItemsItemIdGetQueryKey(options)
+});
+
+export const getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey = (options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData>) => createQueryKey('getStyleSuggestionsApiV1AiStyleSuggestionsGet', options);
+
+/**
+ * Get Style Suggestions
+ *
+ * API Gợi ý style (AI): Phân tích tủ đồ của người dùng và style yêu thích để đưa ra lời khuyên thời trang.
+ */
+export const getStyleSuggestionsApiV1AiStyleSuggestionsGetOptions = (options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData>) => queryOptions<GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, AxiosError<DefaultError>, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, ReturnType<typeof getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await AiStylist.getStyleSuggestionsApiV1AiStyleSuggestionsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey(options)
+});
+
+/**
+ * Get Outfit From Items
+ *
+ * API Gợi ý outfit từ 1 hoặc vài món đồ (AI): Chọn trước các món đồ, AI sẽ phối thêm các đồ khác để hoàn thiện set đồ.
+ */
+export const getOutfitFromItemsApiV1AiOutfitFromItemsPostMutation = (options?: Partial<Options<GetOutfitFromItemsApiV1AiOutfitFromItemsPostData>>): UseMutationOptions<GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, AxiosError<GetOutfitFromItemsApiV1AiOutfitFromItemsPostError>, Options<GetOutfitFromItemsApiV1AiOutfitFromItemsPostData>> => {
+    const mutationOptions: UseMutationOptions<GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, AxiosError<GetOutfitFromItemsApiV1AiOutfitFromItemsPostError>, Options<GetOutfitFromItemsApiV1AiOutfitFromItemsPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await AiStylist.getOutfitFromItemsApiV1AiOutfitFromItemsPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Chat And Modify Outfit
+ *
+ * API Yêu cầu hoặc sửa style/outfit bằng text giống phiên chat (AI).
+ * Nhận vào tin nhắn yêu cầu thay đổi trang phục hiện tại hoặc đề xuất set đồ mới.
+ */
+export const chatAndModifyOutfitApiV1AiChatPostMutation = (options?: Partial<Options<ChatAndModifyOutfitApiV1AiChatPostData>>): UseMutationOptions<ChatAndModifyOutfitApiV1AiChatPostResponse, AxiosError<ChatAndModifyOutfitApiV1AiChatPostError>, Options<ChatAndModifyOutfitApiV1AiChatPostData>> => {
+    const mutationOptions: UseMutationOptions<ChatAndModifyOutfitApiV1AiChatPostResponse, AxiosError<ChatAndModifyOutfitApiV1AiChatPostError>, Options<ChatAndModifyOutfitApiV1AiChatPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await AiStylist.chatAndModifyOutfitApiV1AiChatPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
 };
 
 export const getHomeDashboardApiV1DashboardHomeGetQueryKey = (options: Options<GetHomeDashboardApiV1DashboardHomeGetData>) => createQueryKey('getHomeDashboardApiV1DashboardHomeGet', options);
@@ -182,8 +339,7 @@ export const getWardrobeStyleInsightsApiV1DashboardInsightsGetQueryKey = (option
 /**
  * Get Wardrobe Style Insights
  *
- * API cho Screen 6 (Phần Bottom Section): Tính toán dữ liệu cho Ring Chart đồ họa.
- * Công thức Tỷ lệ sử dụng = (Số món đồ đã từng mặc trong tháng / Tổng số đồ trong tủ) * 100
+ * API tính toán tỷ lệ sử dụng tủ đồ linh hoạt từ cơ sở dữ liệu.
  */
 export const getWardrobeStyleInsightsApiV1DashboardInsightsGetOptions = (options?: Options<GetWardrobeStyleInsightsApiV1DashboardInsightsGetData>) => queryOptions<GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse, AxiosError<DefaultError>, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse, ReturnType<typeof getWardrobeStyleInsightsApiV1DashboardInsightsGetQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -196,6 +352,26 @@ export const getWardrobeStyleInsightsApiV1DashboardInsightsGetOptions = (options
         return data;
     },
     queryKey: getWardrobeStyleInsightsApiV1DashboardInsightsGetQueryKey(options)
+});
+
+export const getCalendarInsightsApiV1DashboardCalendarInsightsGetQueryKey = (options?: Options<GetCalendarInsightsApiV1DashboardCalendarInsightsGetData>) => createQueryKey('getCalendarInsightsApiV1DashboardCalendarInsightsGet', options);
+
+/**
+ * Get Calendar Insights
+ *
+ * API Dự báo 3 ngày & Phân tích Đồ chưa mặc thực tế từ tủ đồ của người dùng.
+ */
+export const getCalendarInsightsApiV1DashboardCalendarInsightsGetOptions = (options?: Options<GetCalendarInsightsApiV1DashboardCalendarInsightsGetData>) => queryOptions<GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponse, AxiosError<DefaultError>, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponse, ReturnType<typeof getCalendarInsightsApiV1DashboardCalendarInsightsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Dashboard__Recommendation.getCalendarInsightsApiV1DashboardCalendarInsightsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getCalendarInsightsApiV1DashboardCalendarInsightsGetQueryKey(options)
 });
 
 /**
@@ -218,36 +394,16 @@ export const syncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostMutation = (o
     return mutationOptions;
 };
 
-/**
- * Scan Clothing Camera
- *
- * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Redis Queue cho Worker xử lý ngầm.
- * Phản hồi ngay lập tức sau vài mili-giây để Mobile hiển thị hiệu ứng quét techy.
- */
-export const scanClothingCameraApiV1ClosetScanPostMutation = (options?: Partial<Options<ScanClothingCameraApiV1ClosetScanPostData>>): UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> => {
-    const mutationOptions: UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await Closet__AiScanner.scanClothingCameraApiV1ClosetScanPost({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const getScanTaskStatusApiV1ClosetScanStatusTaskIdGetQueryKey = (options: Options<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData>) => createQueryKey('getScanTaskStatusApiV1ClosetScanStatusTaskIdGet', options);
+export const getFashionTrendsApiV1ExploreTrendsGetQueryKey = (options?: Options<GetFashionTrendsApiV1ExploreTrendsGetData>) => createQueryKey('getFashionTrendsApiV1ExploreTrendsGet', options);
 
 /**
- * Get Scan Task Status
+ * Get Fashion Trends
  *
- * Bước 2: Mobile thỉnh thoảng gọi lại API này (cứ 1 giây/lần) để kiểm tra xem AI chạy xong chưa.
+ * API Khám phá Xu hướng thời trang được cá nhân hóa dựa trên dữ liệu tủ đồ người dùng.
  */
-export const getScanTaskStatusApiV1ClosetScanStatusTaskIdGetOptions = (options: Options<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData>) => queryOptions<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, AxiosError<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetError>, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, ReturnType<typeof getScanTaskStatusApiV1ClosetScanStatusTaskIdGetQueryKey>>({
+export const getFashionTrendsApiV1ExploreTrendsGetOptions = (options?: Options<GetFashionTrendsApiV1ExploreTrendsGetData>) => queryOptions<GetFashionTrendsApiV1ExploreTrendsGetResponse, AxiosError<DefaultError>, GetFashionTrendsApiV1ExploreTrendsGetResponse, ReturnType<typeof getFashionTrendsApiV1ExploreTrendsGetQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await Closet__AiScanner.getScanTaskStatusApiV1ClosetScanStatusTaskIdGet({
+        const { data } = await Explore__Trends.getFashionTrendsApiV1ExploreTrendsGet({
             ...options,
             ...queryKey[0],
             signal,
@@ -255,39 +411,19 @@ export const getScanTaskStatusApiV1ClosetScanStatusTaskIdGetOptions = (options: 
         });
         return data;
     },
-    queryKey: getScanTaskStatusApiV1ClosetScanStatusTaskIdGetQueryKey(options)
+    queryKey: getFashionTrendsApiV1ExploreTrendsGetQueryKey(options)
 });
 
-/**
- * Approve And Save Item
- *
- * Bước 3: User nhìn thấy các tag gợi ý trên màn hình Bottom 1/3, bấm "Approve & Save".
- * Backend chính thức lưu món đồ sạch nền này vào tủ đồ Postgres.
- */
-export const approveAndSaveItemApiV1ClosetSavePostMutation = (options?: Partial<Options<ApproveAndSaveItemApiV1ClosetSavePostData>>): UseMutationOptions<unknown, AxiosError<ApproveAndSaveItemApiV1ClosetSavePostError>, Options<ApproveAndSaveItemApiV1ClosetSavePostData>> => {
-    const mutationOptions: UseMutationOptions<unknown, AxiosError<ApproveAndSaveItemApiV1ClosetSavePostError>, Options<ApproveAndSaveItemApiV1ClosetSavePostData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await Closet__AiScanner.approveAndSaveItemApiV1ClosetSavePost({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const getMyWardrobeApiV1ClosetItemsGetQueryKey = (options?: Options<GetMyWardrobeApiV1ClosetItemsGetData>) => createQueryKey('getMyWardrobeApiV1ClosetItemsGet', options);
+export const getColorTheoryGuidesApiV1ExploreColorTheoryGetQueryKey = (options?: Options<GetColorTheoryGuidesApiV1ExploreColorTheoryGetData>) => createQueryKey('getColorTheoryGuidesApiV1ExploreColorTheoryGet', options);
 
 /**
- * Get My Wardrobe
+ * Get Color Theory Guides
  *
- * API cho Screen 4 (My Wardrobe Screen): Lấy toàn bộ tủ đồ phẳng, hỗ trợ filter pill và phân trang
+ * API Hướng dẫn Lý thuyết Phối màu cá nhân hóa dựa theo các item thực tế trong tủ đồ.
  */
-export const getMyWardrobeApiV1ClosetItemsGetOptions = (options?: Options<GetMyWardrobeApiV1ClosetItemsGetData>) => queryOptions<GetMyWardrobeApiV1ClosetItemsGetResponse, AxiosError<GetMyWardrobeApiV1ClosetItemsGetError>, GetMyWardrobeApiV1ClosetItemsGetResponse, ReturnType<typeof getMyWardrobeApiV1ClosetItemsGetQueryKey>>({
+export const getColorTheoryGuidesApiV1ExploreColorTheoryGetOptions = (options?: Options<GetColorTheoryGuidesApiV1ExploreColorTheoryGetData>) => queryOptions<GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponse, AxiosError<DefaultError>, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponse, ReturnType<typeof getColorTheoryGuidesApiV1ExploreColorTheoryGetQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await Closet__AiScanner.getMyWardrobeApiV1ClosetItemsGet({
+        const { data } = await Explore__Trends.getColorTheoryGuidesApiV1ExploreColorTheoryGet({
             ...options,
             ...queryKey[0],
             signal,
@@ -295,67 +431,8 @@ export const getMyWardrobeApiV1ClosetItemsGetOptions = (options?: Options<GetMyW
         });
         return data;
     },
-    queryKey: getMyWardrobeApiV1ClosetItemsGetQueryKey(options)
+    queryKey: getColorTheoryGuidesApiV1ExploreColorTheoryGetQueryKey(options)
 });
-
-export const getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey = (options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData>) => createQueryKey('getStyleSuggestionsApiV1AiStyleSuggestionsGet', options);
-
-/**
- * Get Style Suggestions
- *
- * API Gợi ý style (AI): Phân tích tủ đồ của người dùng và style yêu thích để đưa ra lời khuyên thời trang.
- */
-export const getStyleSuggestionsApiV1AiStyleSuggestionsGetOptions = (options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData>) => queryOptions<GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, AxiosError<DefaultError>, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, ReturnType<typeof getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await AiStylist.getStyleSuggestionsApiV1AiStyleSuggestionsGet({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey(options)
-});
-
-/**
- * Get Outfit From Items
- *
- * API Gợi ý outfit từ 1 hoặc vài món đồ (AI): Chọn trước các món đồ, AI sẽ phối thêm các đồ khác để hoàn thiện set đồ.
- */
-export const getOutfitFromItemsApiV1AiOutfitFromItemsPostMutation = (options?: Partial<Options<GetOutfitFromItemsApiV1AiOutfitFromItemsPostData>>): UseMutationOptions<GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, AxiosError<GetOutfitFromItemsApiV1AiOutfitFromItemsPostError>, Options<GetOutfitFromItemsApiV1AiOutfitFromItemsPostData>> => {
-    const mutationOptions: UseMutationOptions<GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, AxiosError<GetOutfitFromItemsApiV1AiOutfitFromItemsPostError>, Options<GetOutfitFromItemsApiV1AiOutfitFromItemsPostData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await AiStylist.getOutfitFromItemsApiV1AiOutfitFromItemsPost({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-/**
- * Chat And Modify Outfit
- *
- * API Yêu cầu hoặc sửa style/outfit bằng text giống phiên chat (AI).
- * Nhận vào tin nhắn yêu cầu thay đổi trang phục hiện tại hoặc đề xuất set đồ mới.
- */
-export const chatAndModifyOutfitApiV1AiChatPostMutation = (options?: Partial<Options<ChatAndModifyOutfitApiV1AiChatPostData>>): UseMutationOptions<ChatAndModifyOutfitApiV1AiChatPostResponse, AxiosError<ChatAndModifyOutfitApiV1AiChatPostError>, Options<ChatAndModifyOutfitApiV1AiChatPostData>> => {
-    const mutationOptions: UseMutationOptions<ChatAndModifyOutfitApiV1AiChatPostResponse, AxiosError<ChatAndModifyOutfitApiV1AiChatPostError>, Options<ChatAndModifyOutfitApiV1AiChatPostData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await AiStylist.chatAndModifyOutfitApiV1AiChatPost({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
 
 export const readRootGetQueryKey = (options?: Options<ReadRootGetData>) => createQueryKey('readRootGet', options);
 

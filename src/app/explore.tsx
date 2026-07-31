@@ -1,180 +1,128 @@
+import React from 'react';
+import { View, Text, ScrollView, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQuery } from '@tanstack/react-query';
+import { Compass, Palette, Sparkles, BookOpen, ChevronRight, TrendingUp } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 
-import { ExternalLink } from '@/components/external-link';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import {
+  getColorTheoryGuidesApiV1ExploreColorTheoryGetOptions,
+  getFashionTrendsApiV1ExploreTrendsGetOptions,
+} from '@/api/@tanstack/react-query.gen';
 
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
-  };
-  const theme = useTheme();
+export default function ExploreScreen() {
+  const router = useRouter();
 
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
+  // Fetch Trends API Query
+  const { data: trendsData } = useQuery(
+    getFashionTrendsApiV1ExploreTrendsGetOptions()
+  );
+
+  // Fetch Color Theory API Query
+  const { data: colorTheoryData } = useQuery(
+    getColorTheoryGuidesApiV1ExploreColorTheoryGetOptions()
+  );
+
+  const articles = trendsData?.trend_articles || [];
+  const colorGuides = colorTheoryData?.guides || [];
+  const aiColorAdvice = colorTheoryData?.ai_advice || '';
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
+    <SafeAreaView className="flex-1 bg-surface w-full max-w-full overflow-hidden" edges={['top']}>
+      {/* Header */}
+      <View className="flex-row justify-between items-center px-margin-mobile py-4 border-b border-outline-variant/30">
+        <View className="flex-row items-center gap-2">
+          <Compass size={24} className="text-primary" />
+          <Text className="font-sans font-bold text-headline-md text-on-surface">Explore & Style</Text>
+        </View>
+        <View className="bg-primary/10 px-3 py-1 rounded-full flex-row items-center gap-1">
+          <TrendingUp size={14} className="text-primary" />
+          <Text className="font-sans font-bold text-label-sm text-primary uppercase">Trending</Text>
+        </View>
+      </View>
 
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-margin-mobile pt-6 pb-28">
+          {/* AI Color Theory Banner */}
+          <View className="bg-white rounded-3xl p-6 border border-primary/20 shadow-sm mb-8 relative overflow-hidden">
+            <View className="flex-row items-center gap-2 mb-3">
+              <Palette size={22} className="text-primary" />
+              <Text className="font-sans font-bold text-title-lg text-on-surface">
+                AI Color Theory Guide
+              </Text>
+            </View>
+            <Text className="font-sans text-body-md text-on-surface-variant leading-relaxed mb-4">
+              {aiColorAdvice}
+            </Text>
+
+            {/* Color Harmony Cards */}
+            <View className="gap-3">
+              {colorGuides.map((guide, idx) => (
+                <View
+                  key={idx}
+                  className="bg-surface-container-low p-4 rounded-2xl border border-outline-variant/20"
+                >
+                  <View className="flex-row justify-between items-center mb-1">
+                    <Text className="font-sans font-bold text-body-md text-primary">
+                      {guide.harmony_type}
+                    </Text>
+                    <Text className="font-sans text-label-sm font-semibold text-secondary">
+                      {guide.color_wheel_tip}
+                    </Text>
+                  </View>
+                  <Text className="font-sans text-label-md text-on-surface-variant">
+                    {guide.description}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* Trend Articles Section */}
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="font-sans font-bold text-headline-md text-on-surface">
+              Latest Trend Insights
+            </Text>
+            <Pressable className="flex-row items-center gap-1">
+              <Text className="font-sans font-semibold text-label-md text-primary">See All</Text>
+              <ChevronRight size={16} className="text-primary" />
             </Pressable>
-          </ExternalLink>
-        </ThemedView>
+          </View>
 
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('@/assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
-              />
-            </ThemedView>
-          </Collapsible>
-
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('@/assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
+          <View className="gap-4">
+            {articles.map((item) => (
+              <Pressable
+                key={item.id}
+                onPress={() => {
+                  router.navigate('/chat' as any);
+                }}
+                className="bg-white rounded-2xl overflow-hidden border border-outline-variant/30 shadow-sm active:scale-[0.98]"
+              >
+                <View className="h-48 w-full bg-surface-container-high relative">
+                  <Image source={item.image_url} className="w-full h-full" contentFit="cover" />
+                  <View className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full">
+                    <Text className="font-sans font-bold text-label-sm text-primary uppercase">
+                      {(item as any).category || (item as any).season || 'Seasonal Trends'}
+                    </Text>
+                  </View>
+                </View>
+                <View className="p-4">
+                  <Text className="font-sans font-bold text-title-lg text-on-surface mb-1">
+                    {item.title}
+                  </Text>
+                  <View className="flex-row items-center gap-2">
+                    <BookOpen size={14} className="text-on-surface-variant" />
+                    <Text className="font-sans text-label-md text-on-surface-variant">
+                      {item.read_time}
+                    </Text>
+                  </View>
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
-  },
-  titleContainer: {
-    gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
-  },
-  centerText: {
-    textAlign: 'center',
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
-  },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
-  },
-  imageTutorial: {
-    width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
-  },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
-  },
-});

@@ -1,55 +1,61 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image } from 'expo-image';
-import Svg, { Circle } from 'react-native-svg';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, Sun, CloudRain, CloudSun, Lightbulb, Cloud } from 'lucide-react-native';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
+import { Cloud, CloudSun, Lightbulb, Sun } from 'lucide-react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Svg, { Circle } from 'react-native-svg';
 
 import {
-  getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetOptions,
+  getCalendarInsightsApiV1DashboardCalendarInsightsGetOptions,
   getWardrobeStyleInsightsApiV1DashboardInsightsGetOptions,
+  getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetOptions,
 } from '@/api/@tanstack/react-query.gen';
 
-const CALENDAR_DAYS = [
-  { day: 'Mon', date: 23 },
-  { day: 'Tue', date: 24, active: true },
-  { day: 'Wed', date: 25 },
-  { day: 'Thu', date: 26 },
-  { day: 'Fri', date: 27 },
-  { day: 'Sat', date: 28 },
-  { day: 'Sun', date: 29 },
-];
-
 export default function CalendarScreen() {
-  const [selectedDate, setSelectedDate] = useState(24);
+  const router = useRouter();
+  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
 
   // Fetch Calendar Strip API Query
   const { data: calendarData } = useQuery(
     getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetOptions()
   );
 
-  // Fetch Style Insights API Query
-  const { data: insightsData } = useQuery(
+  // Fetch Wardrobe Insights Query
+  const { data: wardrobeInsights } = useQuery(
     getWardrobeStyleInsightsApiV1DashboardInsightsGetOptions()
   );
 
+  // Fetch Calendar Insights Query (New Backend API)
+  const { data: calendarInsightsData } = useQuery(
+    getCalendarInsightsApiV1DashboardCalendarInsightsGetOptions()
+  );
+
   // Map API calendar days to display format
-  const displayDays =
-    calendarData && calendarData.length > 0
-      ? calendarData.map((item) => {
-          const parsedDate = new Date(item.date);
-          const dateNum = isNaN(parsedDate.getTime()) ? 24 : parsedDate.getDate();
-          return {
-            day: item.day_name.slice(0, 3),
-            date: dateNum,
-            active: item.is_highlighted,
-          };
-        })
-      : CALENDAR_DAYS;
+  const displayDays = (calendarData || []).map((item) => {
+    const parsedDate = new Date(item.date);
+    const dateNum = isNaN(parsedDate.getTime()) ? 1 : parsedDate.getDate();
+    return {
+      day: item.day_name.slice(0, 3),
+      date: dateNum,
+      active: item.is_highlighted,
+    };
+  });
 
   const displayUtilization =
-    insightsData?.utilization_rate !== undefined ? insightsData.utilization_rate : 78;
+    calendarInsightsData?.utilization_rate ??
+    wardrobeInsights?.utilization_rate ??
+    0;
+
+  const unwornMessage =
+    calendarInsightsData?.unworn_items_insight?.message || '';
+
+  const forecast = calendarInsightsData?.next_3_days_forecast || [];
+
+  const weatherImpactLevel = calendarInsightsData?.weather_impact?.level || 'Normal';
+  const weatherImpactSummary =
+    calendarInsightsData?.weather_impact?.recommendation_summary || '';
 
   // SVG dimensions for utilization chart
   const radius = 40;
@@ -59,17 +65,6 @@ export default function CalendarScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-surface w-full max-w-full overflow-hidden" edges={['top']}>
-      {/* Top Header */}
-      <View className="flex-row justify-between items-center px-margin-mobile py-4 border-b border-outline-variant/30">
-        <View className="flex-row items-center gap-2">
-          <MapPin size={22} className="text-primary" />
-          <Text className="font-sans font-bold text-headline-md text-on-surface">FitCheck AI</Text>
-        </View>
-        <Pressable className="active:scale-95">
-          <Sun size={24} className="text-primary" />
-        </Pressable>
-      </View>
-
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-margin-mobile pt-6 pb-28">
           {/* 7-Day Calendar Strip */}
@@ -112,10 +107,25 @@ export default function CalendarScreen() {
           </View>
 
           {/* Outfit Preview Card */}
-          <View className="mb-6 rounded-[2rem] overflow-hidden bg-white shadow-sm border border-outline-variant/30">
+          <Pressable
+            onPress={() =>
+              router.navigate({
+                pathname: '/outfit-detail' as any,
+                params: {
+                  title: 'Daily Outfit',
+                  image: '',
+                  weather: weatherImpactSummary,
+                  tags: 'Daily Match',
+                  description: 'Daily outfit preview based on calendar and weather.',
+                  insight: unwornMessage,
+                },
+              })
+            }
+            className="mb-6 rounded-[2rem] overflow-hidden bg-white shadow-sm border border-outline-variant/30 active:scale-[0.98]"
+          >
             <View className="aspect-[3/4] w-full bg-surface-container-highest">
               <Image
-                source="https://lh3.googleusercontent.com/aida-public/AB6AXuDG2_Jg2IG-XDPIof0Sj-4MmR2McQCzdvTAQMVQCfgrFD37F9xnpvsDZCzwQF7h9AwDRIZOmeEgGRh8xd_RQW70LTtTlA5KvG51cRNx9NB-UFuJizCbSYdDqTVpLQZEUMD_EuDVCfXT-a0b9qIGoccDICa1SV4CI7d6hNSt71v0DEcyAaD9QkvZT0y3y8jYMXVYdrYAMFM71Mo5m5h4snUzxeGoasGJIFKVR45LJtMMbOG0-cAr78JOJLVXkckFXaSWPtkcIpF__34"
+                source=""
                 className="w-full h-full"
                 contentFit="cover"
               />
@@ -147,7 +157,7 @@ export default function CalendarScreen() {
                 </View>
               </View>
             </View>
-          </View>
+          </Pressable>
 
           {/* Insights Bento Section */}
           <View className="flex-row flex-wrap gap-4">
@@ -194,7 +204,7 @@ export default function CalendarScreen() {
                   AI Insight
                 </Text>
                 <Text className="font-sans text-body-md text-on-surface-variant leading-tight">
-                  {"3 items in your closet haven't been worn in 60 days. "}
+                  {unwornMessage}{' '}
                   <Text className="text-primary font-bold">Sell or Restyle?</Text>
                 </Text>
               </View>
@@ -207,28 +217,28 @@ export default function CalendarScreen() {
                   Next 3-Day Forecast
                 </Text>
                 <View className="flex-row gap-4">
-                  <View className="items-center">
-                    <Cloud size={18} className="text-primary mb-1" />
-                    <Text className="font-sans text-label-sm text-on-surface">12°C</Text>
-                  </View>
-                  <View className="items-center opacity-40">
-                    <Sun size={18} className="text-on-surface-variant mb-1" />
-                    <Text className="font-sans text-label-sm text-on-surface">18°C</Text>
-                  </View>
-                  <View className="items-center opacity-40">
-                    <CloudSun size={18} className="text-on-surface-variant mb-1" />
-                    <Text className="font-sans text-label-sm text-on-surface">16°C</Text>
-                  </View>
+                  {forecast.slice(0, 3).map((item, idx) => (
+                    <View key={idx} className={`items-center ${idx > 0 ? 'opacity-40' : ''}`}>
+                      {idx === 0 ? (
+                        <Cloud size={18} className="text-primary mb-1" />
+                      ) : idx === 1 ? (
+                        <Sun size={18} className="text-on-surface-variant mb-1" />
+                      ) : (
+                        <CloudSun size={18} className="text-on-surface-variant mb-1" />
+                      )}
+                      <Text className="font-sans text-label-sm text-on-surface">{item.temp_c}°C</Text>
+                    </View>
+                  ))}
                 </View>
               </View>
               <View className="h-10 w-[1px] bg-outline-variant" />
               <View className="items-end pl-2">
                 <Text className="font-sans font-bold text-label-sm text-primary uppercase">Impact</Text>
                 <Text className="font-sans font-bold text-headline-md text-on-surface leading-none mt-1">
-                  High
+                  {weatherImpactLevel}
                 </Text>
                 <Text className="font-sans text-label-sm text-on-surface-variant mt-0.5">
-                  Linen swap req.
+                  {weatherImpactSummary}
                 </Text>
               </View>
             </View>
@@ -238,3 +248,4 @@ export default function CalendarScreen() {
     </SafeAreaView>
   );
 }
+

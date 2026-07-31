@@ -1,39 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, Dimensions } from 'react-native';
+import { View, Text, FlatList, Dimensions, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Sparkles } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 import { OutfitRecommendation } from '@/api/types.gen';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH * 0.82;
 const CARD_SPACING = 16;
-
-const DEFAULT_OUTFITS = [
-  {
-    id: '1',
-    title: 'The Modern Executive',
-    tags: ['Business Casual', 'Water-Repellent'],
-    isBestMatch: true,
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAas6k2Ruo9sNokepikpvlr4fcqEObNt0b0MMTdxfQ7hDafVofFkolCDh6eCptu9BYdWDdBomn-M4c5zP7vsfDPGKe33nAbpy1YlyGimOBDM6weAi17hOrgD0_lQdTc8noqfD49VW1w7C4JnXSfApeWjeE1CoN-G1ZJVfd7UUZSVT8dyhUUrPHtAzUoLZUcAAEyNebcBdV3ZhN0t7BcQRfQ4fVnf5l5U8FW-QxN8CGKadx68e_m6C6gMN3A71R3EGSxLPfegLQl87k',
-  },
-  {
-    id: '2',
-    title: 'Classic Layers',
-    tags: ['Casual', 'Layered'],
-    isBestMatch: false,
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuB8S3OaPRBwXAGddqKF8kMC4UEGMSrwDPLRANQ1avpKErlVsXEzE3aIgpNSGzzVEehqse2ie-25UDXVwwkW8SU98qV6yaPo4t9olbr7TQ5NwGFd18zxFYJpeR13rvve3zfR8dEaODFrwI6cDEWoOd0xssvagiKj8QZIwMA5Nt1prU91yOWYm8lu2f7dzibG6K5DLOPsYAEzaNIeoSyNWEKLJCfAeK3yvCxt48itkWBov2eOKqlSLqXtjJOlxzmjWwTC1DstcokISt0',
-  },
-  {
-    id: '3',
-    title: 'Urban Earth Tones',
-    tags: ['Smart Casual', 'Earthy'],
-    isBestMatch: false,
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuC9no3Gc5cSQ295WB-9PZnM3MjWeSEomQF1bLO1Cjw1oTl43Iu4T6PF3w50f11dWZSAFCsOC53t4RPtE9FYyfZFlji0WMJ7B4nJrNKp3gvfQCSyiN8IY_AA3R2HlBrBKCYZQQPrXWitzCc5R5Q7SQf-gCyFGZKx1zsSDppvGf-CqavdO63K1YqaeELVTgOefVbD7UAeFHDuuYAf7rLsDlz-MJCEupcqbMmgpFtBmo_ZT-Y-zD771h46WJSADALCM3GSOszebvH6I94',
-  },
-];
 
 interface OutfitCarouselProps {
   outfits?: Array<OutfitRecommendation>;
@@ -41,23 +15,20 @@ interface OutfitCarouselProps {
 }
 
 export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarouselProps) {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Map API recommended outfits to local display format
-  const data = outfits && outfits.length > 0
-    ? outfits.map((item, index) => {
-        // Fallback to local image index if API doesn't provide images or first item image
-        const fallbackImg = DEFAULT_OUTFITS[index % DEFAULT_OUTFITS.length].image;
-        const mainImage = item.items && item.items.length > 0 ? item.items[0].image_url : fallbackImg;
-        return {
-          id: String(item.outfit_id),
-          title: item.style_type || 'Custom Outfit',
-          tags: [item.style_type || 'Curated', ...(item.items?.map(it => it.name).slice(0, 1) || [])],
-          isBestMatch: index === 0,
-          image: mainImage,
-        };
-      })
-    : DEFAULT_OUTFITS;
+  const data = (outfits || []).map((item, index) => {
+    const mainImage = item.items && item.items.length > 0 ? item.items[0].image_url : '';
+    return {
+      id: String(item.outfit_id),
+      title: item.style_type || 'Custom Outfit',
+      tags: [item.style_type || 'Curated', ...(item.items?.map(it => it.name).slice(0, 1) || [])],
+      isBestMatch: index === 0,
+      image: mainImage,
+    };
+  });
 
   return (
     <View className="mb-4">
@@ -80,9 +51,19 @@ export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarous
         renderItem={({ item, index }) => {
           const isActive = index === activeIndex;
           return (
-            <View
+            <Pressable
+              onPress={() => {
+                router.navigate({
+                  pathname: '/outfit-detail' as any,
+                  params: {
+                    id: item.id,
+                    title: item.title,
+                    image: item.image,
+                  },
+                });
+              }}
               style={{ width: CARD_WIDTH, marginRight: CARD_SPACING }}
-              className={`bg-white rounded-[2rem] overflow-hidden border border-outline-variant/30 shadow-sm transition-all duration-300 ${
+              className={`bg-white rounded-[2rem] overflow-hidden border border-outline-variant/30 shadow-sm transition-all duration-300 active:scale-95 ${
                 isActive ? 'opacity-100 scale-100' : 'opacity-60 scale-[0.97]'
               }`}
             >
@@ -122,7 +103,7 @@ export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarous
                   {item.title}
                 </Text>
               </View>
-            </View>
+            </Pressable>
           );
         }}
         keyExtractor={(item) => item.id}

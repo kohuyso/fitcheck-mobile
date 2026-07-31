@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Pressable, ScrollView, SafeAreaView } from 'react-native';
 import { Image } from 'expo-image';
-import { Sun, CheckCircle, ArrowRight } from 'lucide-react-native';
+import { Sun, CheckCircle, ArrowRight, UserPlus, LogIn } from 'lucide-react-native';
 import { useMutation } from '@tanstack/react-query';
 import { registerApiV1AuthRegisterPostMutation } from '@/api/@tanstack/react-query.gen';
+import AuthModal from './auth-modal';
 
 interface WelcomeScreenProps {
   onGetStarted: () => void;
 }
 
 export default function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
+  const [authModalVisible, setAuthModalVisible] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+
   const { mutateAsync: registerGuest } = useMutation(registerApiV1AuthRegisterPostMutation());
 
-  const handleGetStarted = async () => {
+  const handleGuestGetStarted = async () => {
     try {
       await registerGuest({
         body: {
           email: `guest_${Date.now()}@fitcheck.ai`,
           password: 'guestpassword123',
+          full_name: 'Guest User',
+          preferred_style: ['Casual'],
         },
       });
     } catch (error) {
@@ -25,6 +31,12 @@ export default function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
     }
     onGetStarted();
   };
+
+  const openAuth = (mode: 'login' | 'register') => {
+    setAuthMode(mode);
+    setAuthModalVisible(true);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-surface">
       <ScrollView 
@@ -42,7 +54,7 @@ export default function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
             {/* Hero Flat-lay Illustration */}
             <View className="relative z-10 w-full h-full bg-white/85 border border-outline-variant/30 rounded-3xl overflow-hidden shadow-lg p-6">
               <Image
-                source="https://lh3.googleusercontent.com/aida-public/AB6AXuAs2HLU_r_ny5EEJkf3HL9eVueLsT4WdyMBEe08ZnhB9CuDSNopB4to0DPYgpP5-nXsiTIAKbEmGGUvh1nZKEEJPcCRUL-I6u2iII3TKD1vM_oDiZ4mauC17A-WctJVwy2erTrQC1NOv8tR7UioWiIYmasWMY5qXO4VjiV8GfMuzLk2jfW3VYgDm5c9UjQkwi7YOUmKCsKXPa1Fswyt81zx6bG5ETsJBtPvGF_LnVFTx-_BoyK5gJezEDwaEca75BUrsNK1yGRyNBM"
+                source=""
                 className="w-full h-full"
                 contentFit="contain"
                 transition={500}
@@ -73,25 +85,49 @@ export default function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
         </View>
 
         {/* Footer Area */}
-        <View className="w-full max-w-md items-center mt-auto">
+        <View className="w-full max-w-md items-center mt-auto gap-3">
+          {/* Create Account Primary Action */}
           <Pressable
-            onPress={handleGetStarted}
-            className="w-full bg-primary-container active:scale-[0.98] py-5 rounded-2xl flex-row items-center justify-center gap-3 shadow-lg shadow-primary-container/20"
+            onPress={() => openAuth('register')}
+            className="w-full bg-primary active:scale-[0.98] py-4 rounded-2xl flex-row items-center justify-center gap-2 shadow-lg shadow-primary/20"
           >
-
+            <UserPlus size={20} className="text-white" />
             <Text className="font-sans font-semibold text-headline-md text-white">
-              Get Started
+              Tạo tài khoản mới
             </Text>
-            <ArrowRight size={22} className="text-white" />
           </Pressable>
 
-          <Pressable className="mt-6">
-            <Text className="font-sans font-medium text-label-md text-on-surface-variant hover:text-primary active:opacity-75">
-              Already have an account? Sign in
+          {/* Sign In Secondary Action */}
+          <Pressable
+            onPress={() => openAuth('login')}
+            className="w-full bg-surface-variant/40 border border-outline-variant/40 active:scale-[0.98] py-4 rounded-2xl flex-row items-center justify-center gap-2"
+          >
+            <LogIn size={20} className="text-on-surface" />
+            <Text className="font-sans font-semibold text-headline-md text-on-surface">
+              Đăng nhập
+            </Text>
+          </Pressable>
+
+          {/* Guest Mode */}
+          <Pressable onPress={handleGuestGetStarted} className="mt-2 py-2">
+            <Text className="font-sans font-medium text-label-md text-on-surface-variant text-center underline">
+              Dùng thử chế độ Khách (Guest)
             </Text>
           </Pressable>
         </View>
       </ScrollView>
+
+      {/* Auth Modal */}
+      <AuthModal
+        visible={authModalVisible}
+        initialMode={authMode}
+        onClose={() => setAuthModalVisible(false)}
+        onSuccess={() => {
+          setAuthModalVisible(false);
+          onGetStarted();
+        }}
+      />
     </SafeAreaView>
   );
 }
+

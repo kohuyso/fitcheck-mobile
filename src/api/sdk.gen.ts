@@ -2,7 +2,7 @@
 
 import { type Client, type ClientMeta, formDataBodySerializer, type Options as Options2, type RequestResult, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostErrors, ApproveAndSaveItemApiV1ClosetSavePostResponses, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostErrors, ChatAndModifyOutfitApiV1AiChatPostResponses, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetErrors, GetHomeDashboardApiV1DashboardHomeGetResponses, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetErrors, GetMyWardrobeApiV1ClosetItemsGetResponses, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostErrors, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetErrors, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponses, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetErrors, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponses, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponses, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponses, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostErrors, LoginApiV1AuthLoginPostResponses, LogoutApiV1AuthLogoutPostData, LogoutApiV1AuthLogoutPostResponses, ReadRootGetData, ReadRootGetResponses, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostErrors, RegisterApiV1AuthRegisterPostResponses, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostErrors, ScanClothingCameraApiV1ClosetScanPostResponses, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostErrors, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostResponses, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostErrors, WearOutfitApiV1DashboardWearOutfitPostResponses } from './types.gen';
+import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostErrors, ApproveAndSaveItemApiV1ClosetSavePostResponses, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostErrors, ChatAndModifyOutfitApiV1AiChatPostResponses, GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponses, GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponses, GetFashionTrendsApiV1ExploreTrendsGetData, GetFashionTrendsApiV1ExploreTrendsGetResponses, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetErrors, GetHomeDashboardApiV1DashboardHomeGetResponses, GetItemDetailApiV1ClosetItemsItemIdGetData, GetItemDetailApiV1ClosetItemsItemIdGetErrors, GetItemDetailApiV1ClosetItemsItemIdGetResponses, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetErrors, GetMyWardrobeApiV1ClosetItemsGetResponses, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostErrors, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetErrors, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponses, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetErrors, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponses, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponses, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponses, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostErrors, LoginApiV1AuthLoginPostResponses, LogoutApiV1AuthLogoutPostData, LogoutApiV1AuthLogoutPostResponses, ReadRootGetData, ReadRootGetResponses, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostErrors, RegisterApiV1AuthRegisterPostResponses, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostErrors, ScanClothingCameraApiV1ClosetScanPostResponses, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostErrors, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostResponses, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostErrors, WearOutfitApiV1DashboardWearOutfitPostResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -69,6 +69,139 @@ export class Authentication {
     }
 }
 
+export class Closet__AiScanner {
+    /**
+     * Scan Clothing Camera
+     *
+     * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Redis Queue cho Worker xử lý ngầm.
+     */
+    public static scanClothingCameraApiV1ClosetScanPost<ThrowOnError extends boolean = false>(options: Options<ScanClothingCameraApiV1ClosetScanPostData, ThrowOnError>): RequestResult<ScanClothingCameraApiV1ClosetScanPostResponses, ScanClothingCameraApiV1ClosetScanPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<ScanClothingCameraApiV1ClosetScanPostResponses, ScanClothingCameraApiV1ClosetScanPostErrors, ThrowOnError>({
+            ...formDataBodySerializer,
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/scan',
+            ...options,
+            headers: {
+                'Content-Type': null,
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Get Scan Task Status
+     *
+     * Bước 2: Mobile gọi lại API kiểm tra kết quả xử lý từ Celery AI Worker ngầm.
+     */
+    public static getScanTaskStatusApiV1ClosetScanStatusTaskIdGet<ThrowOnError extends boolean = false>(options: Options<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, ThrowOnError>): RequestResult<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponses, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetErrors, ThrowOnError> {
+        return (options.client ?? client).get<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponses, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetErrors, ThrowOnError>({
+            responseType: 'json',
+            url: '/api/v1/closet/scan/status/{task_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Approve And Save Item
+     *
+     * Bước 3: User bấm "Approve & Save". Backend lưu vào PostgreSQL.
+     */
+    public static approveAndSaveItemApiV1ClosetSavePost<ThrowOnError extends boolean = false>(options: Options<ApproveAndSaveItemApiV1ClosetSavePostData, ThrowOnError>): RequestResult<ApproveAndSaveItemApiV1ClosetSavePostResponses, ApproveAndSaveItemApiV1ClosetSavePostErrors, ThrowOnError> {
+        return (options.client ?? client).post<ApproveAndSaveItemApiV1ClosetSavePostResponses, ApproveAndSaveItemApiV1ClosetSavePostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/save',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Get My Wardrobe
+     *
+     * API lấy toàn bộ tủ đồ phẳng, hỗ trợ filter và search linh hoạt
+     */
+    public static getMyWardrobeApiV1ClosetItemsGet<ThrowOnError extends boolean = false>(options?: Options<GetMyWardrobeApiV1ClosetItemsGetData, ThrowOnError>): RequestResult<GetMyWardrobeApiV1ClosetItemsGetResponses, GetMyWardrobeApiV1ClosetItemsGetErrors, ThrowOnError> {
+        return (options?.client ?? client).get<GetMyWardrobeApiV1ClosetItemsGetResponses, GetMyWardrobeApiV1ClosetItemsGetErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/items',
+            ...options
+        });
+    }
+    
+    /**
+     * Get Item Detail
+     *
+     * API Lấy chi tiết 1 món đồ trong tủ với các chỉ số thống kê thực tế từ DB và thuật toán phối màu.
+     */
+    public static getItemDetailApiV1ClosetItemsItemIdGet<ThrowOnError extends boolean = false>(options: Options<GetItemDetailApiV1ClosetItemsItemIdGetData, ThrowOnError>): RequestResult<GetItemDetailApiV1ClosetItemsItemIdGetResponses, GetItemDetailApiV1ClosetItemsItemIdGetErrors, ThrowOnError> {
+        return (options.client ?? client).get<GetItemDetailApiV1ClosetItemsItemIdGetResponses, GetItemDetailApiV1ClosetItemsItemIdGetErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/items/{item_id}',
+            ...options
+        });
+    }
+}
+
+export class AiStylist {
+    /**
+     * Get Style Suggestions
+     *
+     * API Gợi ý style (AI): Phân tích tủ đồ của người dùng và style yêu thích để đưa ra lời khuyên thời trang.
+     */
+    public static getStyleSuggestionsApiV1AiStyleSuggestionsGet<ThrowOnError extends boolean = false>(options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, ThrowOnError>): RequestResult<GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses, unknown, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/ai/style-suggestions',
+            ...options
+        });
+    }
+    
+    /**
+     * Get Outfit From Items
+     *
+     * API Gợi ý outfit từ 1 hoặc vài món đồ (AI): Chọn trước các món đồ, AI sẽ phối thêm các đồ khác để hoàn thiện set đồ.
+     */
+    public static getOutfitFromItemsApiV1AiOutfitFromItemsPost<ThrowOnError extends boolean = false>(options: Options<GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, ThrowOnError>): RequestResult<GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses, GetOutfitFromItemsApiV1AiOutfitFromItemsPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses, GetOutfitFromItemsApiV1AiOutfitFromItemsPostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/ai/outfit-from-items',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Chat And Modify Outfit
+     *
+     * API Yêu cầu hoặc sửa style/outfit bằng text giống phiên chat (AI).
+     * Nhận vào tin nhắn yêu cầu thay đổi trang phục hiện tại hoặc đề xuất set đồ mới.
+     */
+    public static chatAndModifyOutfitApiV1AiChatPost<ThrowOnError extends boolean = false>(options: Options<ChatAndModifyOutfitApiV1AiChatPostData, ThrowOnError>): RequestResult<ChatAndModifyOutfitApiV1AiChatPostResponses, ChatAndModifyOutfitApiV1AiChatPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<ChatAndModifyOutfitApiV1AiChatPostResponses, ChatAndModifyOutfitApiV1AiChatPostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/ai/chat',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+}
+
 export class Dashboard__Recommendation {
     /**
      * Get Home Dashboard
@@ -130,14 +263,27 @@ export class Dashboard__Recommendation {
     /**
      * Get Wardrobe Style Insights
      *
-     * API cho Screen 6 (Phần Bottom Section): Tính toán dữ liệu cho Ring Chart đồ họa.
-     * Công thức Tỷ lệ sử dụng = (Số món đồ đã từng mặc trong tháng / Tổng số đồ trong tủ) * 100
+     * API tính toán tỷ lệ sử dụng tủ đồ linh hoạt từ cơ sở dữ liệu.
      */
     public static getWardrobeStyleInsightsApiV1DashboardInsightsGet<ThrowOnError extends boolean = false>(options?: Options<GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, ThrowOnError>): RequestResult<GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).get<GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponses, unknown, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/api/v1/dashboard/insights',
+            ...options
+        });
+    }
+    
+    /**
+     * Get Calendar Insights
+     *
+     * API Dự báo 3 ngày & Phân tích Đồ chưa mặc thực tế từ tủ đồ của người dùng.
+     */
+    public static getCalendarInsightsApiV1DashboardCalendarInsightsGet<ThrowOnError extends boolean = false>(options?: Options<GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, ThrowOnError>): RequestResult<GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponses, unknown, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/dashboard/calendar/insights',
             ...options
         });
     }
@@ -162,123 +308,32 @@ export class Dashboard__Recommendation {
     }
 }
 
-export class Closet__AiScanner {
+export class Explore__Trends {
     /**
-     * Scan Clothing Camera
+     * Get Fashion Trends
      *
-     * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Redis Queue cho Worker xử lý ngầm.
-     * Phản hồi ngay lập tức sau vài mili-giây để Mobile hiển thị hiệu ứng quét techy.
+     * API Khám phá Xu hướng thời trang được cá nhân hóa dựa trên dữ liệu tủ đồ người dùng.
      */
-    public static scanClothingCameraApiV1ClosetScanPost<ThrowOnError extends boolean = false>(options: Options<ScanClothingCameraApiV1ClosetScanPostData, ThrowOnError>): RequestResult<ScanClothingCameraApiV1ClosetScanPostResponses, ScanClothingCameraApiV1ClosetScanPostErrors, ThrowOnError> {
-        return (options.client ?? client).post<ScanClothingCameraApiV1ClosetScanPostResponses, ScanClothingCameraApiV1ClosetScanPostErrors, ThrowOnError>({
-            ...formDataBodySerializer,
+    public static getFashionTrendsApiV1ExploreTrendsGet<ThrowOnError extends boolean = false>(options?: Options<GetFashionTrendsApiV1ExploreTrendsGetData, ThrowOnError>): RequestResult<GetFashionTrendsApiV1ExploreTrendsGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<GetFashionTrendsApiV1ExploreTrendsGetResponses, unknown, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/v1/closet/scan',
-            ...options,
-            headers: {
-                'Content-Type': null,
-                ...options.headers
-            }
-        });
-    }
-    
-    /**
-     * Get Scan Task Status
-     *
-     * Bước 2: Mobile thỉnh thoảng gọi lại API này (cứ 1 giây/lần) để kiểm tra xem AI chạy xong chưa.
-     */
-    public static getScanTaskStatusApiV1ClosetScanStatusTaskIdGet<ThrowOnError extends boolean = false>(options: Options<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, ThrowOnError>): RequestResult<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponses, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetErrors, ThrowOnError> {
-        return (options.client ?? client).get<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponses, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetErrors, ThrowOnError>({
-            responseType: 'json',
-            url: '/api/v1/closet/scan/status/{task_id}',
+            url: '/api/v1/explore/trends',
             ...options
         });
     }
     
     /**
-     * Approve And Save Item
+     * Get Color Theory Guides
      *
-     * Bước 3: User nhìn thấy các tag gợi ý trên màn hình Bottom 1/3, bấm "Approve & Save".
-     * Backend chính thức lưu món đồ sạch nền này vào tủ đồ Postgres.
+     * API Hướng dẫn Lý thuyết Phối màu cá nhân hóa dựa theo các item thực tế trong tủ đồ.
      */
-    public static approveAndSaveItemApiV1ClosetSavePost<ThrowOnError extends boolean = false>(options: Options<ApproveAndSaveItemApiV1ClosetSavePostData, ThrowOnError>): RequestResult<ApproveAndSaveItemApiV1ClosetSavePostResponses, ApproveAndSaveItemApiV1ClosetSavePostErrors, ThrowOnError> {
-        return (options.client ?? client).post<ApproveAndSaveItemApiV1ClosetSavePostResponses, ApproveAndSaveItemApiV1ClosetSavePostErrors, ThrowOnError>({
+    public static getColorTheoryGuidesApiV1ExploreColorTheoryGet<ThrowOnError extends boolean = false>(options?: Options<GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, ThrowOnError>): RequestResult<GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponses, unknown, ThrowOnError>({
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/v1/closet/save',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-    
-    /**
-     * Get My Wardrobe
-     *
-     * API cho Screen 4 (My Wardrobe Screen): Lấy toàn bộ tủ đồ phẳng, hỗ trợ filter pill và phân trang
-     */
-    public static getMyWardrobeApiV1ClosetItemsGet<ThrowOnError extends boolean = false>(options?: Options<GetMyWardrobeApiV1ClosetItemsGetData, ThrowOnError>): RequestResult<GetMyWardrobeApiV1ClosetItemsGetResponses, GetMyWardrobeApiV1ClosetItemsGetErrors, ThrowOnError> {
-        return (options?.client ?? client).get<GetMyWardrobeApiV1ClosetItemsGetResponses, GetMyWardrobeApiV1ClosetItemsGetErrors, ThrowOnError>({
-            responseType: 'json',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/v1/closet/items',
+            url: '/api/v1/explore/color-theory',
             ...options
-        });
-    }
-}
-
-export class AiStylist {
-    /**
-     * Get Style Suggestions
-     *
-     * API Gợi ý style (AI): Phân tích tủ đồ của người dùng và style yêu thích để đưa ra lời khuyên thời trang.
-     */
-    public static getStyleSuggestionsApiV1AiStyleSuggestionsGet<ThrowOnError extends boolean = false>(options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, ThrowOnError>): RequestResult<GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses, unknown, ThrowOnError> {
-        return (options?.client ?? client).get<GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses, unknown, ThrowOnError>({
-            responseType: 'json',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/v1/ai/style-suggestions',
-            ...options
-        });
-    }
-    
-    /**
-     * Get Outfit From Items
-     *
-     * API Gợi ý outfit từ 1 hoặc vài món đồ (AI): Chọn trước các món đồ, AI sẽ phối thêm các đồ khác để hoàn thiện set đồ.
-     */
-    public static getOutfitFromItemsApiV1AiOutfitFromItemsPost<ThrowOnError extends boolean = false>(options: Options<GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, ThrowOnError>): RequestResult<GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses, GetOutfitFromItemsApiV1AiOutfitFromItemsPostErrors, ThrowOnError> {
-        return (options.client ?? client).post<GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses, GetOutfitFromItemsApiV1AiOutfitFromItemsPostErrors, ThrowOnError>({
-            responseType: 'json',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/v1/ai/outfit-from-items',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-    
-    /**
-     * Chat And Modify Outfit
-     *
-     * API Yêu cầu hoặc sửa style/outfit bằng text giống phiên chat (AI).
-     * Nhận vào tin nhắn yêu cầu thay đổi trang phục hiện tại hoặc đề xuất set đồ mới.
-     */
-    public static chatAndModifyOutfitApiV1AiChatPost<ThrowOnError extends boolean = false>(options: Options<ChatAndModifyOutfitApiV1AiChatPostData, ThrowOnError>): RequestResult<ChatAndModifyOutfitApiV1AiChatPostResponses, ChatAndModifyOutfitApiV1AiChatPostErrors, ThrowOnError> {
-        return (options.client ?? client).post<ChatAndModifyOutfitApiV1AiChatPostResponses, ChatAndModifyOutfitApiV1AiChatPostErrors, ThrowOnError>({
-            responseType: 'json',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/api/v1/ai/chat',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
         });
     }
 }

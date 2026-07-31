@@ -1,10 +1,19 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { MessageSquare, ChevronRight } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 
 export default function StyleAssistantBanner() {
+  const router = useRouter();
+
   return (
-    <Pressable className="bg-primary active:scale-[0.98] rounded-2xl p-5 shadow-lg flex-row items-center justify-between mb-8">
+    <Pressable
+      onPress={() => {
+        console.log('Banner pressed! Navigating to /chat');
+        router.navigate('/chat');
+      }}
+      className="bg-primary active:scale-[0.98] rounded-2xl p-5 shadow-lg flex-row items-center justify-between mb-8"
+    >
       <View className="flex-row items-center gap-4">
         <View className="bg-white/20 p-3 rounded-xl">
           <MessageSquare size={32} className="text-white" />

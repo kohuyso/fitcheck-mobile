@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
+import { Bot, Check, Link2, MapPin, RefreshCw, Sun } from 'lucide-react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { MapPin, Sun, Link2, Check, RefreshCw, Bot } from 'lucide-react-native';
 
 import {
   getHomeDashboardApiV1DashboardHomeGetOptions,
   wearOutfitApiV1DashboardWearOutfitPostMutation,
 } from '@/api/@tanstack/react-query.gen';
 
-import WeatherAdvice from '@/components/dashboard/weather-advice';
+import OutfitCarousel from '@/components/dashboard/outfit-carousel';
 import ScheduleTag from '@/components/dashboard/schedule-tag';
 import StyleAssistantBanner from '@/components/dashboard/style-assistant-banner';
-import OutfitCarousel from '@/components/dashboard/outfit-carousel';
-import StyleInsightBento from '@/components/dashboard/style-insight-bento';
 import StyleDiscovery from '@/components/dashboard/style-discovery';
+import StyleInsightBento from '@/components/dashboard/style-insight-bento';
 import SwapItemSheet from '@/components/dashboard/swap-item-sheet';
+import WeatherAdvice from '@/components/dashboard/weather-advice';
 
 export default function HomeScreen() {
+  const router = useRouter();
   const [isWorn, setIsWorn] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -28,19 +30,21 @@ export default function HomeScreen() {
     })
   );
 
+  const data = dashboardData;
+
   // Wear Outfit API Mutation
   const wearMutation = useMutation(wearOutfitApiV1DashboardWearOutfitPostMutation());
 
   const toggleWear = async () => {
     try {
-      const outfitId = dashboardData?.recommended_outfits?.[0]?.outfit_id;
+      const outfitId = data?.recommended_outfits?.[0]?.outfit_id;
       if (outfitId !== undefined) {
         await wearMutation.mutateAsync({
           query: { outfit_id: outfitId },
         });
       }
     } catch (error) {
-      console.log('Wear outfit skipped/failed (offline fallback):', error);
+      console.log('Wear outfit skipped/failed:', error);
     }
     setIsWorn(true);
     setTimeout(() => {
@@ -48,11 +52,11 @@ export default function HomeScreen() {
     }, 3000);
   };
 
-  const displayLocation = dashboardData?.location ?? 'Hanoi, VN';
+  const displayLocation = data?.location ?? 'Hanoi, VN';
   const displayTemp =
-    dashboardData?.weather?.temperature !== undefined
-      ? `${dashboardData.weather.temperature}°C`
-      : '22°C';
+    data?.weather?.temperature !== undefined
+      ? `${data.weather.temperature}°C`
+      : '--°C';
 
   return (
     <SafeAreaView className="flex-1 bg-surface w-full max-w-full overflow-hidden" edges={['top']}>
@@ -88,7 +92,9 @@ export default function HomeScreen() {
             <Text className="font-sans font-bold text-headline-md text-on-surface tracking-tight">
               AI Curated Daily
             </Text>
-            <Text className="text-primary font-sans font-semibold text-label-md">View All</Text>
+            <Pressable onPress={() => router.navigate('/outfit-detail' as any)}>
+              <Text className="text-primary font-sans font-semibold text-label-md">View All</Text>
+            </Pressable>
           </View>
 
           {/* Carousel */}
@@ -130,7 +136,13 @@ export default function HomeScreen() {
       </ScrollView>
 
       {/* Floating Style Assistant FAB */}
-      <Pressable className="absolute bottom-24 right-6 w-14 h-14 bg-primary rounded-full shadow-2xl items-center justify-center z-45 active:scale-90">
+      <Pressable
+        onPress={() => {
+          console.log('FAB pressed! Navigating to /chat');
+          router.navigate('/chat');
+        }}
+        className="absolute bottom-24 right-6 w-14 h-14 bg-primary rounded-full shadow-2xl items-center justify-center z-50 active:scale-90"
+      >
         <Bot size={28} className="text-white" />
       </Pressable>
 

@@ -22,33 +22,6 @@ import { getSwapAlternativesApiV1DashboardSwapAlternativesGetOptions } from '@/a
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const ALTERNATIVES = [
-  {
-    id: 'alt-1',
-    type: 'Upgrade',
-    title: 'Leather Boot',
-    brand: 'Thursday • Brown',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuC_IyDvNgaUfYGpxZ4nTYOVt_yfIQUQqJmMRKeDNiRnK5YhpSkn5FxUCr11TQKBfNSWoFnwtnVZy9TdHf1dq0nCn02-SrJHKOu2f6WClwYiwVUbbWrRbjTTBzCrWGaIijtA526V-6pvI2xu0XNcV8YwvQcOpyAw8jJUgLnAp5PbuJ93eRQPZwwJALRJfFBM4i3W6-Z39Zt555Xq4PQ_s63_1bLbKvxr_hHYEvoC9pmy9cXKjG1j980VKRC5SQ08CWKRHnVtrUIzhJ0',
-  },
-  {
-    id: 'alt-2',
-    type: 'Formal',
-    title: 'Penny Loafer',
-    brand: 'G.H. Bass • Black',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuD6-iVVrNBl_SiUGdnd1J7TP4bflA97PqRmAa9VS0O-8IkgO8nGgeAsNv1Zo7XEtgWjObH0jyfikErcHOghzQBNDEV3YTix_5n15rCFuGfiIMg70o90P_eq1h6qLxuD22lMDvUlB8WITan2NoY9_aqQdL4qNf_JP4mhtOhpGtqoUztvabwQxQpd4bUG6wAGLJ_km8_tMgv6zQFI7nQA7kI0isrRIO6_oHgKEvxPtxt-PJaHtvQAy7RUFTKGvcNATS0Y9qxWa7ej8ys',
-  },
-  {
-    id: 'alt-3',
-    type: 'Comfort',
-    title: 'Tech Runner',
-    brand: 'On • Slate',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCuqwIy6pIezO_4lMAAFvG4cuAwGBwjludncYoCfNZ-fVt-fFIGhv1Qp7C431j8szMAn76klmiGAXGHqMWy_sf_jaueUuxaqWy11b4x-ito7G4MN8Dl--V3hMTuxr-Af_560AluXIQmcNDJVStiZTR8htuylsnFPqWLTq5bbxbehEcHIpTGvWEUs93MC2mQIB2eBFfF_AXodlc0BIIPem2M8SlgCgMNiroiCoj4rDB35pscsoDT5Er7Cpj0CtUlDpOfafxjBfTr6-g',
-  },
-];
-
 interface SwapItemSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -89,18 +62,15 @@ export default function SwapItemSheet({ isOpen, onClose }: SwapItemSheetProps) {
   if (!isOpen) return null;
 
   // Map API data to display alternatives
-  const displayAlternatives = alternativesData && alternativesData.length > 0
-    ? alternativesData.map((item, index) => {
-        const fallbackAlt = ALTERNATIVES[index % ALTERNATIVES.length];
-        return {
-          id: String(item.id),
-          type: fallbackAlt.type,
-          title: item.name,
-          brand: fallbackAlt.brand,
-          image: item.image_url || fallbackAlt.image,
-        };
-      })
-    : ALTERNATIVES;
+  const displayAlternatives = (alternativesData || []).map((item) => {
+    return {
+      id: String(item.id),
+      type: item.style_tag || 'Alternative',
+      title: item.name,
+      brand: item.category || 'Wardrobe Item',
+      image: item.image_url || '',
+    };
+  });
 
   return (
     <View className="absolute inset-0 z-50">
@@ -144,7 +114,7 @@ export default function SwapItemSheet({ isOpen, onClose }: SwapItemSheetProps) {
             {/* Active Item */}
             <View className="w-[47%] bg-white rounded-xl overflow-hidden border-2 border-primary relative shadow-sm">
               <Image
-                source="https://lh3.googleusercontent.com/aida-public/AB6AXuCOObeb0AMlawtyLiyyA9221k1YV1Q99YO0j_pqNArnqqBzxCQjnCfiwkuhg989X7tJxfxyDnBp3uJEq9zHccWvnhFZPJGpLxZM7HZsq_QK-WAvKHIkHKKanFfQ8-BtueqjDumxdReKlngQF4hNeK2TN_ncVc8meDCYNPGnUpg2yankorqAMdp0dJctAnBv8XZV2lgqzaQrceYdKOiqaqJJb_zvstn0fJ-9ZHccHMoL-7_gI_9Dy4yPWq_dT1bLWKZW6YOTi5gv2Iw"
+                source=""
                 className="aspect-square w-full bg-surface-container-low"
                 contentFit="cover"
               />
