@@ -5,11 +5,14 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Alert,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ChevronLeft,
   Heart,
@@ -20,16 +23,33 @@ import {
   Tag,
   Shirt,
   Wand2,
+  Trash2,
+  Edit2,
+  X,
 } from 'lucide-react-native';
 
-import { getItemDetailApiV1ClosetItemsItemIdGetOptions } from '@/api/@tanstack/react-query.gen';
+import {
+  getItemDetailApiV1ClosetItemsItemIdGetOptions,
+  toggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostMutation,
+  deleteClothingItemApiV1ClosetItemsItemIdDeleteMutation,
+  updateClothingItemApiV1ClosetItemsItemIdPutMutation,
+  getItemPairingsApiV1ClosetItemsItemIdPairingsGetOptions,
+  uploadClothingItemImageApiV1ClosetItemsUploadPostMutation,
+  getMyWardrobeApiV1ClosetItemsGetQueryKey,
+  getItemDetailApiV1ClosetItemsItemIdGetQueryKey,
+} from '@/api/@tanstack/react-query.gen';
 
 export default function ItemDetailScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const queryClient = useQueryClient();
 
   const numericId = Number(params.id);
   const isValidId = !isNaN(numericId) && numericId > 0;
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editStyle, setEditStyle] = useState('Casual');
 
   // Query Backend API for Item Detail
   const { data: itemDetailData, isLoading } = useQuery({
@@ -38,6 +58,19 @@ export default function ItemDetailScreen() {
     }),
     enabled: isValidId,
   });
+
+  // Query Backend API for Item Pairings Recommendations
+  const { data: pairingsData } = useQuery({
+    ...getItemPairingsApiV1ClosetItemsItemIdPairingsGetOptions({
+      path: { item_id: numericId },
+    }),
+    enabled: isValidId,
+  });
+
+  // Image Upload Mutation
+  const uploadImageMutation = useMutation(
+    uploadClothingItemImageApiV1ClosetItemsUploadPostMutation()
+  );
 
   const name = itemDetailData?.name || (params.name as string) || 'Item';
   const category = itemDetailData?.category || (params.category as string) || 'Category';
@@ -53,6 +86,72 @@ export default function ItemDetailScreen() {
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [isWorn, setIsWorn] = useState(false);
+
+  // Mutations
+  const toggleFavoriteMutation = useMutation(
+    toggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostMutation()
+  );
+  const deleteItemMutation = useMutation({
+    ...deleteClothingItemApiV1ClosetItemsItemIdDeleteMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getMyWardrobeApiV1ClosetItemsGetQueryKey() });
+      router.navigate('/closet' as any);
+    },
+  });
+  const updateItemMutation = useMutation({
+    ...updateClothingItemApiV1ClosetItemsItemIdPutMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getMyWardrobeApiV1ClosetItemsGetQueryKey() });
+      if (isValidId) {
+        queryClient.invalidateQueries({ queryKey: getItemDetailApiV1ClosetItemsItemIdGetQueryKey({ path: { item_id: numericId } }) });
+      }
+      setIsEditing(false);
+    },
+  });
+
+  const handleToggleFavorite = async () => {
+    setIsFavorite((prev: boolean) => !prev);
+    if (isValidId) {
+      try {
+        await toggleFavoriteMutation.mutateAsync({
+          path: { item_id: numericId },
+        });
+      } catch (err) {
+        console.log('Toggle favorite error:', err);
+      }
+    }
+  };
+
+  const handleDeleteItem = () => {
+    Alert.alert('Xóa món đồ', `Bạn có chắc muốn xóa "${name}" khỏi tủ đồ không?`, [
+      { text: 'Hủy', style: 'cancel' },
+      {
+        text: 'Xóa',
+        style: 'destructive',
+        onPress: () => {
+          if (isValidId) {
+            deleteItemMutation.mutate({ path: { item_id: numericId } });
+          } else {
+            router.navigate('/closet' as any);
+          }
+        },
+      },
+    ]);
+  };
+
+  const handleSaveItemEdit = () => {
+    if (isValidId) {
+      updateItemMutation.mutate({
+        path: { item_id: numericId },
+        body: {
+          name: editName || name,
+          style_tag: editStyle,
+        },
+      });
+    } else {
+      setIsEditing(false);
+    }
+  };
 
   const handleWearToday = () => {
     setIsWorn(true);
@@ -94,15 +193,33 @@ export default function ItemDetailScreen() {
           Item Detail
         </Text>
 
-        <Pressable
-          onPress={() => setIsFavorite(!isFavorite)}
-          className="w-10 h-10 items-center justify-center rounded-full bg-surface-container active:scale-95"
-        >
-          <Heart
-            size={20}
-            className={isFavorite ? 'text-rose-500 fill-rose-500' : 'text-on-surface-variant'}
-          />
-        </Pressable>
+        <View className="flex-row items-center gap-2">
+          <Pressable
+            onPress={() => {
+              setEditName(name);
+              setEditStyle(style);
+              setIsEditing(true);
+            }}
+            className="w-9 h-9 items-center justify-center rounded-full bg-surface-container active:scale-95"
+          >
+            <Edit2 size={16} className="text-on-surface-variant" />
+          </Pressable>
+          <Pressable
+            onPress={handleDeleteItem}
+            className="w-9 h-9 items-center justify-center rounded-full bg-surface-container active:scale-95"
+          >
+            <Trash2 size={16} className="text-rose-600" />
+          </Pressable>
+          <Pressable
+            onPress={handleToggleFavorite}
+            className="w-9 h-9 items-center justify-center rounded-full bg-surface-container active:scale-95"
+          >
+            <Heart
+              size={18}
+              className={isFavorite ? 'text-rose-500 fill-rose-500' : 'text-on-surface-variant'}
+            />
+          </Pressable>
+        </View>
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -245,6 +362,44 @@ export default function ItemDetailScreen() {
           )}
         </Pressable>
       </View>
+
+      {/* Edit Item Modal */}
+      <Modal visible={isEditing} animationType="fade" transparent>
+        <View className="flex-1 bg-black/50 justify-center items-center p-5">
+          <View className="bg-white rounded-3xl p-6 w-full max-w-sm border border-outline-variant/30 shadow-2xl">
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="font-sans font-bold text-title-lg text-on-surface">Edit Item</Text>
+              <Pressable onPress={() => setIsEditing(false)} className="p-1">
+                <X size={20} className="text-on-surface-variant" />
+              </Pressable>
+            </View>
+
+            <Text className="font-sans font-bold text-label-md text-on-surface-variant mb-1">Item Name</Text>
+            <TextInput
+              value={editName}
+              onChangeText={setEditName}
+              placeholder="Item name..."
+              className="bg-surface-container-low p-3.5 rounded-xl border border-outline-variant/30 font-sans text-body-md text-on-surface mb-4"
+            />
+
+            <Text className="font-sans font-bold text-label-md text-on-surface-variant mb-1">Style Tag</Text>
+            <TextInput
+              value={editStyle}
+              onChangeText={setEditStyle}
+              placeholder="e.g. Casual, Formal, Sporty"
+              className="bg-surface-container-low p-3.5 rounded-xl border border-outline-variant/30 font-sans text-body-md text-on-surface mb-6"
+            />
+
+            <Pressable
+              onPress={handleSaveItemEdit}
+              disabled={updateItemMutation.isPending}
+              className="w-full py-3.5 bg-primary rounded-xl items-center shadow-md active:scale-95"
+            >
+              <Text className="font-sans font-bold text-body-lg text-white">Save Changes</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

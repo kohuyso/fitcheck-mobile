@@ -27,7 +27,9 @@ import {
 import {
   getOutfitFromItemsApiV1AiOutfitFromItemsPostMutation,
   getMyWardrobeApiV1ClosetItemsGetOptions,
+  toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostMutation,
 } from '@/api/@tanstack/react-query.gen';
+import { Bookmark } from 'lucide-react-native';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -51,6 +53,7 @@ export default function OutfitDetailScreen() {
   const weatherText = (params.weather as string) || '';
   const descriptionText = (params.description as string) || '';
   const defaultInsightText = (params.insight as string) || '';
+  const outfitId = params.outfit_id ? Number(params.outfit_id) : undefined;
 
   const tagsList = params.tags ? (params.tags as string).split(',') : [];
 
@@ -77,10 +80,25 @@ export default function OutfitDetailScreen() {
   const [insightText, setInsightText] = useState(defaultInsightText);
   const [isWorn, setIsWorn] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const [demoViewMode, setDemoViewMode] = useState<'collage' | 'flatlay'>('collage');
 
-  // React Query AI Outfit Mutation from API
+  // React Query AI Outfit Mutation & Bookmark Mutation
   const aiOutfitMutation = useMutation(getOutfitFromItemsApiV1AiOutfitFromItemsPostMutation());
+  const bookmarkMutation = useMutation(toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostMutation());
+
+  const handleToggleBookmark = async () => {
+    setIsBookmarked((prev) => !prev);
+    if (outfitId) {
+      try {
+        await bookmarkMutation.mutateAsync({
+          path: { outfit_id: outfitId },
+        });
+      } catch (err) {
+        console.log('Bookmark outfit error:', err);
+      }
+    }
+  };
 
   // Compute selected items to display live in Demo Collage preview
   const selectedItems = useMemo(() => {

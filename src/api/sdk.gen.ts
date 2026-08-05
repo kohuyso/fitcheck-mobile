@@ -2,7 +2,7 @@
 
 import { type Client, type ClientMeta, formDataBodySerializer, type Options as Options2, type RequestResult, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostErrors, ApproveAndSaveItemApiV1ClosetSavePostResponses, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostErrors, ChatAndModifyOutfitApiV1AiChatPostResponses, GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponses, GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponses, GetFashionTrendsApiV1ExploreTrendsGetData, GetFashionTrendsApiV1ExploreTrendsGetResponses, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetErrors, GetHomeDashboardApiV1DashboardHomeGetResponses, GetItemDetailApiV1ClosetItemsItemIdGetData, GetItemDetailApiV1ClosetItemsItemIdGetErrors, GetItemDetailApiV1ClosetItemsItemIdGetResponses, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetErrors, GetMyWardrobeApiV1ClosetItemsGetResponses, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostErrors, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetErrors, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponses, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetErrors, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponses, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponses, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponses, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostErrors, LoginApiV1AuthLoginPostResponses, LogoutApiV1AuthLogoutPostData, LogoutApiV1AuthLogoutPostResponses, ReadRootGetData, ReadRootGetResponses, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostErrors, RegisterApiV1AuthRegisterPostResponses, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostErrors, ScanClothingCameraApiV1ClosetScanPostResponses, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostErrors, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostResponses, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostErrors, WearOutfitApiV1DashboardWearOutfitPostResponses } from './types.gen';
+import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostErrors, ApproveAndSaveItemApiV1ClosetSavePostResponses, ChangePasswordApiV1AuthChangePasswordPostData, ChangePasswordApiV1AuthChangePasswordPostErrors, ChangePasswordApiV1AuthChangePasswordPostResponses, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostErrors, ChatAndModifyOutfitApiV1AiChatPostResponses, ClearChatHistoryApiV1AiChatHistoryDeleteData, ClearChatHistoryApiV1AiChatHistoryDeleteResponses, CreateCustomOutfitApiV1ClosetOutfitsPostData, CreateCustomOutfitApiV1ClosetOutfitsPostErrors, CreateCustomOutfitApiV1ClosetOutfitsPostResponses, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteErrors, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteResponses, DeleteClothingItemApiV1ClosetItemsItemIdDeleteData, DeleteClothingItemApiV1ClosetItemsItemIdDeleteErrors, DeleteClothingItemApiV1ClosetItemsItemIdDeleteResponses, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteErrors, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteResponses, GetCalendarByRangeApiV1DashboardCalendarGetData, GetCalendarByRangeApiV1DashboardCalendarGetErrors, GetCalendarByRangeApiV1DashboardCalendarGetResponses, GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponses, GetChatHistoryApiV1AiChatHistoryGetData, GetChatHistoryApiV1AiChatHistoryGetResponses, GetClosetSummaryApiV1ClosetSummaryGetData, GetClosetSummaryApiV1ClosetSummaryGetResponses, GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponses, GetFashionTrendsApiV1ExploreTrendsGetData, GetFashionTrendsApiV1ExploreTrendsGetResponses, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetErrors, GetHomeDashboardApiV1DashboardHomeGetResponses, GetItemDetailApiV1ClosetItemsItemIdGetData, GetItemDetailApiV1ClosetItemsItemIdGetErrors, GetItemDetailApiV1ClosetItemsItemIdGetResponses, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetData, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetErrors, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponses, GetMyOutfitsApiV1ClosetOutfitsGetData, GetMyOutfitsApiV1ClosetOutfitsGetErrors, GetMyOutfitsApiV1ClosetOutfitsGetResponses, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetErrors, GetMyWardrobeApiV1ClosetItemsGetResponses, GetOutfitByEventApiV1AiOutfitByEventPostData, GetOutfitByEventApiV1AiOutfitByEventPostErrors, GetOutfitByEventApiV1AiOutfitByEventPostResponses, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostErrors, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses, GetProfileApiV1AuthProfileGetData, GetProfileApiV1AuthProfileGetResponses, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetErrors, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponses, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetErrors, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponses, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetData, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetErrors, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponses, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetData, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponses, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponses, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponses, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostErrors, LoginApiV1AuthLoginPostResponses, LogoutApiV1AuthLogoutPostData, LogoutApiV1AuthLogoutPostResponses, ReadRootGetData, ReadRootGetResponses, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostErrors, RegisterApiV1AuthRegisterPostResponses, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostErrors, ScanClothingCameraApiV1ClosetScanPostResponses, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostErrors, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostResponses, SubmitChatFeedbackApiV1AiChatFeedbackPostData, SubmitChatFeedbackApiV1AiChatFeedbackPostErrors, SubmitChatFeedbackApiV1AiChatFeedbackPostResponses, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostErrors, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponses, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostErrors, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostResponses, TestAiConnectionApiV1AiTestConnectionGetData, TestAiConnectionApiV1AiTestConnectionGetResponses, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostResponses, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostErrors, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostResponses, UpdateClothingItemApiV1ClosetItemsItemIdPutData, UpdateClothingItemApiV1ClosetItemsItemIdPutErrors, UpdateClothingItemApiV1ClosetItemsItemIdPutResponses, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutErrors, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses, UpdateProfileApiV1AuthProfilePutData, UpdateProfileApiV1AuthProfilePutErrors, UpdateProfileApiV1AuthProfilePutResponses, UploadAvatarApiV1AuthProfileAvatarPostData, UploadAvatarApiV1AuthProfileAvatarPostErrors, UploadAvatarApiV1AuthProfileAvatarPostResponses, UploadClothingItemImageApiV1ClosetItemsUploadPostData, UploadClothingItemImageApiV1ClosetItemsUploadPostErrors, UploadClothingItemImageApiV1ClosetItemsUploadPostResponses, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostErrors, WearOutfitApiV1DashboardWearOutfitPostResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -67,13 +67,82 @@ export class Authentication {
             ...options
         });
     }
+    
+    /**
+     * Get Profile
+     *
+     * API Lấy thông tin cá nhân của người dùng hiện tại
+     */
+    public static getProfileApiV1AuthProfileGet<ThrowOnError extends boolean = false>(options?: Options<GetProfileApiV1AuthProfileGetData, ThrowOnError>): RequestResult<GetProfileApiV1AuthProfileGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<GetProfileApiV1AuthProfileGetResponses, unknown, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/auth/profile',
+            ...options
+        });
+    }
+    
+    /**
+     * Update Profile
+     *
+     * API Cập nhật thông tin cá nhân và gu thời trang (preferred_style)
+     */
+    public static updateProfileApiV1AuthProfilePut<ThrowOnError extends boolean = false>(options: Options<UpdateProfileApiV1AuthProfilePutData, ThrowOnError>): RequestResult<UpdateProfileApiV1AuthProfilePutResponses, UpdateProfileApiV1AuthProfilePutErrors, ThrowOnError> {
+        return (options.client ?? client).put<UpdateProfileApiV1AuthProfilePutResponses, UpdateProfileApiV1AuthProfilePutErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/auth/profile',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Upload Avatar
+     *
+     * API Upload & Cập nhật ảnh đại diện (Avatar) cho Profile người dùng
+     */
+    public static uploadAvatarApiV1AuthProfileAvatarPost<ThrowOnError extends boolean = false>(options: Options<UploadAvatarApiV1AuthProfileAvatarPostData, ThrowOnError>): RequestResult<UploadAvatarApiV1AuthProfileAvatarPostResponses, UploadAvatarApiV1AuthProfileAvatarPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<UploadAvatarApiV1AuthProfileAvatarPostResponses, UploadAvatarApiV1AuthProfileAvatarPostErrors, ThrowOnError>({
+            ...formDataBodySerializer,
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/auth/profile/avatar',
+            ...options,
+            headers: {
+                'Content-Type': null,
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Change Password
+     *
+     * API Thay đổi mật khẩu tài khoản người dùng
+     */
+    public static changePasswordApiV1AuthChangePasswordPost<ThrowOnError extends boolean = false>(options: Options<ChangePasswordApiV1AuthChangePasswordPostData, ThrowOnError>): RequestResult<ChangePasswordApiV1AuthChangePasswordPostResponses, ChangePasswordApiV1AuthChangePasswordPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<ChangePasswordApiV1AuthChangePasswordPostResponses, ChangePasswordApiV1AuthChangePasswordPostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/auth/change-password',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
 }
 
 export class Closet__AiScanner {
     /**
      * Scan Clothing Camera
      *
-     * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Redis Queue cho Worker xử lý ngầm.
+     * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Queue / Thread ngầm xử lý.
      */
     public static scanClothingCameraApiV1ClosetScanPost<ThrowOnError extends boolean = false>(options: Options<ScanClothingCameraApiV1ClosetScanPostData, ThrowOnError>): RequestResult<ScanClothingCameraApiV1ClosetScanPostResponses, ScanClothingCameraApiV1ClosetScanPostErrors, ThrowOnError> {
         return (options.client ?? client).post<ScanClothingCameraApiV1ClosetScanPostResponses, ScanClothingCameraApiV1ClosetScanPostErrors, ThrowOnError>({
@@ -135,6 +204,20 @@ export class Closet__AiScanner {
     }
     
     /**
+     * Delete Clothing Item
+     *
+     * API Xóa 1 món đồ khỏi tủ đồ
+     */
+    public static deleteClothingItemApiV1ClosetItemsItemIdDelete<ThrowOnError extends boolean = false>(options: Options<DeleteClothingItemApiV1ClosetItemsItemIdDeleteData, ThrowOnError>): RequestResult<DeleteClothingItemApiV1ClosetItemsItemIdDeleteResponses, DeleteClothingItemApiV1ClosetItemsItemIdDeleteErrors, ThrowOnError> {
+        return (options.client ?? client).delete<DeleteClothingItemApiV1ClosetItemsItemIdDeleteResponses, DeleteClothingItemApiV1ClosetItemsItemIdDeleteErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/items/{item_id}',
+            ...options
+        });
+    }
+    
+    /**
      * Get Item Detail
      *
      * API Lấy chi tiết 1 món đồ trong tủ với các chỉ số thống kê thực tế từ DB và thuật toán phối màu.
@@ -147,9 +230,180 @@ export class Closet__AiScanner {
             ...options
         });
     }
+    
+    /**
+     * Update Clothing Item
+     *
+     * API Cập nhật thông tin món đồ (danh mục, màu sắc, phong cách, tên)
+     */
+    public static updateClothingItemApiV1ClosetItemsItemIdPut<ThrowOnError extends boolean = false>(options: Options<UpdateClothingItemApiV1ClosetItemsItemIdPutData, ThrowOnError>): RequestResult<UpdateClothingItemApiV1ClosetItemsItemIdPutResponses, UpdateClothingItemApiV1ClosetItemsItemIdPutErrors, ThrowOnError> {
+        return (options.client ?? client).put<UpdateClothingItemApiV1ClosetItemsItemIdPutResponses, UpdateClothingItemApiV1ClosetItemsItemIdPutErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/items/{item_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Toggle Favorite Item
+     *
+     * API Bật/Tắt trạng thái yêu thích món đồ
+     */
+    public static toggleFavoriteItemApiV1ClosetItemsItemIdFavoritePost<ThrowOnError extends boolean = false>(options: Options<ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData, ThrowOnError>): RequestResult<ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostResponses, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostErrors, ThrowOnError> {
+        return (options.client ?? client).post<ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostResponses, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/items/{item_id}/favorite',
+            ...options
+        });
+    }
+    
+    /**
+     * Get My Outfits
+     *
+     * API Lấy danh sách toàn bộ các outfit combos của người dùng
+     */
+    public static getMyOutfitsApiV1ClosetOutfitsGet<ThrowOnError extends boolean = false>(options?: Options<GetMyOutfitsApiV1ClosetOutfitsGetData, ThrowOnError>): RequestResult<GetMyOutfitsApiV1ClosetOutfitsGetResponses, GetMyOutfitsApiV1ClosetOutfitsGetErrors, ThrowOnError> {
+        return (options?.client ?? client).get<GetMyOutfitsApiV1ClosetOutfitsGetResponses, GetMyOutfitsApiV1ClosetOutfitsGetErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/outfits',
+            ...options
+        });
+    }
+    
+    /**
+     * Create Custom Outfit
+     *
+     * API Tạo và lưu bộ phối đồ ghép thủ công từ các item IDs
+     */
+    public static createCustomOutfitApiV1ClosetOutfitsPost<ThrowOnError extends boolean = false>(options: Options<CreateCustomOutfitApiV1ClosetOutfitsPostData, ThrowOnError>): RequestResult<CreateCustomOutfitApiV1ClosetOutfitsPostResponses, CreateCustomOutfitApiV1ClosetOutfitsPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<CreateCustomOutfitApiV1ClosetOutfitsPostResponses, CreateCustomOutfitApiV1ClosetOutfitsPostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/outfits',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Toggle Bookmark Outfit
+     *
+     * API Bookmark/Lưu bộ outfit gợi ý vào danh sách yêu thích
+     */
+    public static toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPost<ThrowOnError extends boolean = false>(options: Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData, ThrowOnError>): RequestResult<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostResponses, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostResponses, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/outfits/{outfit_id}/bookmark',
+            ...options
+        });
+    }
+    
+    /**
+     * Delete Custom Outfit
+     *
+     * API Xóa một set phối đồ (Outfit) khỏi danh sách cá nhân
+     */
+    public static deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDelete<ThrowOnError extends boolean = false>(options: Options<DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData, ThrowOnError>): RequestResult<DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteResponses, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteErrors, ThrowOnError> {
+        return (options.client ?? client).delete<DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteResponses, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/outfits/{outfit_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update Custom Outfit
+     *
+     * API Cập nhật danh sách món đồ hoặc phong cách của một Outfit đã tạo
+     */
+    public static updateCustomOutfitApiV1ClosetOutfitsOutfitIdPut<ThrowOnError extends boolean = false>(options: Options<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData, ThrowOnError>): RequestResult<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutErrors, ThrowOnError> {
+        return (options.client ?? client).put<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/outfits/{outfit_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Upload Clothing Item Image
+     *
+     * API Upload trực tiếp file ảnh chụp món đồ từ thiết bị di động
+     */
+    public static uploadClothingItemImageApiV1ClosetItemsUploadPost<ThrowOnError extends boolean = false>(options: Options<UploadClothingItemImageApiV1ClosetItemsUploadPostData, ThrowOnError>): RequestResult<UploadClothingItemImageApiV1ClosetItemsUploadPostResponses, UploadClothingItemImageApiV1ClosetItemsUploadPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<UploadClothingItemImageApiV1ClosetItemsUploadPostResponses, UploadClothingItemImageApiV1ClosetItemsUploadPostErrors, ThrowOnError>({
+            ...formDataBodySerializer,
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/items/upload',
+            ...options,
+            headers: {
+                'Content-Type': null,
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Get Closet Summary
+     *
+     * API Lấy báo cáo tổng quan tủ đồ (Số lượng theo từng danh mục & tỷ lệ màu sắc)
+     */
+    public static getClosetSummaryApiV1ClosetSummaryGet<ThrowOnError extends boolean = false>(options?: Options<GetClosetSummaryApiV1ClosetSummaryGetData, ThrowOnError>): RequestResult<GetClosetSummaryApiV1ClosetSummaryGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<GetClosetSummaryApiV1ClosetSummaryGetResponses, unknown, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/summary',
+            ...options
+        });
+    }
+    
+    /**
+     * Get Item Pairings
+     *
+     * API Trả về danh sách các món đồ phối hợp ăn ý nhất với 1 item cụ thể dựa trên Color Theory
+     */
+    public static getItemPairingsApiV1ClosetItemsItemIdPairingsGet<ThrowOnError extends boolean = false>(options: Options<GetItemPairingsApiV1ClosetItemsItemIdPairingsGetData, ThrowOnError>): RequestResult<GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponses, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetErrors, ThrowOnError> {
+        return (options.client ?? client).get<GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponses, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/closet/items/{item_id}/pairings',
+            ...options
+        });
+    }
 }
 
 export class AiStylist {
+    /**
+     * Test Ai Connection
+     *
+     * API Kiểm tra trạng thái kết nối tới Gemini / OpenAI LLM.
+     * Trả về thông tin mô hình, API key mask, và thử nghiệm phản hồi trực tiếp.
+     */
+    public static testAiConnectionApiV1AiTestConnectionGet<ThrowOnError extends boolean = false>(options?: Options<TestAiConnectionApiV1AiTestConnectionGetData, ThrowOnError>): RequestResult<TestAiConnectionApiV1AiTestConnectionGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<TestAiConnectionApiV1AiTestConnectionGetResponses, unknown, ThrowOnError>({
+            responseType: 'json',
+            url: '/api/v1/ai/test-connection',
+            ...options
+        });
+    }
+    
     /**
      * Get Style Suggestions
      *
@@ -183,6 +437,24 @@ export class AiStylist {
     }
     
     /**
+     * Get Outfit By Event
+     *
+     * API Gợi ý Outfit theo sự kiện (AI): Chọn dịp (work, date, party, gym, casual), AI sẽ lọc tủ đồ và phối ngay một set đồ chuẩn cho dịp đó.
+     */
+    public static getOutfitByEventApiV1AiOutfitByEventPost<ThrowOnError extends boolean = false>(options: Options<GetOutfitByEventApiV1AiOutfitByEventPostData, ThrowOnError>): RequestResult<GetOutfitByEventApiV1AiOutfitByEventPostResponses, GetOutfitByEventApiV1AiOutfitByEventPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<GetOutfitByEventApiV1AiOutfitByEventPostResponses, GetOutfitByEventApiV1AiOutfitByEventPostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/ai/outfit-by-event',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
      * Chat And Modify Outfit
      *
      * API Yêu cầu hoặc sửa style/outfit bằng text giống phiên chat (AI).
@@ -193,6 +465,52 @@ export class AiStylist {
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/api/v1/ai/chat',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Clear Chat History
+     *
+     * API Xóa toàn bộ lịch sử trò chuyện với AI Stylist
+     */
+    public static clearChatHistoryApiV1AiChatHistoryDelete<ThrowOnError extends boolean = false>(options?: Options<ClearChatHistoryApiV1AiChatHistoryDeleteData, ThrowOnError>): RequestResult<ClearChatHistoryApiV1AiChatHistoryDeleteResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).delete<ClearChatHistoryApiV1AiChatHistoryDeleteResponses, unknown, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/ai/chat/history',
+            ...options
+        });
+    }
+    
+    /**
+     * Get Chat History
+     *
+     * API Lấy lịch sử hội thoại trò chuyện với AI Stylist
+     */
+    public static getChatHistoryApiV1AiChatHistoryGet<ThrowOnError extends boolean = false>(options?: Options<GetChatHistoryApiV1AiChatHistoryGetData, ThrowOnError>): RequestResult<GetChatHistoryApiV1AiChatHistoryGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<GetChatHistoryApiV1AiChatHistoryGetResponses, unknown, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/ai/chat/history',
+            ...options
+        });
+    }
+    
+    /**
+     * Submit Chat Feedback
+     *
+     * API Người dùng đánh giá phản hồi của AI Stylist (like/dislike & comment)
+     */
+    public static submitChatFeedbackApiV1AiChatFeedbackPost<ThrowOnError extends boolean = false>(options: Options<SubmitChatFeedbackApiV1AiChatFeedbackPostData, ThrowOnError>): RequestResult<SubmitChatFeedbackApiV1AiChatFeedbackPostResponses, SubmitChatFeedbackApiV1AiChatFeedbackPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<SubmitChatFeedbackApiV1AiChatFeedbackPostResponses, SubmitChatFeedbackApiV1AiChatFeedbackPostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/ai/chat/feedback',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
@@ -306,6 +624,85 @@ export class Dashboard__Recommendation {
             }
         });
     }
+    
+    /**
+     * Get Calendar By Range
+     *
+     * API Truy vấn lịch mặc đồ theo khoảng thời gian tùy chọn (start_date, end_date dạng YYYY-MM-DD).
+     * Nếu không truyền, mặc định lấy 30 ngày gần nhất.
+     */
+    public static getCalendarByRangeApiV1DashboardCalendarGet<ThrowOnError extends boolean = false>(options?: Options<GetCalendarByRangeApiV1DashboardCalendarGetData, ThrowOnError>): RequestResult<GetCalendarByRangeApiV1DashboardCalendarGetResponses, GetCalendarByRangeApiV1DashboardCalendarGetErrors, ThrowOnError> {
+        return (options?.client ?? client).get<GetCalendarByRangeApiV1DashboardCalendarGetResponses, GetCalendarByRangeApiV1DashboardCalendarGetErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/dashboard/calendar',
+            ...options
+        });
+    }
+    
+    /**
+     * Delete Calendar History
+     *
+     * API Xóa bản ghi lịch sử mặc đồ (Hủy wear today)
+     */
+    public static deleteCalendarHistoryApiV1DashboardCalendarHistoryIdDelete<ThrowOnError extends boolean = false>(options: Options<DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData, ThrowOnError>): RequestResult<DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteResponses, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteErrors, ThrowOnError> {
+        return (options.client ?? client).delete<DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteResponses, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/dashboard/calendar/{history_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Swap Outfit Item
+     *
+     * API Lưu lựa chọn thay thế món đồ vào bộ Outfit gợi ý hoặc cá nhân
+     */
+    public static swapOutfitItemApiV1DashboardOutfitOutfitIdSwapPost<ThrowOnError extends boolean = false>(options: Options<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData, ThrowOnError>): RequestResult<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponses, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostErrors, ThrowOnError> {
+        return (options.client ?? client).post<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponses, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/dashboard/outfit/{outfit_id}/swap',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Schedule Calendar Event
+     *
+     * API Đặt trước Lịch mặc đồ cho một ngày trong tương lai
+     */
+    public static scheduleCalendarEventApiV1DashboardCalendarSchedulePost<ThrowOnError extends boolean = false>(options: Options<ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData, ThrowOnError>): RequestResult<ScheduleCalendarEventApiV1DashboardCalendarSchedulePostResponses, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostErrors, ThrowOnError> {
+        return (options.client ?? client).post<ScheduleCalendarEventApiV1DashboardCalendarSchedulePostResponses, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/dashboard/calendar/schedule',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Get Upcoming Calendar Events
+     *
+     * API Lấy danh sách các sự kiện sắp tới để AI Stylist chủ động chuẩn bị outfit gợi ý
+     */
+    public static getUpcomingCalendarEventsApiV1DashboardCalendarEventsGet<ThrowOnError extends boolean = false>(options?: Options<GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetData, ThrowOnError>): RequestResult<GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponses, unknown, ThrowOnError> {
+        return (options?.client ?? client).get<GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponses, unknown, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/dashboard/calendar/events',
+            ...options
+        });
+    }
 }
 
 export class Explore__Trends {
@@ -333,6 +730,20 @@ export class Explore__Trends {
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/api/v1/explore/color-theory',
+            ...options
+        });
+    }
+    
+    /**
+     * Get Trend Article Detail
+     *
+     * API Lấy thông tin chi tiết của một bài viết xu hướng thời trang
+     */
+    public static getTrendArticleDetailApiV1ExploreTrendsArticleIdGet<ThrowOnError extends boolean = false>(options: Options<GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetData, ThrowOnError>): RequestResult<GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponses, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetErrors, ThrowOnError> {
+        return (options.client ?? client).get<GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponses, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/explore/trends/{article_id}',
             ...options
         });
     }

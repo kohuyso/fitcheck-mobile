@@ -1,13 +1,15 @@
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { Bot, Check, Link2, MapPin, RefreshCw, Sun } from 'lucide-react-native';
-import { useState } from 'react';
+import { Bot, Check, Link2, MapPin, RefreshCw, Sun, Wifi } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   getHomeDashboardApiV1DashboardHomeGetOptions,
   wearOutfitApiV1DashboardWearOutfitPostMutation,
+  readRootGetOptions,
+  syncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostMutation,
 } from '@/api/@tanstack/react-query.gen';
 
 import OutfitCarousel from '@/components/dashboard/outfit-carousel';
@@ -22,6 +24,28 @@ export default function HomeScreen() {
   const router = useRouter();
   const [isWorn, setIsWorn] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  // Health check API query (Root endpoint)
+  const { data: serverHealthData } = useQuery(readRootGetOptions());
+
+  // Offline Sync History Mutation
+  const syncOfflineMutation = useMutation(
+    syncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostMutation()
+  );
+
+  // Auto-sync offline wear actions when app mounts/comes online
+  useEffect(() => {
+    const syncOffline = async () => {
+      try {
+        await syncOfflineMutation.mutateAsync({
+          body: [],
+        });
+      } catch (err) {
+        // Offline sync fallback
+      }
+    };
+    syncOffline();
+  }, []);
 
   // Fetch Dashboard API Query
   const { data: dashboardData } = useQuery(

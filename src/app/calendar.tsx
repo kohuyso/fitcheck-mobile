@@ -1,26 +1,58 @@
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { Pressable, ScrollView, Text, View, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { Cloud, CloudSun, Lightbulb, Sun } from 'lucide-react-native';
-import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
-
+import { Cloud, CloudSun, Lightbulb, Sun, Calendar as CalendarIcon, Plus, Trash2 } from 'lucide-react-native';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   getCalendarInsightsApiV1DashboardCalendarInsightsGetOptions,
   getWardrobeStyleInsightsApiV1DashboardInsightsGetOptions,
   getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetOptions,
+  getCalendarByRangeApiV1DashboardCalendarGetOptions,
+  deleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteMutation,
+  getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetQueryKey,
+  scheduleCalendarEventApiV1DashboardCalendarSchedulePostMutation,
+  getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetOptions,
+  getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetQueryKey,
 } from '@/api/@tanstack/react-query.gen';
 
 export default function CalendarScreen() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [selectedDate, setSelectedDate] = useState(new Date().getDate());
 
   // Fetch Calendar Strip API Query
   const { data: calendarData } = useQuery(
     getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetOptions()
   );
+
+  // Fetch Upcoming Events API Query
+  const { data: upcomingEventsData } = useQuery(
+    getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetOptions()
+  );
+
+  // Schedule Event Mutation
+  const scheduleEventMutation = useMutation({
+    ...scheduleCalendarEventApiV1DashboardCalendarSchedulePostMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetQueryKey() });
+    },
+  });
+
+  // Fetch Calendar By Range Query (30 Days)
+  const { data: calendarRangeData } = useQuery(
+    getCalendarByRangeApiV1DashboardCalendarGetOptions()
+  );
+
+  // Delete Calendar History Mutation
+  const deleteCalendarHistoryMutation = useMutation({
+    ...deleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetQueryKey() });
+    },
+  });
 
   // Fetch Wardrobe Insights Query
   const { data: wardrobeInsights } = useQuery(

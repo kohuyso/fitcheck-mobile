@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -18,16 +18,20 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Sparkles, Check, Image as ImageIcon, Send } from 'lucide-react-native';
-import { getSwapAlternativesApiV1DashboardSwapAlternativesGetOptions } from '@/api/@tanstack/react-query.gen';
+import {
+  getSwapAlternativesApiV1DashboardSwapAlternativesGetOptions,
+  swapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostMutation,
+} from '@/api/@tanstack/react-query.gen';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface SwapItemSheetProps {
   isOpen: boolean;
   onClose: () => void;
+  outfitId?: number;
 }
 
-export default function SwapItemSheet({ isOpen, onClose }: SwapItemSheetProps) {
+export default function SwapItemSheet({ isOpen, onClose, outfitId = 1 }: SwapItemSheetProps) {
   const [selectedAltId, setSelectedAltId] = useState<string | null>(null);
 
   // Fetch Swap Alternatives from API
@@ -35,6 +39,11 @@ export default function SwapItemSheet({ isOpen, onClose }: SwapItemSheetProps) {
     getSwapAlternativesApiV1DashboardSwapAlternativesGetOptions({
       query: { category: 'footwear' },
     })
+  );
+
+  // Swap Outfit Item Mutation
+  const swapItemMutation = useMutation(
+    swapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostMutation()
   );
 
   // Animation values
@@ -176,10 +185,25 @@ export default function SwapItemSheet({ isOpen, onClose }: SwapItemSheetProps) {
           </View>
 
           <Pressable
-            onPress={onClose}
+            onPress={async () => {
+              if (selectedAltId) {
+                try {
+                  await swapItemMutation.mutateAsync({
+                    path: { outfit_id: outfitId },
+                    body: { new_item_id: Number(selectedAltId) } as any,
+                  });
+                } catch (err) {
+                  console.log('Swap item error:', err);
+                }
+              }
+              onClose();
+            }}
+            disabled={swapItemMutation.isPending}
             className="w-full bg-on-background active:scale-[0.98] py-4 rounded-xl items-center shadow-md mb-2"
           >
-            <Text className="font-sans font-bold text-title-lg text-white">Confirm Selection</Text>
+            <Text className="font-sans font-bold text-title-lg text-white">
+              {swapItemMutation.isPending ? 'Swapping...' : 'Confirm Selection'}
+            </Text>
           </Pressable>
 
           <Pressable onPress={onClose} className="w-full py-2 items-center">

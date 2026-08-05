@@ -1,6 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { FlatList, Pressable, Text, TextInput, View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Check,
   CheckCircle,
@@ -11,18 +14,25 @@ import {
   Wand2,
   X,
 } from 'lucide-react-native';
-import { useState } from 'react';
-import { FlatList, Pressable, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { getMyWardrobeApiV1ClosetItemsGetOptions } from '@/api/@tanstack/react-query.gen';
+import {
+  getMyWardrobeApiV1ClosetItemsGetOptions,
+  getMyOutfitsApiV1ClosetOutfitsGetOptions,
+  createCustomOutfitApiV1ClosetOutfitsPostMutation,
+  deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteMutation,
+  updateCustomOutfitApiV1ClosetOutfitsOutfitIdPutMutation,
+  getClosetSummaryApiV1ClosetSummaryGetOptions,
+  getMyOutfitsApiV1ClosetOutfitsGetQueryKey,
+} from '@/api/@tanstack/react-query.gen';
 
 const CATEGORIES = ['All', 'Shirts', 'Pants', 'Shoes', 'Jackets', 'Accessories'];
 
 export default function ClosetScreen() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<'items' | 'outfits'>('items');
 
   // Selection mode for manual outfit builder
   const [isSelectionMode, setIsSelectionMode] = useState(false);
@@ -30,6 +40,36 @@ export default function ClosetScreen() {
 
   // Fetch Wardrobe items using API query
   const { data: wardrobeData } = useQuery(getMyWardrobeApiV1ClosetItemsGetOptions());
+
+  // Fetch Closet Summary API Query
+  const { data: closetSummaryData } = useQuery(getClosetSummaryApiV1ClosetSummaryGetOptions());
+
+  // Fetch My Outfits using API query
+  const { data: myOutfitsData } = useQuery(getMyOutfitsApiV1ClosetOutfitsGetOptions());
+
+  // Mutation to create custom outfit
+  const createOutfitMutation = useMutation({
+    ...createCustomOutfitApiV1ClosetOutfitsPostMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getMyOutfitsApiV1ClosetOutfitsGetQueryKey() });
+    },
+  });
+
+  // Mutation to delete custom outfit
+  const deleteOutfitMutation = useMutation({
+    ...deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getMyOutfitsApiV1ClosetOutfitsGetQueryKey() });
+    },
+  });
+
+  // Mutation to update custom outfit
+  const updateOutfitMutation = useMutation({
+    ...updateCustomOutfitApiV1ClosetOutfitsOutfitIdPutMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getMyOutfitsApiV1ClosetOutfitsGetQueryKey() });
+    },
+  });
 
   const itemsList = (wardrobeData || []).map((item, index) => {
     return {
@@ -61,7 +101,7 @@ export default function ClosetScreen() {
     }
   };
 
-  const handleConfirmOutfit = () => {
+  const handleConfirmOutfit = async () => {
     const selectedItems = itemsList.filter((item) => selectedItemIds.includes(item.id));
     if (selectedItems.length === 0) return;
 
@@ -70,6 +110,22 @@ export default function ClosetScreen() {
       selectedItems.length === 1
         ? `${firstItem.name} Look`
         : `${firstItem.name} & ${selectedItems[1].name}`;
+
+    const numericItemIds = selectedItemIds.map((id) => Number(id)).filter((id) => !isNaN(id));
+
+    try {
+      if (numericItemIds.length > 0) {
+        await createOutfitMutation.mutateAsync({
+          body: {
+            item_ids: numericItemIds,
+            style_type: outfitTitle,
+            tags: ['Custom Mix'],
+          } as any,
+        });
+      }
+    } catch (err) {
+      console.log('Create custom outfit API error:', err);
+    }
 
     const categoriesTag = Array.from(new Set(selectedItems.map((i) => i.category))).join(', ');
     const itemNamesList = selectedItems.map((i) => i.name).join(', ');

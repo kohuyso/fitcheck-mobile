@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ChevronLeft,
   Sparkles,
@@ -22,9 +23,20 @@ import {
   PlusCircle,
   Camera,
   Send,
+  Trash2,
+  ThumbsUp,
+  ThumbsDown,
 } from 'lucide-react-native';
 
-import { chatAndModifyOutfitApiV1AiChatPostMutation } from '@/api/@tanstack/react-query.gen';
+import {
+  chatAndModifyOutfitApiV1AiChatPostMutation,
+  getChatHistoryApiV1AiChatHistoryGetOptions,
+  clearChatHistoryApiV1AiChatHistoryDeleteMutation,
+  toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostMutation,
+  getChatHistoryApiV1AiChatHistoryGetQueryKey,
+  testAiConnectionApiV1AiTestConnectionGetOptions,
+  submitChatFeedbackApiV1AiChatFeedbackPostMutation,
+} from '@/api/@tanstack/react-query.gen';
 import { OutfitRecommendation } from '@/api/types.gen';
 
 interface MessageItem {
@@ -38,18 +50,104 @@ interface MessageItem {
 export default function ChatScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const queryClient = useQueryClient();
   const scrollViewRef = useRef<ScrollView>(null);
   const [inputText, setInputText] = useState('');
-  const [messages, setMessages] = useState<MessageItem[]>([
-    {
-      id: 'init-1',
-      role: 'assistant',
-      text: 'Good morning! Looking for something specific today, or should I suggest an outfit based on your schedule?',
-      time: '10:00 AM',
+  const [messages, setMessages] = useState<MessageItem[]>([]);
+  const [bookmarkedOutfitIds, setBookmarkedOutfitIds] = useState<number[]>([]);
+  const [likedMessageIds, setLikedMessageIds] = useState<string[]>([]);
+
+  // Test AI Connection Query
+  const { data: aiConnectionData } = useQuery(testAiConnectionApiV1AiTestConnectionGetOptions());
+
+  // Chat Feedback Mutation
+  const feedbackMutation = useMutation(submitChatFeedbackApiV1AiChatFeedbackPostMutation());
+
+  // Fetch Chat History API Query
+  const { data: historyData, isLoading: isHistoryLoading } = useQuery(
+    getChatHistoryApiV1AiChatHistoryGetOptions()
+  );
+
+  // Clear Chat History Mutation
+  const clearHistoryMutation = useMutation({
+    ...clearChatHistoryApiV1AiChatHistoryDeleteMutation(),
+    onSuccess: () => {
+      setMessages([
+        {
+          id: 'init-1',
+          role: 'assistant',
+          text: 'Lịch sử trò chuyện đã được xóa. Bạn cần tôi gợi ý trang phục nào hôm nay?',
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+      queryClient.invalidateQueries({ queryKey: getChatHistoryApiV1AiChatHistoryGetQueryKey() });
     },
-  ]);
+  });
+
+  // Toggle Bookmark Outfit Mutation
+  const toggleBookmarkMutation = useMutation(
+    toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostMutation()
+  );
+
+  // Sync server history with UI messages state
+  useEffect(() => {
+    if (historyData && historyData.length > 0) {
+      const serverMessages: MessageItem[] = historyData.map((msg) => {
+        const dateObj = msg.created_at ? new Date(msg.created_at) : new Date();
+        const timeStr = isNaN(dateObj.getTime())
+          ? ''
+          : dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        return {
+          id: String(msg.id),
+          role: msg.role === 'user' ? 'user' : 'assistant',
+          text: msg.content,
+          time: timeStr,
+        };
+      });
+      setMessages(serverMessages);
+    } else if (!isHistoryLoading && messages.length === 0) {
+      setMessages([
+        {
+          id: 'init-1',
+          role: 'assistant',
+          text: 'Chào bạn! Bạn đang tìm kiếm trang phục nào cho hôm nay, hay muốn tôi gợi ý theo lịch trình?',
+          time: '10:00 AM',
+        },
+      ]);
+    }
+  }, [historyData, isHistoryLoading]);
 
   const chatMutation = useMutation(chatAndModifyOutfitApiV1AiChatPostMutation());
+
+  const handleClearHistory = () => {
+    Alert.alert(
+      'Xóa lịch sử chat',
+      'Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện với AI Stylist?',
+      [
+        { text: 'Hủy', style: 'cancel' },
+        {
+          text: 'Xóa',
+          style: 'destructive',
+          onPress: () => clearHistoryMutation.mutate({}),
+        },
+      ]
+    );
+  };
+
+  const handleToggleBookmark = async (outfitId?: number) => {
+    if (!outfitId) return;
+    try {
+      await toggleBookmarkMutation.mutateAsync({
+        path: { outfit_id: outfitId },
+      });
+      setBookmarkedOutfitIds((prev) =>
+        prev.includes(outfitId) ? prev.filter((id) => id !== outfitId) : [...prev, outfitId]
+      );
+    } catch (err) {
+      console.log('Bookmark outfit error:', err);
+    }
+  };
 
   const handleSend = async () => {
     if (!inputText.trim() || chatMutation.isPending) return;
@@ -79,7 +177,7 @@ export default function ChatScreen() {
         },
       });
 
-      const replyContent = res.reply || res.reply_text || 'I have analyzed your closet and styled a look for you.';
+      const replyContent = res.reply || res.reply_text || 'Tôi đã phân tích tủ đồ của bạn và tạo một gợi ý phù hợp.';
       const suggestedOutfit = res.suggested_outfit || (res.recommended_outfit as any);
 
       const aiMsg: MessageItem = {
@@ -91,6 +189,7 @@ export default function ChatScreen() {
       };
 
       setMessages((prev) => [...prev, aiMsg]);
+      queryClient.invalidateQueries({ queryKey: getChatHistoryApiV1AiChatHistoryGetQueryKey() });
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
@@ -118,12 +217,18 @@ export default function ChatScreen() {
             Style Assistant
           </Text>
         </View>
-        <View className="w-8 h-8 rounded-full bg-primary-container items-center justify-center overflow-hidden border border-primary/10">
-          <Image
-            source=""
-            className="w-full h-full"
-            contentFit="cover"
-          />
+
+        <View className="flex-row items-center gap-3">
+          <Pressable
+            onPress={handleClearHistory}
+            disabled={clearHistoryMutation.isPending}
+            className="p-2 rounded-full bg-surface-container-high active:scale-90"
+          >
+            <Trash2 size={18} className="text-on-surface-variant" />
+          </Pressable>
+          <View className="w-8 h-8 rounded-full bg-primary-container items-center justify-center overflow-hidden border border-primary/10">
+            <Image source="" className="w-full h-full" contentFit="cover" />
+          </View>
         </View>
       </View>
 
@@ -134,6 +239,15 @@ export default function ChatScreen() {
         contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 24, gap: 20 }}
         showsVerticalScrollIndicator={false}
       >
+        {isHistoryLoading && (
+          <View className="py-4 items-center justify-center">
+            <ActivityIndicator size="small" color="#005c55" />
+            <Text className="font-sans text-label-md text-on-surface-variant mt-2">
+              Đang tải lịch sử trò chuyện...
+            </Text>
+          </View>
+        )}
+
         {messages.map((item) => {
           if (item.role === 'user') {
             return (
@@ -143,12 +257,17 @@ export default function ChatScreen() {
                     {item.text}
                   </Text>
                 </View>
-                <Text className="font-sans text-label-sm text-on-surface-variant mr-1">
-                  {item.time}
-                </Text>
+                {item.time ? (
+                  <Text className="font-sans text-label-sm text-on-surface-variant mr-1">
+                    {item.time}
+                  </Text>
+                ) : null}
               </View>
             );
           }
+
+          const outfitId = item.suggestedOutfit?.outfit_id;
+          const isBookmarked = outfitId ? bookmarkedOutfitIds.includes(outfitId) : false;
 
           return (
             <View key={item.id} className="items-start gap-3 max-w-[95%]">
@@ -165,6 +284,38 @@ export default function ChatScreen() {
                 <Text className="font-sans text-body-md text-on-surface leading-relaxed">
                   {item.text}
                 </Text>
+                <View className="flex-row items-center gap-3 mt-2 pt-2 border-t border-outline-variant/10">
+                  <Pressable
+                    onPress={() => {
+                      setLikedMessageIds((prev) => [...prev, item.id]);
+                      feedbackMutation.mutate({
+                        body: {
+                          message_id: Number(item.id.replace(/\D/g, '')) || 1,
+                          rating: 'like',
+                        } as any,
+                      });
+                    }}
+                    className="p-1"
+                  >
+                    <ThumbsUp
+                      size={14}
+                      className={likedMessageIds.includes(item.id) ? 'text-primary fill-primary' : 'text-on-surface-variant/60'}
+                    />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      feedbackMutation.mutate({
+                        body: {
+                          message_id: Number(item.id.replace(/\D/g, '')) || 1,
+                          rating: 'dislike',
+                        } as any,
+                      });
+                    }}
+                    className="p-1"
+                  >
+                    <ThumbsDown size={14} className="text-on-surface-variant/60" />
+                  </Pressable>
+                </View>
               </View>
 
               {/* Render Outfit Card if AI returns a suggested outfit */}
@@ -193,8 +344,14 @@ export default function ChatScreen() {
                           Smart Style Recommendation
                         </Text>
                       </View>
-                      <Pressable className="bg-surface-container p-2 rounded-full active:scale-90">
-                        <Bookmark size={20} className="text-primary" />
+                      <Pressable
+                        onPress={() => handleToggleBookmark(outfitId)}
+                        className="bg-surface-container p-2 rounded-full active:scale-90"
+                      >
+                        <Bookmark
+                          size={20}
+                          className={isBookmarked ? 'text-primary fill-primary' : 'text-primary'}
+                        />
                       </Pressable>
                     </View>
 
@@ -277,4 +434,5 @@ export default function ChatScreen() {
     </SafeAreaView>
   );
 }
+
 

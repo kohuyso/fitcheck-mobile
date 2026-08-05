@@ -24,6 +24,7 @@ import { X, Bolt, Sparkles, CheckCircle2, RefreshCw } from 'lucide-react-native'
 import {
   approveAndSaveItemApiV1ClosetSavePostMutation,
   getScanTaskStatusApiV1ClosetScanStatusTaskIdGetOptions,
+  scanClothingCameraApiV1ClosetScanPostMutation,
 } from '@/api/@tanstack/react-query.gen';
 
 export default function ScanScreen() {
@@ -34,6 +35,9 @@ export default function ScanScreen() {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [scanStep, setScanStep] = useState<'scanning' | 'result'>('scanning');
   const [taskId, setTaskId] = useState<string | null>(null);
+
+  // Scan Camera Mutation to initiate Celery AI Worker task
+  const scanMutation = useMutation(scanClothingCameraApiV1ClosetScanPostMutation());
 
   // AI Scanner Status Query with 1s Polling
   const { data: scanTaskData } = useQuery({
@@ -107,7 +111,22 @@ export default function ScanScreen() {
       true
     );
 
-    // Simulate AI scanning and backend analysis (3 seconds)
+    // Initiate AI Scan camera task with API mutation
+    const initiateScan = async () => {
+      try {
+        const res = await scanMutation.mutateAsync({
+          body: {} as any,
+        });
+        if (res?.task_id) {
+          setTaskId(res.task_id);
+        }
+      } catch (err) {
+        console.log('Initiate camera scan error:', err);
+      }
+    };
+    initiateScan();
+
+    // AI scanning timer fallback (3 seconds)
     const scanTimer = setTimeout(() => {
       setScanStep('result');
     }, 3000);

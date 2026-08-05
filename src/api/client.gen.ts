@@ -2,7 +2,6 @@
 
 import { type Client, type ClientOptions, type Config, createClient, createConfig } from './client';
 import type { ClientOptions as ClientOptions2 } from './types.gen';
-import { getStoredToken } from './storage';
 
 /**
  * The `createClientConfig()` function will be called on client initialization
@@ -14,12 +13,4 @@ import { getStoredToken } from './storage';
  */
 export type CreateClientConfig<T extends ClientOptions = ClientOptions2> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T>;
 
-export const client: Client = createClient(createConfig<ClientOptions2>({ 
-  baseURL: process.env.EXPO_PUBLIC_API_URL || 'https://fitcheck-backend.onrender.com',
-  auth: async () => {
-    const token = await getStoredToken();
-    return token ?? undefined;
-  }
-}));
-
-
+export const client: Client = createClient(createConfig<ClientOptions2>({ baseURL: 'http://localhost:8000' }));

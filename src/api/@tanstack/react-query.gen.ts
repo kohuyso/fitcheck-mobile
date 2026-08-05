@@ -5,7 +5,7 @@ import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
 import { AiStylist, Authentication, Closet__AiScanner, Dashboard__Recommendation, Default, Explore__Trends, type Options } from '../sdk.gen';
-import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostError, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostError, ChatAndModifyOutfitApiV1AiChatPostResponse, GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponse, GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponse, GetFashionTrendsApiV1ExploreTrendsGetData, GetFashionTrendsApiV1ExploreTrendsGetResponse, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetError, GetHomeDashboardApiV1DashboardHomeGetResponse, GetItemDetailApiV1ClosetItemsItemIdGetData, GetItemDetailApiV1ClosetItemsItemIdGetError, GetItemDetailApiV1ClosetItemsItemIdGetResponse, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetError, GetMyWardrobeApiV1ClosetItemsGetResponse, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostError, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetError, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetError, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponse, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponse, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostError, LoginApiV1AuthLoginPostResponse, LogoutApiV1AuthLogoutPostData, ReadRootGetData, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostError, RegisterApiV1AuthRegisterPostResponse, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostError, ScanClothingCameraApiV1ClosetScanPostResponse, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostError, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostError } from '../types.gen';
+import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostError, ChangePasswordApiV1AuthChangePasswordPostData, ChangePasswordApiV1AuthChangePasswordPostError, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostError, ChatAndModifyOutfitApiV1AiChatPostResponse, ClearChatHistoryApiV1AiChatHistoryDeleteData, CreateCustomOutfitApiV1ClosetOutfitsPostData, CreateCustomOutfitApiV1ClosetOutfitsPostError, CreateCustomOutfitApiV1ClosetOutfitsPostResponse, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteError, DeleteClothingItemApiV1ClosetItemsItemIdDeleteData, DeleteClothingItemApiV1ClosetItemsItemIdDeleteError, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteError, GetCalendarByRangeApiV1DashboardCalendarGetData, GetCalendarByRangeApiV1DashboardCalendarGetError, GetCalendarByRangeApiV1DashboardCalendarGetResponse, GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponse, GetChatHistoryApiV1AiChatHistoryGetData, GetChatHistoryApiV1AiChatHistoryGetResponse, GetClosetSummaryApiV1ClosetSummaryGetData, GetClosetSummaryApiV1ClosetSummaryGetResponse, GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponse, GetFashionTrendsApiV1ExploreTrendsGetData, GetFashionTrendsApiV1ExploreTrendsGetResponse, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetError, GetHomeDashboardApiV1DashboardHomeGetResponse, GetItemDetailApiV1ClosetItemsItemIdGetData, GetItemDetailApiV1ClosetItemsItemIdGetError, GetItemDetailApiV1ClosetItemsItemIdGetResponse, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetData, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetError, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponse, GetMyOutfitsApiV1ClosetOutfitsGetData, GetMyOutfitsApiV1ClosetOutfitsGetError, GetMyOutfitsApiV1ClosetOutfitsGetResponse, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetError, GetMyWardrobeApiV1ClosetItemsGetResponse, GetOutfitByEventApiV1AiOutfitByEventPostData, GetOutfitByEventApiV1AiOutfitByEventPostError, GetOutfitByEventApiV1AiOutfitByEventPostResponse, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostError, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, GetProfileApiV1AuthProfileGetData, GetProfileApiV1AuthProfileGetResponse, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetError, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetError, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponse, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetData, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetError, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponse, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetData, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponse, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponse, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostError, LoginApiV1AuthLoginPostResponse, LogoutApiV1AuthLogoutPostData, ReadRootGetData, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostError, RegisterApiV1AuthRegisterPostResponse, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostError, ScanClothingCameraApiV1ClosetScanPostResponse, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostError, SubmitChatFeedbackApiV1AiChatFeedbackPostData, SubmitChatFeedbackApiV1AiChatFeedbackPostError, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostError, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponse, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostError, TestAiConnectionApiV1AiTestConnectionGetData, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostError, UpdateClothingItemApiV1ClosetItemsItemIdPutData, UpdateClothingItemApiV1ClosetItemsItemIdPutError, UpdateClothingItemApiV1ClosetItemsItemIdPutResponse, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutError, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponse, UpdateProfileApiV1AuthProfilePutData, UpdateProfileApiV1AuthProfilePutError, UpdateProfileApiV1AuthProfilePutResponse, UploadAvatarApiV1AuthProfileAvatarPostData, UploadAvatarApiV1AuthProfileAvatarPostError, UploadAvatarApiV1AuthProfileAvatarPostResponse, UploadClothingItemImageApiV1ClosetItemsUploadPostData, UploadClothingItemImageApiV1ClosetItemsUploadPostError, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostError } from '../types.gen';
 
 /**
  * Register
@@ -64,25 +64,6 @@ export const logoutApiV1AuthLogoutPostMutation = (options?: Partial<Options<Logo
     return mutationOptions;
 };
 
-/**
- * Scan Clothing Camera
- *
- * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Redis Queue cho Worker xử lý ngầm.
- */
-export const scanClothingCameraApiV1ClosetScanPostMutation = (options?: Partial<Options<ScanClothingCameraApiV1ClosetScanPostData>>): UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> => {
-    const mutationOptions: UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await Closet__AiScanner.scanClothingCameraApiV1ClosetScanPost({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
@@ -114,6 +95,102 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
         params.query = options.query;
     }
     return [params];
+};
+
+export const getProfileApiV1AuthProfileGetQueryKey = (options?: Options<GetProfileApiV1AuthProfileGetData>) => createQueryKey('getProfileApiV1AuthProfileGet', options);
+
+/**
+ * Get Profile
+ *
+ * API Lấy thông tin cá nhân của người dùng hiện tại
+ */
+export const getProfileApiV1AuthProfileGetOptions = (options?: Options<GetProfileApiV1AuthProfileGetData>) => queryOptions<GetProfileApiV1AuthProfileGetResponse, AxiosError<DefaultError>, GetProfileApiV1AuthProfileGetResponse, ReturnType<typeof getProfileApiV1AuthProfileGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Authentication.getProfileApiV1AuthProfileGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getProfileApiV1AuthProfileGetQueryKey(options)
+});
+
+/**
+ * Update Profile
+ *
+ * API Cập nhật thông tin cá nhân và gu thời trang (preferred_style)
+ */
+export const updateProfileApiV1AuthProfilePutMutation = (options?: Partial<Options<UpdateProfileApiV1AuthProfilePutData>>): UseMutationOptions<UpdateProfileApiV1AuthProfilePutResponse, AxiosError<UpdateProfileApiV1AuthProfilePutError>, Options<UpdateProfileApiV1AuthProfilePutData>> => {
+    const mutationOptions: UseMutationOptions<UpdateProfileApiV1AuthProfilePutResponse, AxiosError<UpdateProfileApiV1AuthProfilePutError>, Options<UpdateProfileApiV1AuthProfilePutData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Authentication.updateProfileApiV1AuthProfilePut({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Upload Avatar
+ *
+ * API Upload & Cập nhật ảnh đại diện (Avatar) cho Profile người dùng
+ */
+export const uploadAvatarApiV1AuthProfileAvatarPostMutation = (options?: Partial<Options<UploadAvatarApiV1AuthProfileAvatarPostData>>): UseMutationOptions<UploadAvatarApiV1AuthProfileAvatarPostResponse, AxiosError<UploadAvatarApiV1AuthProfileAvatarPostError>, Options<UploadAvatarApiV1AuthProfileAvatarPostData>> => {
+    const mutationOptions: UseMutationOptions<UploadAvatarApiV1AuthProfileAvatarPostResponse, AxiosError<UploadAvatarApiV1AuthProfileAvatarPostError>, Options<UploadAvatarApiV1AuthProfileAvatarPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Authentication.uploadAvatarApiV1AuthProfileAvatarPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Change Password
+ *
+ * API Thay đổi mật khẩu tài khoản người dùng
+ */
+export const changePasswordApiV1AuthChangePasswordPostMutation = (options?: Partial<Options<ChangePasswordApiV1AuthChangePasswordPostData>>): UseMutationOptions<unknown, AxiosError<ChangePasswordApiV1AuthChangePasswordPostError>, Options<ChangePasswordApiV1AuthChangePasswordPostData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<ChangePasswordApiV1AuthChangePasswordPostError>, Options<ChangePasswordApiV1AuthChangePasswordPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Authentication.changePasswordApiV1AuthChangePasswordPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Scan Clothing Camera
+ *
+ * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Queue / Thread ngầm xử lý.
+ */
+export const scanClothingCameraApiV1ClosetScanPostMutation = (options?: Partial<Options<ScanClothingCameraApiV1ClosetScanPostData>>): UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> => {
+    const mutationOptions: UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.scanClothingCameraApiV1ClosetScanPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
 };
 
 export const getScanTaskStatusApiV1ClosetScanStatusTaskIdGetQueryKey = (options: Options<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData>) => createQueryKey('getScanTaskStatusApiV1ClosetScanStatusTaskIdGet', options);
@@ -175,6 +252,25 @@ export const getMyWardrobeApiV1ClosetItemsGetOptions = (options?: Options<GetMyW
     queryKey: getMyWardrobeApiV1ClosetItemsGetQueryKey(options)
 });
 
+/**
+ * Delete Clothing Item
+ *
+ * API Xóa 1 món đồ khỏi tủ đồ
+ */
+export const deleteClothingItemApiV1ClosetItemsItemIdDeleteMutation = (options?: Partial<Options<DeleteClothingItemApiV1ClosetItemsItemIdDeleteData>>): UseMutationOptions<unknown, AxiosError<DeleteClothingItemApiV1ClosetItemsItemIdDeleteError>, Options<DeleteClothingItemApiV1ClosetItemsItemIdDeleteData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<DeleteClothingItemApiV1ClosetItemsItemIdDeleteError>, Options<DeleteClothingItemApiV1ClosetItemsItemIdDeleteData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.deleteClothingItemApiV1ClosetItemsItemIdDelete({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
 export const getItemDetailApiV1ClosetItemsItemIdGetQueryKey = (options: Options<GetItemDetailApiV1ClosetItemsItemIdGetData>) => createQueryKey('getItemDetailApiV1ClosetItemsItemIdGet', options);
 
 /**
@@ -193,6 +289,220 @@ export const getItemDetailApiV1ClosetItemsItemIdGetOptions = (options: Options<G
         return data;
     },
     queryKey: getItemDetailApiV1ClosetItemsItemIdGetQueryKey(options)
+});
+
+/**
+ * Update Clothing Item
+ *
+ * API Cập nhật thông tin món đồ (danh mục, màu sắc, phong cách, tên)
+ */
+export const updateClothingItemApiV1ClosetItemsItemIdPutMutation = (options?: Partial<Options<UpdateClothingItemApiV1ClosetItemsItemIdPutData>>): UseMutationOptions<UpdateClothingItemApiV1ClosetItemsItemIdPutResponse, AxiosError<UpdateClothingItemApiV1ClosetItemsItemIdPutError>, Options<UpdateClothingItemApiV1ClosetItemsItemIdPutData>> => {
+    const mutationOptions: UseMutationOptions<UpdateClothingItemApiV1ClosetItemsItemIdPutResponse, AxiosError<UpdateClothingItemApiV1ClosetItemsItemIdPutError>, Options<UpdateClothingItemApiV1ClosetItemsItemIdPutData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.updateClothingItemApiV1ClosetItemsItemIdPut({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Toggle Favorite Item
+ *
+ * API Bật/Tắt trạng thái yêu thích món đồ
+ */
+export const toggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostMutation = (options?: Partial<Options<ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData>>): UseMutationOptions<unknown, AxiosError<ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostError>, Options<ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostError>, Options<ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.toggleFavoriteItemApiV1ClosetItemsItemIdFavoritePost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const getMyOutfitsApiV1ClosetOutfitsGetQueryKey = (options?: Options<GetMyOutfitsApiV1ClosetOutfitsGetData>) => createQueryKey('getMyOutfitsApiV1ClosetOutfitsGet', options);
+
+/**
+ * Get My Outfits
+ *
+ * API Lấy danh sách toàn bộ các outfit combos của người dùng
+ */
+export const getMyOutfitsApiV1ClosetOutfitsGetOptions = (options?: Options<GetMyOutfitsApiV1ClosetOutfitsGetData>) => queryOptions<GetMyOutfitsApiV1ClosetOutfitsGetResponse, AxiosError<GetMyOutfitsApiV1ClosetOutfitsGetError>, GetMyOutfitsApiV1ClosetOutfitsGetResponse, ReturnType<typeof getMyOutfitsApiV1ClosetOutfitsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Closet__AiScanner.getMyOutfitsApiV1ClosetOutfitsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getMyOutfitsApiV1ClosetOutfitsGetQueryKey(options)
+});
+
+/**
+ * Create Custom Outfit
+ *
+ * API Tạo và lưu bộ phối đồ ghép thủ công từ các item IDs
+ */
+export const createCustomOutfitApiV1ClosetOutfitsPostMutation = (options?: Partial<Options<CreateCustomOutfitApiV1ClosetOutfitsPostData>>): UseMutationOptions<CreateCustomOutfitApiV1ClosetOutfitsPostResponse, AxiosError<CreateCustomOutfitApiV1ClosetOutfitsPostError>, Options<CreateCustomOutfitApiV1ClosetOutfitsPostData>> => {
+    const mutationOptions: UseMutationOptions<CreateCustomOutfitApiV1ClosetOutfitsPostResponse, AxiosError<CreateCustomOutfitApiV1ClosetOutfitsPostError>, Options<CreateCustomOutfitApiV1ClosetOutfitsPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.createCustomOutfitApiV1ClosetOutfitsPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Toggle Bookmark Outfit
+ *
+ * API Bookmark/Lưu bộ outfit gợi ý vào danh sách yêu thích
+ */
+export const toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostMutation = (options?: Partial<Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>>): UseMutationOptions<unknown, AxiosError<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError>, Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError>, Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Delete Custom Outfit
+ *
+ * API Xóa một set phối đồ (Outfit) khỏi danh sách cá nhân
+ */
+export const deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteMutation = (options?: Partial<Options<DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData>>): UseMutationOptions<unknown, AxiosError<DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteError>, Options<DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteError>, Options<DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDelete({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Update Custom Outfit
+ *
+ * API Cập nhật danh sách món đồ hoặc phong cách của một Outfit đã tạo
+ */
+export const updateCustomOutfitApiV1ClosetOutfitsOutfitIdPutMutation = (options?: Partial<Options<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData>>): UseMutationOptions<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponse, AxiosError<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutError>, Options<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData>> => {
+    const mutationOptions: UseMutationOptions<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponse, AxiosError<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutError>, Options<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.updateCustomOutfitApiV1ClosetOutfitsOutfitIdPut({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Upload Clothing Item Image
+ *
+ * API Upload trực tiếp file ảnh chụp món đồ từ thiết bị di động
+ */
+export const uploadClothingItemImageApiV1ClosetItemsUploadPostMutation = (options?: Partial<Options<UploadClothingItemImageApiV1ClosetItemsUploadPostData>>): UseMutationOptions<unknown, AxiosError<UploadClothingItemImageApiV1ClosetItemsUploadPostError>, Options<UploadClothingItemImageApiV1ClosetItemsUploadPostData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<UploadClothingItemImageApiV1ClosetItemsUploadPostError>, Options<UploadClothingItemImageApiV1ClosetItemsUploadPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.uploadClothingItemImageApiV1ClosetItemsUploadPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const getClosetSummaryApiV1ClosetSummaryGetQueryKey = (options?: Options<GetClosetSummaryApiV1ClosetSummaryGetData>) => createQueryKey('getClosetSummaryApiV1ClosetSummaryGet', options);
+
+/**
+ * Get Closet Summary
+ *
+ * API Lấy báo cáo tổng quan tủ đồ (Số lượng theo từng danh mục & tỷ lệ màu sắc)
+ */
+export const getClosetSummaryApiV1ClosetSummaryGetOptions = (options?: Options<GetClosetSummaryApiV1ClosetSummaryGetData>) => queryOptions<GetClosetSummaryApiV1ClosetSummaryGetResponse, AxiosError<DefaultError>, GetClosetSummaryApiV1ClosetSummaryGetResponse, ReturnType<typeof getClosetSummaryApiV1ClosetSummaryGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Closet__AiScanner.getClosetSummaryApiV1ClosetSummaryGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getClosetSummaryApiV1ClosetSummaryGetQueryKey(options)
+});
+
+export const getItemPairingsApiV1ClosetItemsItemIdPairingsGetQueryKey = (options: Options<GetItemPairingsApiV1ClosetItemsItemIdPairingsGetData>) => createQueryKey('getItemPairingsApiV1ClosetItemsItemIdPairingsGet', options);
+
+/**
+ * Get Item Pairings
+ *
+ * API Trả về danh sách các món đồ phối hợp ăn ý nhất với 1 item cụ thể dựa trên Color Theory
+ */
+export const getItemPairingsApiV1ClosetItemsItemIdPairingsGetOptions = (options: Options<GetItemPairingsApiV1ClosetItemsItemIdPairingsGetData>) => queryOptions<GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponse, AxiosError<GetItemPairingsApiV1ClosetItemsItemIdPairingsGetError>, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponse, ReturnType<typeof getItemPairingsApiV1ClosetItemsItemIdPairingsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Closet__AiScanner.getItemPairingsApiV1ClosetItemsItemIdPairingsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getItemPairingsApiV1ClosetItemsItemIdPairingsGetQueryKey(options)
+});
+
+export const testAiConnectionApiV1AiTestConnectionGetQueryKey = (options?: Options<TestAiConnectionApiV1AiTestConnectionGetData>) => createQueryKey('testAiConnectionApiV1AiTestConnectionGet', options);
+
+/**
+ * Test Ai Connection
+ *
+ * API Kiểm tra trạng thái kết nối tới Gemini / OpenAI LLM.
+ * Trả về thông tin mô hình, API key mask, và thử nghiệm phản hồi trực tiếp.
+ */
+export const testAiConnectionApiV1AiTestConnectionGetOptions = (options?: Options<TestAiConnectionApiV1AiTestConnectionGetData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof testAiConnectionApiV1AiTestConnectionGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await AiStylist.testAiConnectionApiV1AiTestConnectionGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: testAiConnectionApiV1AiTestConnectionGetQueryKey(options)
 });
 
 export const getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey = (options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData>) => createQueryKey('getStyleSuggestionsApiV1AiStyleSuggestionsGet', options);
@@ -235,6 +545,25 @@ export const getOutfitFromItemsApiV1AiOutfitFromItemsPostMutation = (options?: P
 };
 
 /**
+ * Get Outfit By Event
+ *
+ * API Gợi ý Outfit theo sự kiện (AI): Chọn dịp (work, date, party, gym, casual), AI sẽ lọc tủ đồ và phối ngay một set đồ chuẩn cho dịp đó.
+ */
+export const getOutfitByEventApiV1AiOutfitByEventPostMutation = (options?: Partial<Options<GetOutfitByEventApiV1AiOutfitByEventPostData>>): UseMutationOptions<GetOutfitByEventApiV1AiOutfitByEventPostResponse, AxiosError<GetOutfitByEventApiV1AiOutfitByEventPostError>, Options<GetOutfitByEventApiV1AiOutfitByEventPostData>> => {
+    const mutationOptions: UseMutationOptions<GetOutfitByEventApiV1AiOutfitByEventPostResponse, AxiosError<GetOutfitByEventApiV1AiOutfitByEventPostError>, Options<GetOutfitByEventApiV1AiOutfitByEventPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await AiStylist.getOutfitByEventApiV1AiOutfitByEventPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
  * Chat And Modify Outfit
  *
  * API Yêu cầu hoặc sửa style/outfit bằng text giống phiên chat (AI).
@@ -244,6 +573,64 @@ export const chatAndModifyOutfitApiV1AiChatPostMutation = (options?: Partial<Opt
     const mutationOptions: UseMutationOptions<ChatAndModifyOutfitApiV1AiChatPostResponse, AxiosError<ChatAndModifyOutfitApiV1AiChatPostError>, Options<ChatAndModifyOutfitApiV1AiChatPostData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await AiStylist.chatAndModifyOutfitApiV1AiChatPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Clear Chat History
+ *
+ * API Xóa toàn bộ lịch sử trò chuyện với AI Stylist
+ */
+export const clearChatHistoryApiV1AiChatHistoryDeleteMutation = (options?: Partial<Options<ClearChatHistoryApiV1AiChatHistoryDeleteData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<ClearChatHistoryApiV1AiChatHistoryDeleteData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<ClearChatHistoryApiV1AiChatHistoryDeleteData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await AiStylist.clearChatHistoryApiV1AiChatHistoryDelete({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const getChatHistoryApiV1AiChatHistoryGetQueryKey = (options?: Options<GetChatHistoryApiV1AiChatHistoryGetData>) => createQueryKey('getChatHistoryApiV1AiChatHistoryGet', options);
+
+/**
+ * Get Chat History
+ *
+ * API Lấy lịch sử hội thoại trò chuyện với AI Stylist
+ */
+export const getChatHistoryApiV1AiChatHistoryGetOptions = (options?: Options<GetChatHistoryApiV1AiChatHistoryGetData>) => queryOptions<GetChatHistoryApiV1AiChatHistoryGetResponse, AxiosError<DefaultError>, GetChatHistoryApiV1AiChatHistoryGetResponse, ReturnType<typeof getChatHistoryApiV1AiChatHistoryGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await AiStylist.getChatHistoryApiV1AiChatHistoryGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getChatHistoryApiV1AiChatHistoryGetQueryKey(options)
+});
+
+/**
+ * Submit Chat Feedback
+ *
+ * API Người dùng đánh giá phản hồi của AI Stylist (like/dislike & comment)
+ */
+export const submitChatFeedbackApiV1AiChatFeedbackPostMutation = (options?: Partial<Options<SubmitChatFeedbackApiV1AiChatFeedbackPostData>>): UseMutationOptions<unknown, AxiosError<SubmitChatFeedbackApiV1AiChatFeedbackPostError>, Options<SubmitChatFeedbackApiV1AiChatFeedbackPostData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<SubmitChatFeedbackApiV1AiChatFeedbackPostError>, Options<SubmitChatFeedbackApiV1AiChatFeedbackPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await AiStylist.submitChatFeedbackApiV1AiChatFeedbackPost({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -394,6 +781,104 @@ export const syncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostMutation = (o
     return mutationOptions;
 };
 
+export const getCalendarByRangeApiV1DashboardCalendarGetQueryKey = (options?: Options<GetCalendarByRangeApiV1DashboardCalendarGetData>) => createQueryKey('getCalendarByRangeApiV1DashboardCalendarGet', options);
+
+/**
+ * Get Calendar By Range
+ *
+ * API Truy vấn lịch mặc đồ theo khoảng thời gian tùy chọn (start_date, end_date dạng YYYY-MM-DD).
+ * Nếu không truyền, mặc định lấy 30 ngày gần nhất.
+ */
+export const getCalendarByRangeApiV1DashboardCalendarGetOptions = (options?: Options<GetCalendarByRangeApiV1DashboardCalendarGetData>) => queryOptions<GetCalendarByRangeApiV1DashboardCalendarGetResponse, AxiosError<GetCalendarByRangeApiV1DashboardCalendarGetError>, GetCalendarByRangeApiV1DashboardCalendarGetResponse, ReturnType<typeof getCalendarByRangeApiV1DashboardCalendarGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Dashboard__Recommendation.getCalendarByRangeApiV1DashboardCalendarGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getCalendarByRangeApiV1DashboardCalendarGetQueryKey(options)
+});
+
+/**
+ * Delete Calendar History
+ *
+ * API Xóa bản ghi lịch sử mặc đồ (Hủy wear today)
+ */
+export const deleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteMutation = (options?: Partial<Options<DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData>>): UseMutationOptions<unknown, AxiosError<DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteError>, Options<DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteError>, Options<DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Dashboard__Recommendation.deleteCalendarHistoryApiV1DashboardCalendarHistoryIdDelete({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Swap Outfit Item
+ *
+ * API Lưu lựa chọn thay thế món đồ vào bộ Outfit gợi ý hoặc cá nhân
+ */
+export const swapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostMutation = (options?: Partial<Options<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData>>): UseMutationOptions<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponse, AxiosError<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostError>, Options<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData>> => {
+    const mutationOptions: UseMutationOptions<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponse, AxiosError<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostError>, Options<SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Dashboard__Recommendation.swapOutfitItemApiV1DashboardOutfitOutfitIdSwapPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Schedule Calendar Event
+ *
+ * API Đặt trước Lịch mặc đồ cho một ngày trong tương lai
+ */
+export const scheduleCalendarEventApiV1DashboardCalendarSchedulePostMutation = (options?: Partial<Options<ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData>>): UseMutationOptions<unknown, AxiosError<ScheduleCalendarEventApiV1DashboardCalendarSchedulePostError>, Options<ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<ScheduleCalendarEventApiV1DashboardCalendarSchedulePostError>, Options<ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Dashboard__Recommendation.scheduleCalendarEventApiV1DashboardCalendarSchedulePost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetQueryKey = (options?: Options<GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetData>) => createQueryKey('getUpcomingCalendarEventsApiV1DashboardCalendarEventsGet', options);
+
+/**
+ * Get Upcoming Calendar Events
+ *
+ * API Lấy danh sách các sự kiện sắp tới để AI Stylist chủ động chuẩn bị outfit gợi ý
+ */
+export const getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetOptions = (options?: Options<GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetData>) => queryOptions<GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponse, AxiosError<DefaultError>, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponse, ReturnType<typeof getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Dashboard__Recommendation.getUpcomingCalendarEventsApiV1DashboardCalendarEventsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetQueryKey(options)
+});
+
 export const getFashionTrendsApiV1ExploreTrendsGetQueryKey = (options?: Options<GetFashionTrendsApiV1ExploreTrendsGetData>) => createQueryKey('getFashionTrendsApiV1ExploreTrendsGet', options);
 
 /**
@@ -432,6 +917,26 @@ export const getColorTheoryGuidesApiV1ExploreColorTheoryGetOptions = (options?: 
         return data;
     },
     queryKey: getColorTheoryGuidesApiV1ExploreColorTheoryGetQueryKey(options)
+});
+
+export const getTrendArticleDetailApiV1ExploreTrendsArticleIdGetQueryKey = (options: Options<GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetData>) => createQueryKey('getTrendArticleDetailApiV1ExploreTrendsArticleIdGet', options);
+
+/**
+ * Get Trend Article Detail
+ *
+ * API Lấy thông tin chi tiết của một bài viết xu hướng thời trang
+ */
+export const getTrendArticleDetailApiV1ExploreTrendsArticleIdGetOptions = (options: Options<GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetData>) => queryOptions<GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponse, AxiosError<GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetError>, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponse, ReturnType<typeof getTrendArticleDetailApiV1ExploreTrendsArticleIdGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Explore__Trends.getTrendArticleDetailApiV1ExploreTrendsArticleIdGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getTrendArticleDetailApiV1ExploreTrendsArticleIdGetQueryKey(options)
 });
 
 export const readRootGetQueryKey = (options?: Options<ReadRootGetData>) => createQueryKey('readRootGet', options);

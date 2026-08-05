@@ -126,6 +126,26 @@ export type BodyScanClothingCameraApiV1ClosetScanPost = {
 };
 
 /**
+ * Body_upload_avatar_api_v1_auth_profile_avatar_post
+ */
+export type BodyUploadAvatarApiV1AuthProfileAvatarPost = {
+    /**
+     * File
+     */
+    file: Blob | File;
+};
+
+/**
+ * Body_upload_clothing_item_image_api_v1_closet_items_upload_post
+ */
+export type BodyUploadClothingItemImageApiV1ClosetItemsUploadPost = {
+    /**
+     * File
+     */
+    file: Blob | File;
+};
+
+/**
  * CalendarDayPreview
  */
 export type CalendarDayPreview = {
@@ -187,6 +207,38 @@ export type CalendarInsightsResponse = {
 };
 
 /**
+ * CalendarScheduleRequest
+ */
+export type CalendarScheduleRequest = {
+    /**
+     * Date
+     */
+    date: string;
+    /**
+     * Outfit Id
+     */
+    outfit_id: number;
+    /**
+     * Event Name
+     */
+    event_name?: string | null;
+};
+
+/**
+ * ChangePasswordRequest
+ */
+export type ChangePasswordRequest = {
+    /**
+     * Current Password
+     */
+    current_password: string;
+    /**
+     * New Password
+     */
+    new_password: string;
+};
+
+/**
  * ChatMessage
  */
 export type ChatMessage = {
@@ -202,6 +254,84 @@ export type ChatMessage = {
      * Image Url
      */
     image_url?: string | null;
+};
+
+/**
+ * ChatMessageFeedbackRequest
+ */
+export type ChatMessageFeedbackRequest = {
+    /**
+     * Message Id
+     */
+    message_id: number;
+    /**
+     * Rating
+     */
+    rating: string;
+    /**
+     * Comment
+     */
+    comment?: string | null;
+};
+
+/**
+ * ChatMessageResponse
+ */
+export type ChatMessageResponse = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Role
+     */
+    role: string;
+    /**
+     * Content
+     */
+    content: string;
+    /**
+     * Suggested Outfit Id
+     */
+    suggested_outfit_id?: number | null;
+    /**
+     * Rating
+     */
+    rating?: string | null;
+    /**
+     * Feedback Comment
+     */
+    feedback_comment?: string | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
+ * ClosetSummaryResponse
+ */
+export type ClosetSummaryResponse = {
+    /**
+     * Total Items
+     */
+    total_items: number;
+    /**
+     * Favorites Count
+     */
+    favorites_count: number;
+    /**
+     * Category Counts
+     */
+    category_counts: {
+        [key: string]: number;
+    };
+    /**
+     * Color Distribution
+     */
+    color_distribution: Array<{
+        [key: string]: unknown;
+    }>;
 };
 
 /**
@@ -391,6 +521,32 @@ export type HttpValidationError = {
 };
 
 /**
+ * ItemUpdateRequest
+ */
+export type ItemUpdateRequest = {
+    /**
+     * Name
+     */
+    name?: string | null;
+    /**
+     * Category
+     */
+    category?: string | null;
+    /**
+     * Color Name
+     */
+    color_name?: string | null;
+    /**
+     * Color Code
+     */
+    color_code?: string | null;
+    /**
+     * Style Tag
+     */
+    style_tag?: string | null;
+};
+
+/**
  * LookItem
  */
 export type LookItem = {
@@ -427,6 +583,34 @@ export type OfflineSyncRequest = {
 };
 
 /**
+ * OutfitByEventRequest
+ */
+export type OutfitByEventRequest = {
+    /**
+     * Event Type
+     */
+    event_type: string;
+    /**
+     * Weather Condition
+     */
+    weather_condition?: string | null;
+};
+
+/**
+ * OutfitCreateRequest
+ */
+export type OutfitCreateRequest = {
+    /**
+     * Style Type
+     */
+    style_type?: string | null;
+    /**
+     * Item Ids
+     */
+    item_ids: Array<number>;
+};
+
+/**
  * OutfitFromItemsRequest
  */
 export type OutfitFromItemsRequest = {
@@ -460,6 +644,20 @@ export type OutfitRecommendation = {
      * Items
      */
     items: Array<ClothingItemFlat>;
+};
+
+/**
+ * OutfitUpdateRequest
+ */
+export type OutfitUpdateRequest = {
+    /**
+     * Style Type
+     */
+    style_type?: string | null;
+    /**
+     * Item Ids
+     */
+    item_ids?: Array<number> | null;
 };
 
 /**
@@ -522,6 +720,20 @@ export type StyleSuggestionResponse = {
      * Suggested Additions
      */
     suggested_additions: Array<string>;
+};
+
+/**
+ * SwapOutfitItemRequest
+ */
+export type SwapOutfitItemRequest = {
+    /**
+     * Old Item Id
+     */
+    old_item_id: number;
+    /**
+     * New Item Id
+     */
+    new_item_id: number;
 };
 
 /**
@@ -641,6 +853,24 @@ export type UserCreate = {
 };
 
 /**
+ * UserProfileUpdate
+ */
+export type UserProfileUpdate = {
+    /**
+     * Full Name
+     */
+    full_name?: string | null;
+    /**
+     * Avatar Url
+     */
+    avatar_url?: string | null;
+    /**
+     * Preferred Style
+     */
+    preferred_style?: Array<string> | null;
+};
+
+/**
  * UserResponse
  */
 export type UserResponse = {
@@ -655,7 +885,11 @@ export type UserResponse = {
     /**
      * Full Name
      */
-    full_name: string | null;
+    full_name?: string | null;
+    /**
+     * Avatar Url
+     */
+    avatar_url?: string | null;
     /**
      * Preferred Style
      */
@@ -794,6 +1028,95 @@ export type LogoutApiV1AuthLogoutPostResponses = {
     200: unknown;
 };
 
+export type GetProfileApiV1AuthProfileGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/profile';
+};
+
+export type GetProfileApiV1AuthProfileGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserResponse;
+};
+
+export type GetProfileApiV1AuthProfileGetResponse = GetProfileApiV1AuthProfileGetResponses[keyof GetProfileApiV1AuthProfileGetResponses];
+
+export type UpdateProfileApiV1AuthProfilePutData = {
+    body: UserProfileUpdate;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/profile';
+};
+
+export type UpdateProfileApiV1AuthProfilePutErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UpdateProfileApiV1AuthProfilePutError = UpdateProfileApiV1AuthProfilePutErrors[keyof UpdateProfileApiV1AuthProfilePutErrors];
+
+export type UpdateProfileApiV1AuthProfilePutResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserResponse;
+};
+
+export type UpdateProfileApiV1AuthProfilePutResponse = UpdateProfileApiV1AuthProfilePutResponses[keyof UpdateProfileApiV1AuthProfilePutResponses];
+
+export type UploadAvatarApiV1AuthProfileAvatarPostData = {
+    body: BodyUploadAvatarApiV1AuthProfileAvatarPost;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/profile/avatar';
+};
+
+export type UploadAvatarApiV1AuthProfileAvatarPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UploadAvatarApiV1AuthProfileAvatarPostError = UploadAvatarApiV1AuthProfileAvatarPostErrors[keyof UploadAvatarApiV1AuthProfileAvatarPostErrors];
+
+export type UploadAvatarApiV1AuthProfileAvatarPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserResponse;
+};
+
+export type UploadAvatarApiV1AuthProfileAvatarPostResponse = UploadAvatarApiV1AuthProfileAvatarPostResponses[keyof UploadAvatarApiV1AuthProfileAvatarPostResponses];
+
+export type ChangePasswordApiV1AuthChangePasswordPostData = {
+    body: ChangePasswordRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/change-password';
+};
+
+export type ChangePasswordApiV1AuthChangePasswordPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ChangePasswordApiV1AuthChangePasswordPostError = ChangePasswordApiV1AuthChangePasswordPostErrors[keyof ChangePasswordApiV1AuthChangePasswordPostErrors];
+
+export type ChangePasswordApiV1AuthChangePasswordPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
 export type ScanClothingCameraApiV1ClosetScanPostData = {
     body: BodyScanClothingCameraApiV1ClosetScanPost;
     path?: never;
@@ -920,6 +1243,34 @@ export type GetMyWardrobeApiV1ClosetItemsGetResponses = {
 
 export type GetMyWardrobeApiV1ClosetItemsGetResponse = GetMyWardrobeApiV1ClosetItemsGetResponses[keyof GetMyWardrobeApiV1ClosetItemsGetResponses];
 
+export type DeleteClothingItemApiV1ClosetItemsItemIdDeleteData = {
+    body?: never;
+    path: {
+        /**
+         * Item Id
+         */
+        item_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/items/{item_id}';
+};
+
+export type DeleteClothingItemApiV1ClosetItemsItemIdDeleteErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteClothingItemApiV1ClosetItemsItemIdDeleteError = DeleteClothingItemApiV1ClosetItemsItemIdDeleteErrors[keyof DeleteClothingItemApiV1ClosetItemsItemIdDeleteErrors];
+
+export type DeleteClothingItemApiV1ClosetItemsItemIdDeleteResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
 export type GetItemDetailApiV1ClosetItemsItemIdGetData = {
     body?: never;
     path: {
@@ -949,6 +1300,292 @@ export type GetItemDetailApiV1ClosetItemsItemIdGetResponses = {
 };
 
 export type GetItemDetailApiV1ClosetItemsItemIdGetResponse = GetItemDetailApiV1ClosetItemsItemIdGetResponses[keyof GetItemDetailApiV1ClosetItemsItemIdGetResponses];
+
+export type UpdateClothingItemApiV1ClosetItemsItemIdPutData = {
+    body: ItemUpdateRequest;
+    path: {
+        /**
+         * Item Id
+         */
+        item_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/items/{item_id}';
+};
+
+export type UpdateClothingItemApiV1ClosetItemsItemIdPutErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UpdateClothingItemApiV1ClosetItemsItemIdPutError = UpdateClothingItemApiV1ClosetItemsItemIdPutErrors[keyof UpdateClothingItemApiV1ClosetItemsItemIdPutErrors];
+
+export type UpdateClothingItemApiV1ClosetItemsItemIdPutResponses = {
+    /**
+     * Successful Response
+     */
+    200: ClothingItemFlat;
+};
+
+export type UpdateClothingItemApiV1ClosetItemsItemIdPutResponse = UpdateClothingItemApiV1ClosetItemsItemIdPutResponses[keyof UpdateClothingItemApiV1ClosetItemsItemIdPutResponses];
+
+export type ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData = {
+    body?: never;
+    path: {
+        /**
+         * Item Id
+         */
+        item_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/items/{item_id}/favorite';
+};
+
+export type ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostError = ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostErrors[keyof ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostErrors];
+
+export type ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type GetMyOutfitsApiV1ClosetOutfitsGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Bookmarked Only
+         */
+        bookmarked_only?: boolean;
+    };
+    url: '/api/v1/closet/outfits';
+};
+
+export type GetMyOutfitsApiV1ClosetOutfitsGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetMyOutfitsApiV1ClosetOutfitsGetError = GetMyOutfitsApiV1ClosetOutfitsGetErrors[keyof GetMyOutfitsApiV1ClosetOutfitsGetErrors];
+
+export type GetMyOutfitsApiV1ClosetOutfitsGetResponses = {
+    /**
+     * Response Get My Outfits Api V1 Closet Outfits Get
+     *
+     * Successful Response
+     */
+    200: Array<OutfitRecommendation>;
+};
+
+export type GetMyOutfitsApiV1ClosetOutfitsGetResponse = GetMyOutfitsApiV1ClosetOutfitsGetResponses[keyof GetMyOutfitsApiV1ClosetOutfitsGetResponses];
+
+export type CreateCustomOutfitApiV1ClosetOutfitsPostData = {
+    body: OutfitCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/closet/outfits';
+};
+
+export type CreateCustomOutfitApiV1ClosetOutfitsPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CreateCustomOutfitApiV1ClosetOutfitsPostError = CreateCustomOutfitApiV1ClosetOutfitsPostErrors[keyof CreateCustomOutfitApiV1ClosetOutfitsPostErrors];
+
+export type CreateCustomOutfitApiV1ClosetOutfitsPostResponses = {
+    /**
+     * Successful Response
+     */
+    201: OutfitRecommendation;
+};
+
+export type CreateCustomOutfitApiV1ClosetOutfitsPostResponse = CreateCustomOutfitApiV1ClosetOutfitsPostResponses[keyof CreateCustomOutfitApiV1ClosetOutfitsPostResponses];
+
+export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData = {
+    body?: never;
+    path: {
+        /**
+         * Outfit Id
+         */
+        outfit_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/outfits/{outfit_id}/bookmark';
+};
+
+export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError = ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors[keyof ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors];
+
+export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData = {
+    body?: never;
+    path: {
+        /**
+         * Outfit Id
+         */
+        outfit_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/outfits/{outfit_id}';
+};
+
+export type DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteError = DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteErrors[keyof DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteErrors];
+
+export type DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData = {
+    body: OutfitUpdateRequest;
+    path: {
+        /**
+         * Outfit Id
+         */
+        outfit_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/outfits/{outfit_id}';
+};
+
+export type UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutError = UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutErrors[keyof UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutErrors];
+
+export type UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses = {
+    /**
+     * Successful Response
+     */
+    200: OutfitRecommendation;
+};
+
+export type UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponse = UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses[keyof UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses];
+
+export type UploadClothingItemImageApiV1ClosetItemsUploadPostData = {
+    body: BodyUploadClothingItemImageApiV1ClosetItemsUploadPost;
+    path?: never;
+    query?: never;
+    url: '/api/v1/closet/items/upload';
+};
+
+export type UploadClothingItemImageApiV1ClosetItemsUploadPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UploadClothingItemImageApiV1ClosetItemsUploadPostError = UploadClothingItemImageApiV1ClosetItemsUploadPostErrors[keyof UploadClothingItemImageApiV1ClosetItemsUploadPostErrors];
+
+export type UploadClothingItemImageApiV1ClosetItemsUploadPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type GetClosetSummaryApiV1ClosetSummaryGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/closet/summary';
+};
+
+export type GetClosetSummaryApiV1ClosetSummaryGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: ClosetSummaryResponse;
+};
+
+export type GetClosetSummaryApiV1ClosetSummaryGetResponse = GetClosetSummaryApiV1ClosetSummaryGetResponses[keyof GetClosetSummaryApiV1ClosetSummaryGetResponses];
+
+export type GetItemPairingsApiV1ClosetItemsItemIdPairingsGetData = {
+    body?: never;
+    path: {
+        /**
+         * Item Id
+         */
+        item_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/items/{item_id}/pairings';
+};
+
+export type GetItemPairingsApiV1ClosetItemsItemIdPairingsGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetItemPairingsApiV1ClosetItemsItemIdPairingsGetError = GetItemPairingsApiV1ClosetItemsItemIdPairingsGetErrors[keyof GetItemPairingsApiV1ClosetItemsItemIdPairingsGetErrors];
+
+export type GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponses = {
+    /**
+     * Response Get Item Pairings Api V1 Closet Items  Item Id  Pairings Get
+     *
+     * Successful Response
+     */
+    200: Array<ClothingItemFlat>;
+};
+
+export type GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponse = GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponses[keyof GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponses];
+
+export type TestAiConnectionApiV1AiTestConnectionGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/ai/test-connection';
+};
+
+export type TestAiConnectionApiV1AiTestConnectionGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type GetStyleSuggestionsApiV1AiStyleSuggestionsGetData = {
     body?: never;
@@ -993,6 +1630,31 @@ export type GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses = {
 
 export type GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse = GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses[keyof GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponses];
 
+export type GetOutfitByEventApiV1AiOutfitByEventPostData = {
+    body: OutfitByEventRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/ai/outfit-by-event';
+};
+
+export type GetOutfitByEventApiV1AiOutfitByEventPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetOutfitByEventApiV1AiOutfitByEventPostError = GetOutfitByEventApiV1AiOutfitByEventPostErrors[keyof GetOutfitByEventApiV1AiOutfitByEventPostErrors];
+
+export type GetOutfitByEventApiV1AiOutfitByEventPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: OutfitRecommendation;
+};
+
+export type GetOutfitByEventApiV1AiOutfitByEventPostResponse = GetOutfitByEventApiV1AiOutfitByEventPostResponses[keyof GetOutfitByEventApiV1AiOutfitByEventPostResponses];
+
 export type ChatAndModifyOutfitApiV1AiChatPostData = {
     body: AiChatRequest;
     path?: never;
@@ -1017,6 +1679,61 @@ export type ChatAndModifyOutfitApiV1AiChatPostResponses = {
 };
 
 export type ChatAndModifyOutfitApiV1AiChatPostResponse = ChatAndModifyOutfitApiV1AiChatPostResponses[keyof ChatAndModifyOutfitApiV1AiChatPostResponses];
+
+export type ClearChatHistoryApiV1AiChatHistoryDeleteData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/ai/chat/history';
+};
+
+export type ClearChatHistoryApiV1AiChatHistoryDeleteResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type GetChatHistoryApiV1AiChatHistoryGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/ai/chat/history';
+};
+
+export type GetChatHistoryApiV1AiChatHistoryGetResponses = {
+    /**
+     * Response Get Chat History Api V1 Ai Chat History Get
+     *
+     * Successful Response
+     */
+    200: Array<ChatMessageResponse>;
+};
+
+export type GetChatHistoryApiV1AiChatHistoryGetResponse = GetChatHistoryApiV1AiChatHistoryGetResponses[keyof GetChatHistoryApiV1AiChatHistoryGetResponses];
+
+export type SubmitChatFeedbackApiV1AiChatFeedbackPostData = {
+    body: ChatMessageFeedbackRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/ai/chat/feedback';
+};
+
+export type SubmitChatFeedbackApiV1AiChatFeedbackPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SubmitChatFeedbackApiV1AiChatFeedbackPostError = SubmitChatFeedbackApiV1AiChatFeedbackPostErrors[keyof SubmitChatFeedbackApiV1AiChatFeedbackPostErrors];
+
+export type SubmitChatFeedbackApiV1AiChatFeedbackPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type GetHomeDashboardApiV1DashboardHomeGetData = {
     body?: never;
@@ -1196,6 +1913,141 @@ export type SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostResponses = {
     200: unknown;
 };
 
+export type GetCalendarByRangeApiV1DashboardCalendarGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Start Date
+         */
+        start_date?: string;
+        /**
+         * End Date
+         */
+        end_date?: string;
+    };
+    url: '/api/v1/dashboard/calendar';
+};
+
+export type GetCalendarByRangeApiV1DashboardCalendarGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetCalendarByRangeApiV1DashboardCalendarGetError = GetCalendarByRangeApiV1DashboardCalendarGetErrors[keyof GetCalendarByRangeApiV1DashboardCalendarGetErrors];
+
+export type GetCalendarByRangeApiV1DashboardCalendarGetResponses = {
+    /**
+     * Response Get Calendar By Range Api V1 Dashboard Calendar Get
+     *
+     * Successful Response
+     */
+    200: Array<CalendarDayPreview>;
+};
+
+export type GetCalendarByRangeApiV1DashboardCalendarGetResponse = GetCalendarByRangeApiV1DashboardCalendarGetResponses[keyof GetCalendarByRangeApiV1DashboardCalendarGetResponses];
+
+export type DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData = {
+    body?: never;
+    path: {
+        /**
+         * History Id
+         */
+        history_id: number;
+    };
+    query?: never;
+    url: '/api/v1/dashboard/calendar/{history_id}';
+};
+
+export type DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteError = DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteErrors[keyof DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteErrors];
+
+export type DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData = {
+    body: SwapOutfitItemRequest;
+    path: {
+        /**
+         * Outfit Id
+         */
+        outfit_id: number;
+    };
+    query?: never;
+    url: '/api/v1/dashboard/outfit/{outfit_id}/swap';
+};
+
+export type SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostError = SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostErrors[keyof SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostErrors];
+
+export type SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: OutfitRecommendation;
+};
+
+export type SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponse = SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponses[keyof SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponses];
+
+export type ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData = {
+    body: CalendarScheduleRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/dashboard/calendar/schedule';
+};
+
+export type ScheduleCalendarEventApiV1DashboardCalendarSchedulePostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ScheduleCalendarEventApiV1DashboardCalendarSchedulePostError = ScheduleCalendarEventApiV1DashboardCalendarSchedulePostErrors[keyof ScheduleCalendarEventApiV1DashboardCalendarSchedulePostErrors];
+
+export type ScheduleCalendarEventApiV1DashboardCalendarSchedulePostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/dashboard/calendar/events';
+};
+
+export type GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponses = {
+    /**
+     * Response Get Upcoming Calendar Events Api V1 Dashboard Calendar Events Get
+     *
+     * Successful Response
+     */
+    200: Array<CalendarDayPreview>;
+};
+
+export type GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponse = GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponses[keyof GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponses];
+
 export type GetFashionTrendsApiV1ExploreTrendsGetData = {
     body?: never;
     path?: never;
@@ -1227,6 +2079,36 @@ export type GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponses = {
 };
 
 export type GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponse = GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponses[keyof GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponses];
+
+export type GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetData = {
+    body?: never;
+    path: {
+        /**
+         * Article Id
+         */
+        article_id: number;
+    };
+    query?: never;
+    url: '/api/v1/explore/trends/{article_id}';
+};
+
+export type GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetError = GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetErrors[keyof GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetErrors];
+
+export type GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: TrendArticle;
+};
+
+export type GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponse = GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponses[keyof GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponses];
 
 export type ReadRootGetData = {
     body?: never;
