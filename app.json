@@ -34,7 +34,12 @@
           "imageWidth": 76
         }
       ],
-      "expo-image",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow FitCheck to access your camera to scan clothing items."
+        }
+      ],
       "expo-secure-store",
       "expo-sqlite"
     ],

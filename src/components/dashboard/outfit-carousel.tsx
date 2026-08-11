@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import { Sparkles } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { OutfitRecommendation } from '@/api/types.gen';
+import { resolveImageUrl } from '@/utils/image-url';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH * 0.82;
@@ -14,21 +15,48 @@ interface OutfitCarouselProps {
   onIndexChanged?: (index: number) => void;
 }
 
+const DEFAULT_OUTFITS = [
+  {
+    id: 'demo-outfit-1',
+    title: 'Smart Business Casual',
+    tags: ['Work', 'Minimalist'],
+    isBestMatch: true,
+    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80',
+  },
+  {
+    id: 'demo-outfit-2',
+    title: 'Weekend Streetwear',
+    tags: ['Casual', 'Denim'],
+    isBestMatch: false,
+    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80',
+  },
+  {
+    id: 'demo-outfit-3',
+    title: 'Monochrome Modern',
+    tags: ['Chill', 'Classic'],
+    isBestMatch: false,
+    image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80',
+  },
+];
+
 export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarouselProps) {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Map API recommended outfits to local display format
-  const data = (outfits || []).map((item, index) => {
-    const mainImage = item.items && item.items.length > 0 ? item.items[0].image_url : '';
-    return {
-      id: String(item.outfit_id),
-      title: item.style_type || 'Custom Outfit',
-      tags: [item.style_type || 'Curated', ...(item.items?.map(it => it.name).slice(0, 1) || [])],
-      isBestMatch: index === 0,
-      image: mainImage,
-    };
-  });
+  // Map API recommended outfits or fallback to high quality demo outfits
+  const data =
+    outfits && outfits.length > 0
+      ? outfits.map((item, index) => {
+          const mainImage = item.items && item.items.length > 0 ? item.items[0].image_url : '';
+          return {
+            id: `outfit-${item.outfit_id || index}-${index}`,
+            title: item.style_type || 'Custom Outfit',
+            tags: [item.style_type || 'Curated', ...(item.items?.map((it) => it.name).slice(0, 1) || [])],
+            isBestMatch: index === 0,
+            image: mainImage,
+          };
+        })
+      : DEFAULT_OUTFITS;
 
   return (
     <View className="mb-4">
@@ -58,7 +86,7 @@ export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarous
                   params: {
                     id: item.id,
                     title: item.title,
-                    image: item.image,
+                    image: typeof item.image === 'string' ? item.image : '',
                   },
                 });
               }}
@@ -69,13 +97,13 @@ export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarous
             >
               <View className="h-96 relative bg-surface-container-high">
                 <Image
-                  source={item.image}
-                  className="w-full h-full"
+                  source={resolveImageUrl(item.image, 'Shirts')}
+                  style={{ width: '100%', height: '100%' }}
                   contentFit="cover"
                 />
                 {item.isBestMatch && (
                   <View className="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-full flex-row items-center gap-1.5 shadow-sm">
-                    <Sparkles size={14} className="text-primary fill-primary" />
+                    <Sparkles size={14} color="#005c55" fill="#005c55" />
                     <Text className="font-sans font-bold text-[11px] text-primary">BEST MATCH</Text>
                   </View>
                 )}
@@ -106,7 +134,7 @@ export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarous
             </Pressable>
           );
         }}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
       />
 
       {/* Dots Indicators */}

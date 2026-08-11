@@ -1,16 +1,12 @@
 import { useState } from 'react';
-import { FlatList, Pressable, Text, TextInput, View, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image } from 'expo-image';
+import { FlatList, Pressable, Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  Check,
-  CheckCircle,
   MapPin,
   Search,
   SlidersHorizontal,
-  Sparkles,
   Wand2,
   X,
 } from 'lucide-react-native';
@@ -22,36 +18,93 @@ import {
   deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteMutation,
   updateCustomOutfitApiV1ClosetOutfitsOutfitIdPutMutation,
   getClosetSummaryApiV1ClosetSummaryGetOptions,
-  getMyOutfitsApiV1ClosetOutfitsGetQueryKey,
 } from '@/api/@tanstack/react-query.gen';
+import { closetKeys } from '@/api/query-keys';
+import { cn } from '@/utils/cn';
+import { WardrobeCard, WardrobeItemData } from '@/components/closet/wardrobe-card';
+import { SelectionActionBar } from '@/components/closet/selection-action-bar';
 
 const CATEGORIES = ['All', 'Shirts', 'Pants', 'Shoes', 'Jackets', 'Accessories'];
 
+const DEFAULT_WARDROBE_ITEMS: WardrobeItemData[] = [
+  {
+    id: 'mock-1',
+    name: 'White Oxford Shirt',
+    category: 'Shirts',
+    color: 'WHITE',
+    colorHex: '#FFFFFF',
+    style: 'Formal',
+    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&q=80',
+    isAiFixed: true,
+  },
+  {
+    id: 'mock-2',
+    name: 'Slim Fit Chinos',
+    category: 'Pants',
+    color: 'BLACK',
+    colorHex: '#2B2B2B',
+    style: 'Casual',
+    image: 'https://images.unsplash.com/photo-1542272604-780c36856d66?w=500&q=80',
+    isAiFixed: false,
+  },
+  {
+    id: 'mock-3',
+    name: 'Leather Sneakers',
+    category: 'Shoes',
+    color: 'GREY',
+    colorHex: '#EAEAEA',
+    style: 'Minimalist',
+    image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&q=80',
+    isAiFixed: true,
+  },
+  {
+    id: 'mock-4',
+    name: 'Denim Jacket',
+    category: 'Jackets',
+    color: 'BLUE',
+    colorHex: '#1D4ED8',
+    style: 'Streetwear',
+    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80',
+    isAiFixed: false,
+  },
+];
+
 export default function ClosetScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const queryClient = useQueryClient();
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'items' | 'outfits'>('items');
 
   // Selection mode for manual outfit builder
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
 
+  const bottomTabBarHeight = 72 + insets.bottom;
+
   // Fetch Wardrobe items using API query
-  const { data: wardrobeData } = useQuery(getMyWardrobeApiV1ClosetItemsGetOptions());
+  const { data: wardrobeData } = useQuery({
+    ...getMyWardrobeApiV1ClosetItemsGetOptions(),
+    queryKey: closetKeys.items(),
+  });
 
   // Fetch Closet Summary API Query
-  const { data: closetSummaryData } = useQuery(getClosetSummaryApiV1ClosetSummaryGetOptions());
+  const { data: closetSummaryData } = useQuery({
+    ...getClosetSummaryApiV1ClosetSummaryGetOptions(),
+    queryKey: closetKeys.summary(),
+  });
 
   // Fetch My Outfits using API query
-  const { data: myOutfitsData } = useQuery(getMyOutfitsApiV1ClosetOutfitsGetOptions());
+  const { data: myOutfitsData } = useQuery({
+    ...getMyOutfitsApiV1ClosetOutfitsGetOptions(),
+    queryKey: closetKeys.outfits(),
+  });
 
   // Mutation to create custom outfit
   const createOutfitMutation = useMutation({
     ...createCustomOutfitApiV1ClosetOutfitsPostMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getMyOutfitsApiV1ClosetOutfitsGetQueryKey() });
+      queryClient.invalidateQueries({ queryKey: closetKeys.outfits() });
     },
   });
 
@@ -59,7 +112,7 @@ export default function ClosetScreen() {
   const deleteOutfitMutation = useMutation({
     ...deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getMyOutfitsApiV1ClosetOutfitsGetQueryKey() });
+      queryClient.invalidateQueries({ queryKey: closetKeys.outfits() });
     },
   });
 
@@ -67,22 +120,23 @@ export default function ClosetScreen() {
   const updateOutfitMutation = useMutation({
     ...updateCustomOutfitApiV1ClosetOutfitsOutfitIdPutMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getMyOutfitsApiV1ClosetOutfitsGetQueryKey() });
+      queryClient.invalidateQueries({ queryKey: closetKeys.outfits() });
     },
   });
 
-  const itemsList = (wardrobeData || []).map((item, index) => {
-    return {
-      id: String(item.id),
-      name: item.name,
-      category: item.category,
-      color: item.color_code || 'Default',
-      colorHex: item.color_code || '#333333',
-      style: item.style_tag || 'Casual',
-      image: item.image_url || '',
-      isAiFixed: index === 0,
-    };
-  });
+  const itemsList: WardrobeItemData[] =
+    wardrobeData && wardrobeData.length > 0
+      ? wardrobeData.map((item, index) => ({
+          id: String(item.id || index),
+          name: item.name,
+          category: item.category || 'Tops',
+          color: item.color_name || 'DEFAULT',
+          colorHex: item.color_code || '#333333',
+          style: item.style_tag || 'Casual',
+          image: item.image_url || '',
+          isAiFixed: item.is_ai_fixed ?? false,
+        }))
+      : DEFAULT_WARDROBE_ITEMS;
 
   const filteredItems = itemsList.filter((item) => {
     const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
@@ -141,8 +195,8 @@ export default function ClosetScreen() {
     setIsSelectionMode(false);
     setSelectedItemIds([]);
 
-    router.navigate({
-      pathname: '/outfit-detail' as any,
+    router.push({
+      pathname: '/outfit-detail',
       params: outfitParams,
     });
   };
@@ -152,25 +206,26 @@ export default function ClosetScreen() {
       {/* Header */}
       <View className="flex-row justify-between items-center px-margin-mobile py-4 border-b border-outline-variant/30">
         <View className="flex-row items-center gap-2">
-          <MapPin size={22} className="text-primary" />
+          <MapPin size={22} color="#005c55" />
           <Text className="font-sans font-bold text-headline-md text-on-surface">FitCheck AI</Text>
         </View>
 
         {/* Build Outfit / Cancel Button */}
         <Pressable
           onPress={toggleSelectionMode}
-          className={`flex-row items-center gap-1.5 px-4 py-2 rounded-full active:scale-95 ${
+          className={cn(
+            'flex-row items-center gap-1.5 px-4 py-2 rounded-full active:scale-95 transition-all',
             isSelectionMode ? 'bg-secondary' : 'bg-primary'
-          }`}
+          )}
         >
           {isSelectionMode ? (
             <>
-              <X size={16} className="text-white" />
+              <X size={16} color="#ffffff" />
               <Text className="font-sans font-semibold text-label-md text-white">Cancel</Text>
             </>
           ) : (
             <>
-              <Wand2 size={16} className="text-white" />
+              <Wand2 size={16} color="#ffffff" />
               <Text className="font-sans font-semibold text-label-md text-white">Build Outfit</Text>
             </>
           )}
@@ -194,7 +249,7 @@ export default function ClosetScreen() {
       {/* Search & Filter */}
       <View className="px-margin-mobile pt-4 flex-row gap-3 items-center">
         <View className="flex-1 h-12 bg-surface-container-low rounded-xl px-4 flex-row items-center gap-2 border border-outline-variant/20">
-          <Search size={20} className="text-on-surface-variant" />
+          <Search size={20} color="#3e4947" />
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -204,7 +259,7 @@ export default function ClosetScreen() {
           />
         </View>
         <Pressable className="h-12 w-12 bg-surface-container-low rounded-xl items-center justify-center border border-outline-variant/20 active:scale-95">
-          <SlidersHorizontal size={20} className="text-on-surface-variant" />
+          <SlidersHorizontal size={20} color="#3e4947" />
         </Pressable>
       </View>
 
@@ -216,16 +271,18 @@ export default function ClosetScreen() {
             <Pressable
               key={cat}
               onPress={() => setActiveCategory(cat)}
-              className={`px-4 py-1.5 rounded-full active:scale-95 border transition-all ${
+              className={cn(
+                'px-4 py-1.5 rounded-full active:scale-95 border transition-all',
                 isActive
                   ? 'bg-primary border-primary'
                   : 'bg-surface-container-low border-outline-variant/20'
-              }`}
+              )}
             >
               <Text
-                className={`font-sans font-semibold text-label-md ${
+                className={cn(
+                  'font-sans font-semibold text-label-md',
                   isActive ? 'text-white' : 'text-on-surface-variant'
-                }`}
+                )}
               >
                 {cat}
               </Text>
@@ -239,19 +296,22 @@ export default function ClosetScreen() {
         data={filteredItems}
         numColumns={2}
         columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 20 }}
-        contentContainerStyle={{ paddingBottom: isSelectionMode ? 180 : 100 }}
+        contentContainerStyle={{ paddingBottom: bottomTabBarHeight + (isSelectionMode ? 100 : 24) }}
         renderItem={({ item }) => {
           const isSelected = selectedItemIds.includes(item.id);
           return (
-            <Pressable
+            <WardrobeCard
+              item={item}
+              isSelectionMode={isSelectionMode}
+              isSelected={isSelected}
               onPress={() => {
                 if (isSelectionMode) {
                   setSelectedItemIds((prev) =>
                     prev.includes(item.id) ? prev.filter((id) => id !== item.id) : [...prev, item.id]
                   );
                 } else {
-                  router.navigate({
-                    pathname: '/item-detail' as any,
+                  router.push({
+                    pathname: '/item-detail',
                     params: {
                       id: item.id,
                       name: item.name,
@@ -263,93 +323,20 @@ export default function ClosetScreen() {
                   });
                 }
               }}
-              className={`w-[47%] bg-white rounded-2xl overflow-hidden border mb-4 shadow-sm active:scale-98 relative ${
-                isSelectionMode && isSelected
-                  ? 'border-2 border-primary bg-primary/5'
-                  : 'border-[#E2E8F0]'
-              }`}
-            >
-              {/* Selection Checkbox */}
-              {isSelectionMode && (
-                <View
-                  className={`absolute top-2 left-2 z-20 w-6 h-6 rounded-full items-center justify-center border shadow-sm ${
-                    isSelected
-                      ? 'bg-primary border-primary'
-                      : 'bg-white/90 border-outline-variant/50'
-                  }`}
-                >
-                  {isSelected && <Check size={14} className="text-white" />}
-                </View>
-              )}
-
-              <View className="relative aspect-[4/5] bg-[#F1F5F9] items-center justify-center p-4">
-                <Image source={item.image} className="w-full h-full" contentFit="contain" />
-                {item.isAiFixed && !isSelectionMode && (
-                  <View className="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full border border-black/5">
-                    <Sparkles size={14} className="text-primary fill-primary" />
-                  </View>
-                )}
-              </View>
-              <View className="p-3">
-                <View className="flex-row items-center gap-1.5 mb-1">
-                  <View
-                    style={{ backgroundColor: item.colorHex }}
-                    className="w-2.5 h-2.5 rounded-full border border-outline-variant/30"
-                  />
-                  <Text className="font-sans font-bold text-label-sm text-outline uppercase tracking-wider">
-                    {item.color}
-                  </Text>
-                </View>
-                <View className="flex-row items-center justify-between">
-                  <Text className="font-sans font-bold text-body-md text-on-surface truncate flex-1 mr-1">
-                    {item.name}
-                  </Text>
-                  <View
-                    className={`px-2 py-0.5 rounded ${
-                      item.style === 'Formal' ? 'bg-emerald-50' : 'bg-surface-container-high'
-                    }`}
-                  >
-                    <Text
-                      className={`font-sans font-bold text-[10px] uppercase ${
-                        item.style === 'Formal' ? 'text-primary' : 'text-secondary'
-                      }`}
-                    >
-                      {item.style}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </Pressable>
+            />
           );
         }}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
       />
 
       {/* Floating Outfit Confirmation Action Bar */}
       {isSelectionMode && (
-        <View className="absolute bottom-24 left-5 right-5 bg-white p-4 rounded-2xl border border-primary/20 shadow-2xl z-[150] flex-row items-center justify-between gap-3">
-          <View className="flex-1">
-            <Text className="font-sans font-bold text-body-lg text-on-surface">
-              {selectedItemIds.length} {selectedItemIds.length === 1 ? 'item' : 'items'} selected
-            </Text>
-            <Text className="font-sans text-label-md text-on-surface-variant">
-              {selectedItemIds.length === 0 ? 'Select items above' : 'Ready to create outfit'}
-            </Text>
-          </View>
-
-          <Pressable
-            disabled={selectedItemIds.length === 0}
-            onPress={handleConfirmOutfit}
-            className={`px-5 py-3 rounded-xl flex-row items-center gap-2 active:scale-95 shadow-md ${
-              selectedItemIds.length > 0 ? 'bg-primary' : 'bg-surface-container-high opacity-50'
-            }`}
-          >
-            <CheckCircle size={18} className="text-white" />
-            <Text className="font-sans font-bold text-label-md text-white">Create Outfit</Text>
-          </Pressable>
-        </View>
+        <SelectionActionBar
+          selectedCount={selectedItemIds.length}
+          bottomOffset={bottomTabBarHeight + 16}
+          onConfirm={handleConfirmOutfit}
+        />
       )}
     </SafeAreaView>
   );
 }
-

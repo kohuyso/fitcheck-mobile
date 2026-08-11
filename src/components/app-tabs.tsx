@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Tabs,
   TabList,
@@ -8,7 +8,7 @@ import {
   TabListProps,
   defaultTabsSlotRender,
 } from 'expo-router/ui';
-import { Pressable, useColorScheme, View, StyleSheet } from 'react-native';
+import { Pressable, View, Text, StyleSheet } from 'react-native';
 import { usePathname } from 'expo-router';
 import { Home, Camera, Calendar, User } from 'lucide-react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -64,18 +64,18 @@ function AnimatedTabScreen({
     if (isFocused) {
       setShouldMount(true);
       setIsVisible(true);
-      opacity.value = withTiming(1, { duration: 200 });
-      scale.value = withTiming(1, { duration: 200 });
+      opacity.value = withTiming(1, { duration: 150 });
+      scale.value = withTiming(1, { duration: 150 });
     } else {
-      opacity.value = withTiming(0, { duration: 200 }, (finished) => {
-        if (finished) {
-          runOnJS(setIsVisible)(false);
-          if (unmountOnBlur) {
-            runOnJS(setShouldMount)(false);
-          }
+      scale.value = withTiming(0.99, { duration: 150 });
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+        opacity.value = 0;
+        if (unmountOnBlur) {
+          setShouldMount(false);
         }
-      });
-      scale.value = withTiming(0.98, { duration: 200 });
+      }, 150);
+      return () => clearTimeout(timer);
     }
   }, [isFocused, unmountOnBlur]);
 
@@ -162,18 +162,14 @@ interface TabButtonProps extends TabTriggerSlotProps {
 }
 
 export function TabButton({ name, label, isFocused, ...props }: TabButtonProps) {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
-  
-  const activeColor = isDark ? '#80d5cb' : '#0f766e';
-  const inactiveColor = isDark ? '#9ca3af' : '#64748b';
+  const activeColor = '#005c55';
+  const inactiveColor = '#6e7977';
   const color = isFocused ? activeColor : inactiveColor;
 
   if (name === 'scan') {
-    const centerBgColor = isDark ? '#0f766e' : '#005c55';
     return (
       <Pressable {...props} style={styles.centerButtonContainer}>
-        <View style={[styles.centerButtonCircle, { backgroundColor: centerBgColor }]}>
+        <View style={[styles.centerButtonCircle, { backgroundColor: '#005c55' }]}>
           <Camera size={26} color="#ffffff" />
         </View>
       </Pressable>
@@ -188,13 +184,13 @@ export function TabButton({ name, label, isFocused, ...props }: TabButtonProps) 
         {name === 'calendar' && <Calendar size={22} color={color} />}
         {name === 'explore' && <User size={22} color={color} />}
         
-        <ThemedText
+        <Text
           style={[
             styles.tabButtonLabel,
             { color: color }
           ]}>
           {label}
-        </ThemedText>
+        </Text>
       </View>
     </Pressable>
   );
@@ -202,12 +198,10 @@ export function TabButton({ name, label, isFocused, ...props }: TabButtonProps) 
 
 export function CustomTabList(props: TabListProps) {
   const pathname = usePathname();
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
   const insets = useSafeAreaInsets();
 
-  const backgroundColor = isDark ? '#181c1c' : '#ffffff';
-  const borderTopColor = isDark ? '#292d2c' : '#f1f5f9';
+  const backgroundColor = '#ffffff';
+  const borderTopColor = '#e2e8f0';
 
   if (
     pathname === '/scan' ||
@@ -304,5 +298,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+    backgroundColor: '#f6faf8',
   },
 });

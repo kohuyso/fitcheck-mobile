@@ -16,14 +16,14 @@ export default function StyleAssistantBanner() {
     >
       <View className="flex-row items-center gap-4">
         <View className="bg-white/20 p-3 rounded-xl">
-          <MessageSquare size={32} className="text-white" />
+          <MessageSquare size={32} color="#ffffff" />
         </View>
         <View>
           <Text className="font-sans font-bold text-title-lg text-white">Style Assistant</Text>
           <Text className="font-sans text-label-md text-white/90">Ask for outfit advice or trends</Text>
         </View>
       </View>
-      <ChevronRight size={20} className="text-white" />
+      <ChevronRight size={20} color="#ffffff" />
     </Pressable>
   );
 }

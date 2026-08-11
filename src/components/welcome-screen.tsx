@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
-import { Sun, CheckCircle, ArrowRight, UserPlus, LogIn } from 'lucide-react-native';
+import { Sun, CheckCircle, ArrowRight, UserPlus, LogIn, Sparkles } from 'lucide-react-native';
 import { useMutation } from '@tanstack/react-query';
 import { registerApiV1AuthRegisterPostMutation } from '@/api/@tanstack/react-query.gen';
 import AuthModal from './auth-modal';
 
 interface WelcomeScreenProps {
   onGetStarted: () => void;
+  initialAuthMode?: 'login' | 'register' | null;
 }
 
-export default function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
-  const [authModalVisible, setAuthModalVisible] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+export default function WelcomeScreen({ onGetStarted, initialAuthMode = null }: WelcomeScreenProps) {
+  const [authModalVisible, setAuthModalVisible] = useState(Boolean(initialAuthMode));
+  const [authMode, setAuthMode] = useState<'login' | 'register'>(initialAuthMode || 'login');
+
+  React.useEffect(() => {
+    if (initialAuthMode) {
+      setAuthMode(initialAuthMode);
+      setAuthModalVisible(true);
+    }
+  }, [initialAuthMode]);
 
   const { mutateAsync: registerGuest } = useMutation(registerApiV1AuthRegisterPostMutation());
 
@@ -52,13 +61,16 @@ export default function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
             <View className="absolute inset-0 bg-primary-container/5 rounded-full scale-90 blur-3xl" />
             
             {/* Hero Flat-lay Illustration */}
-            <View className="relative z-10 w-full h-full bg-white/85 border border-outline-variant/30 rounded-3xl overflow-hidden shadow-lg p-6">
-              <Image
-                source=""
-                className="w-full h-full"
-                contentFit="contain"
-                transition={500}
-              />
+            <View className="relative z-10 w-full h-full bg-surface-container-low border border-outline-variant/30 rounded-3xl overflow-hidden shadow-lg p-6 items-center justify-center">
+              <View className="w-24 h-24 bg-primary/10 rounded-full items-center justify-center mb-4">
+                <Sparkles size={48} className="text-primary" />
+              </View>
+              <Text className="font-sans font-bold text-headline-md text-on-surface text-center">
+                FitCheck AI
+              </Text>
+              <Text className="font-sans text-label-md text-on-surface-variant text-center mt-1">
+                Virtual Wardrobe Assistant
+              </Text>
             </View>
 
             {/* Floating Chips */}

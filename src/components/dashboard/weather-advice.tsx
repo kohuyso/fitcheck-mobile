@@ -16,7 +16,7 @@ export default function WeatherAdvice({ condition, temperature, recommendation }
   return (
     <View className="bg-white/85 border border-outline-variant/40 rounded-xl p-4 flex-row items-start gap-4 mb-6 shadow-sm">
       <View className="bg-primary/10 p-3 rounded-xl">
-        <CloudRain size={32} className="text-primary" />
+        <CloudRain size={32} color="#005c55" />
       </View>
       <View className="flex-1">
         <Text className="font-sans font-bold text-title-lg text-on-surface">{displayCondition}</Text>

@@ -1,47 +1,56 @@
 ---
 name: "React Native & Expo Developer"
-description: "Creating, editing, and debugging mobile UI components and application logic using React Native, Expo Router, and NativeWind (Tailwind CSS)."
+description: "Creating, editing, and debugging mobile UI components and application logic using React Native, Expo Router, NativeWind (Tailwind CSS), and Expo SDK 57."
 ---
 
 # React Native & Expo Development Skill
 
-This skill contains guidelines and instructions for writing, modifying, and refactoring React Native applications with Expo (v57) and NativeWind.
+This skill provides comprehensive guidelines for building, refactoring, and debugging mobile applications using **Expo SDK 57**, **Expo Router**, **React 19**, and **NativeWind v4**.
 
-## 1. Expo Router & Routing Patterns
-- Use directory-based routing (`app/` directory).
-- Dynamic routes use `[id].tsx` syntax.
-- Use `<Link>` or `useRouter()` hook from `expo-router` for navigation.
-- Ensure all screens have appropriate layout structure (e.g. `<Stack.Screen options={{ title: '...' }} />`).
+## 1. Directory & Routing Architecture (`src/app/`)
+- All screens reside inside `src/app/` leveraging Expo Router's file-based navigation system.
+- Use `_layout.tsx` files for layout hierarchy (`<Stack>`, `<Tabs>`).
+- Dynamic screens must follow the `[id].tsx` naming standard and access parameters via `useLocalSearchParams()`.
+- Navigation actions:
+  - Imperative: `const router = useRouter(); router.push('/item-detail?id=123');`
+  - Declarative: `<Link href={{ pathname: '/item-detail', params: { id: '123' } }}>`
+- Always specify header screen options inside layout or screen components (`<Stack.Screen options={{ title: '...', headerBackTitle: 'Back' }} />`).
 
-## 2. UI Components & NativeWind (Tailwind CSS for React Native)
-- Use standard React Native primitive components (`View`, `Text`, `TouchableOpacity`, `ScrollView`, `TextInput`, etc.).
-- Apply styling using `className` with NativeWind classes.
-- Since NativeWind maps CSS properties to React Native styles:
-  * Avoid web-only styles (e.g., `grid`, `fixed`, complex selectors, gradient background defaults).
-  * Use Flexbox layout for all alignments (`flex-row`, `items-center`, `justify-between`).
-  * For border styling, ensure both border width and color are specified.
-  * Use `active:opacity-70` or `active:scale-95` to style active interactive states.
+## 2. UI Components & NativeWind v4 Guidelines
+- Use React Native primitives: `View`, `Text`, `Pressable`, `TouchableOpacity`, `ScrollView`, `TextInput`, `SafeAreaView`.
+- Apply utility classes via `className`.
+- Always merge dynamic or conditional classes using `cn()` from `@/utils/cn`:
+  ```tsx
+  import { cn } from '@/utils/cn';
 
-## 3. Expo Image & Assets
-- Use `Image` from `expo-image` for high-performance images (e.g., `import { Image } from 'expo-image';`).
-- Use vectors and SF Symbols or `lucide-react-native` for clean rendering.
-- Reference assets using `require('../../assets/images/filename.png')` or static remote URIs with error fallbacks.
+  <View className={cn("flex-1 bg-white p-4", isActive && "bg-primary-50 border border-primary-500")} />
+  ```
+- **Flexbox Positioning**: Always use flex-based layouts (`flex-1`, `flex-row`, `items-center`, `justify-between`). Do NOT use web CSS grid, fixed positioning, or inline styles where NativeWind classes exist.
+- **Active & Touch States**: Use `active:opacity-70`, `active:scale-95` for press feedback.
+- **SafeArea Handling**: Wrap screen roots in `<SafeAreaView className="flex-1 bg-background">` or use `useSafeAreaInsets()` from `react-native-safe-area-context` for absolute positioned elements.
 
-## 4. Reanimated Animations
-- Use `react-native-reanimated` for smooth UI transitions and layout animations.
-- Use `useSharedValue`, `useAnimatedStyle`, and `withTiming` / `withSpring`.
-- Ensure animations run entirely on the UI thread.
-- Standard pattern:
-  ```typescript
-  import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-  
-  const scale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+## 3. Expo Image & Media
+- Import `Image` strictly from `expo-image` (`import { Image } from 'expo-image'`).
+- Image rendering pattern with fallback & `getImageUrl()` helper:
+  ```tsx
+  import { Image } from 'expo-image';
+  import { getImageUrl } from '@/utils/image-url';
+
+  <Image
+    source={{ uri: getImageUrl(item.imageUrl) }}
+    style={{ width: 80, height: 80, borderRadius: 12 }}
+    contentFit="cover"
+    transition={200}
+    placeholder={require('@/assets/images/placeholder.png')}
+  />
   ```
 
-## 5. Performance & Responsiveness
-- Use standard React Hooks (`useMemo`, `useCallback`) to avoid redundant renders of lists and heavy components.
-- Use FlatList / FlashList instead of ScrollView for long dynamic lists.
-- Design responsive layouts using responsive Tailwind breakpoints (e.g., `md:`) or React Native's `useWindowDimensions`.
+## 4. Hardware APIs & Native Modules
+- **Camera & Picker**: Use `expo-camera` for scanning/capture workflows and `expo-image-picker` for gallery selection.
+- **Storage**: Use `expo-secure-store` for sensitive data (tokens) and `expo-sqlite` for local caching/offline data.
+- **Location**: Use `expo-location` with explicit permission checks before fetching location coordinates.
+
+## 5. Performance Best Practices
+- Prefer `FlatList` or `FlashList` over `ScrollView` for lists with >10 items. Provide explicit `keyExtractor` and `getItemLayout` where applicable.
+- Memoize heavy callbacks and computations using `useCallback` and `useMemo`.
+- Avoid inline function allocations in list rendering loops (`renderItem`).

@@ -44,9 +44,9 @@ export default function ScheduleTag({ schedule, onEventOutfitGenerated }: Schedu
 
   return (
     <View className="mb-6">
-      <View className="flex-row items-center justify-between mb-2.5">
+      <View className="flex-row items-center justify-between mb-2.5 min-h-[28px]">
         <View className="flex-row items-center gap-2">
-          <Calendar size={18} className="text-primary" />
+          <Calendar size={18} color="#005c55" />
           <Text className="font-sans font-bold text-label-md text-on-surface">
             Hôm nay bạn làm gì?
           </Text>
@@ -67,13 +67,13 @@ export default function ScheduleTag({ schedule, onEventOutfitGenerated }: Schedu
             <Pressable
               key={evt.id}
               onPress={() => handleSelectEvent(evt.id)}
-              className={`flex-row items-center gap-2 px-3.5 py-2.5 rounded-full mr-2 active:scale-95 transition-all border ${
+              className={`flex-row items-center gap-2 px-3.5 py-2.5 rounded-full mr-2 border active:opacity-80 ${
                 isSelected
                   ? 'bg-primary border-primary shadow-sm'
                   : 'bg-surface-container-low border-outline-variant/30'
               }`}
             >
-              <IconComp size={15} className={isSelected ? 'text-white' : 'text-on-surface-variant'} />
+              <IconComp size={15} color={isSelected ? '#ffffff' : '#3e4947'} />
               <Text
                 className={`font-sans font-bold text-label-md ${
                   isSelected ? 'text-white' : 'text-on-surface'

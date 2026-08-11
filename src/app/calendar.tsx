@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, Text, View, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import Svg, { Circle } from 'react-native-svg';
-import { Cloud, CloudSun, Lightbulb, Sun, Calendar as CalendarIcon, Plus, Trash2 } from 'lucide-react-native';
+import { Lightbulb, Calendar as CalendarIcon, Plus, Trash2 } from 'lucide-react-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   getCalendarInsightsApiV1DashboardCalendarInsightsGetOptions,
@@ -12,20 +11,34 @@ import {
   getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetOptions,
   getCalendarByRangeApiV1DashboardCalendarGetOptions,
   deleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteMutation,
-  getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetQueryKey,
   scheduleCalendarEventApiV1DashboardCalendarSchedulePostMutation,
   getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetOptions,
-  getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetQueryKey,
+  getDailyCalendarDetailApiV1DashboardCalendarDailyGetOptions,
 } from '@/api/@tanstack/react-query.gen';
+import { calendarKeys } from '@/api/query-keys';
+import { cn } from '@/utils/cn';
+import { resolveImageUrl } from '@/utils/image-url';
 
 export default function CalendarScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const queryClient = useQueryClient();
-  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
+
+  const bottomTabBarHeight = 72 + insets.bottom;
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const [selectedDateStr, setSelectedDateStr] = useState<string>(todayStr);
 
   // Fetch Calendar Strip API Query
   const { data: calendarData } = useQuery(
     getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetOptions()
+  );
+
+  // Fetch Daily Detail Query for selected date
+  const { data: dailyDetail } = useQuery(
+    getDailyCalendarDetailApiV1DashboardCalendarDailyGetOptions({
+      query: { date: selectedDateStr },
+    })
   );
 
   // Fetch Upcoming Events API Query
@@ -37,7 +50,8 @@ export default function CalendarScreen() {
   const scheduleEventMutation = useMutation({
     ...scheduleCalendarEventApiV1DashboardCalendarSchedulePostMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetQueryKey() });
+      queryClient.invalidateQueries({ queryKey: calendarKeys.events() });
+      queryClient.invalidateQueries({ queryKey: calendarKeys.weekly() });
     },
   });
 
@@ -50,7 +64,7 @@ export default function CalendarScreen() {
   const deleteCalendarHistoryMutation = useMutation({
     ...deleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetQueryKey() });
+      queryClient.invalidateQueries({ queryKey: calendarKeys.weekly() });
     },
   });
 
@@ -59,7 +73,7 @@ export default function CalendarScreen() {
     getWardrobeStyleInsightsApiV1DashboardInsightsGetOptions()
   );
 
-  // Fetch Calendar Insights Query (New Backend API)
+  // Fetch Calendar Insights Query
   const { data: calendarInsightsData } = useQuery(
     getCalendarInsightsApiV1DashboardCalendarInsightsGetOptions()
   );
@@ -69,215 +83,203 @@ export default function CalendarScreen() {
     const parsedDate = new Date(item.date);
     const dateNum = isNaN(parsedDate.getTime()) ? 1 : parsedDate.getDate();
     return {
-      day: item.day_name.slice(0, 3),
+      dateStr: item.date,
+      day: item.day_name ? item.day_name.slice(0, 3) : '',
       date: dateNum,
-      active: item.is_highlighted,
+      active: item.date === selectedDateStr || item.is_highlighted,
+      outfit: item.outfit,
+      eventTitle: item.event_title,
     };
   });
 
-  const displayUtilization =
-    calendarInsightsData?.utilization_rate ??
-    wardrobeInsights?.utilization_rate ??
-    0;
+  const formattedMonthYear = React.useMemo(() => {
+    const d = new Date(selectedDateStr);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }, [selectedDateStr]);
 
-  const unwornMessage =
-    calendarInsightsData?.unworn_items_insight?.message || '';
+  const handleDaySelect = (dateStr: string) => {
+    setSelectedDateStr(dateStr);
+  };
 
-  const forecast = calendarInsightsData?.next_3_days_forecast || [];
+  const handleScheduleEvent = async () => {
+    try {
+      await scheduleEventMutation.mutateAsync({
+        body: {
+          date: selectedDateStr,
+          outfit_id: 1,
+          event_title: 'Client Presentation',
+        },
+      });
+      Alert.alert('Scheduled', `Event scheduled for ${selectedDateStr}`);
+    } catch (err) {
+      console.log('Schedule event error:', err);
+    }
+  };
 
-  const weatherImpactLevel = calendarInsightsData?.weather_impact?.level || 'Normal';
-  const weatherImpactSummary =
-    calendarInsightsData?.weather_impact?.recommendation_summary || '';
-
-  // SVG dimensions for utilization chart
-  const radius = 40;
-  const strokeWidth = 8;
-  const circumference = 2 * Math.PI * radius; // 251.2
-  const progressOffset = circumference * (1 - displayUtilization / 100);
+  const handleDeleteHistory = async (historyId: number) => {
+    try {
+      await deleteCalendarHistoryMutation.mutateAsync({
+        path: { history_id: historyId },
+      });
+      Alert.alert('Deleted', 'Outfit history record removed');
+    } catch (err) {
+      console.log('Delete history error:', err);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-surface w-full max-w-full overflow-hidden" edges={['top']}>
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-margin-mobile pt-6 pb-28">
-          {/* 7-Day Calendar Strip */}
-          <View className="mb-6">
-            <View className="flex-row justify-between items-end mb-4">
-              <Text className="font-sans font-bold text-title-lg text-on-surface">Outfit Calendar</Text>
-              <Text className="font-sans font-semibold text-label-md text-primary">October 2023</Text>
+        <View style={{ paddingBottom: bottomTabBarHeight + 24 }} className="px-margin-mobile pt-4">
+          {/* Header */}
+          <View className="flex-row justify-between items-center mb-6">
+            <View>
+              <Text className="font-sans font-bold text-headline-sm text-on-surface">
+                {formattedMonthYear || 'Outfit Calendar'}
+              </Text>
+              <Text className="font-sans text-label-md text-on-surface-variant">
+                Plan and track your weekly style history
+              </Text>
             </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-2">
-              {displayDays.map((item) => {
-                const isSelected = item.date === selectedDate;
-                return (
-                  <Pressable
-                    key={item.date}
-                    onPress={() => setSelectedDate(item.date)}
-                    className={`flex-col items-center justify-center min-w-[52px] h-20 rounded-xl mr-2 active:scale-95 ${
-                      isSelected
-                        ? 'bg-primary text-on-primary shadow-lg shadow-primary/20'
-                        : 'bg-surface-container-low text-on-surface-variant'
-                    }`}
-                  >
-                    <Text
-                      className={`font-sans text-label-sm uppercase ${
-                        isSelected ? 'text-white/80' : 'text-on-surface-variant/60'
-                      }`}
-                    >
-                      {item.day}
-                    </Text>
-                    <Text
-                      className={`font-sans font-bold text-title-lg mt-1 ${
-                        isSelected ? 'text-white' : 'text-on-surface'
-                      }`}
-                    >
-                      {item.date}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
+
+            <Pressable
+              onPress={handleScheduleEvent}
+              className="p-2.5 bg-primary/10 rounded-full border border-primary/20 active:scale-95 flex-row items-center gap-1"
+            >
+              <Plus size={18} color="#005c55" />
+            </Pressable>
           </View>
 
-          {/* Outfit Preview Card */}
-          <Pressable
-            onPress={() =>
-              router.navigate({
-                pathname: '/outfit-detail' as any,
-                params: {
-                  title: 'Daily Outfit',
-                  image: '',
-                  weather: weatherImpactSummary,
-                  tags: 'Daily Match',
-                  description: 'Daily outfit preview based on calendar and weather.',
-                  insight: unwornMessage,
-                },
-              })
-            }
-            className="mb-6 rounded-[2rem] overflow-hidden bg-white shadow-sm border border-outline-variant/30 active:scale-[0.98]"
-          >
-            <View className="aspect-[3/4] w-full bg-surface-container-highest">
-              <Image
-                source=""
-                className="w-full h-full"
-                contentFit="cover"
-              />
-            </View>
-            {/* Glass Overlay Info */}
-            <View className="p-5 border-t border-outline-variant/20 bg-white/95">
-              <View className="flex-row justify-between items-center mb-2">
-                <Text className="font-sans font-bold text-title-lg text-on-surface">
-                  Rainy Day Professional
+          {/* Weekly Days Strip */}
+          <View className="flex-row justify-between items-center mb-6 bg-surface-container-low p-3 rounded-2xl border border-outline-variant/20">
+            {displayDays.map((item) => (
+              <Pressable
+                key={item.dateStr}
+                onPress={() => handleDaySelect(item.dateStr)}
+                className={cn(
+                  'items-center py-2.5 px-3 rounded-xl transition-all',
+                  item.active ? 'bg-primary' : 'bg-transparent'
+                )}
+              >
+                <Text
+                  className={cn(
+                    'font-sans font-medium text-label-xs uppercase mb-1',
+                    item.active ? 'text-white' : 'text-on-surface-variant'
+                  )}
+                >
+                  {item.day}
                 </Text>
-                <View className="flex-row items-center gap-1 bg-primary/10 px-2.5 py-1 rounded-full">
-                  <CloudSun size={12} className="text-primary" />
-                  <Text className="font-sans font-bold text-[11px] text-primary">Weather Adjusted</Text>
-                </View>
-              </View>
-              <Text className="font-sans text-body-md text-on-surface-variant mb-4 leading-relaxed">
-                Optimized for 14°C with light showers. Minimalist layers for comfort and style.
-              </Text>
-              <View className="flex-row gap-2">
-                <View className="px-3 py-1 rounded-full bg-surface-container-highest">
-                  <Text className="font-sans font-medium text-label-md text-on-surface-variant">
-                    Business Casual
+                <Text
+                  className={cn(
+                    'font-sans font-bold text-title-md',
+                    item.active ? 'text-white' : 'text-on-surface'
+                  )}
+                >
+                  {item.date}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+
+          {/* Daily Outfit Detail Card */}
+          {dailyDetail && (
+            <View className="bg-white p-5 rounded-2xl border border-outline-variant/30 shadow-sm mb-6">
+              <View className="flex-row justify-between items-start mb-4">
+                <View>
+                  <Text className="font-sans font-bold text-headline-xs text-on-surface">
+                    {dailyDetail.event_title || 'Daily Planned Outfit'}
                   </Text>
-                </View>
-                <View className="px-3 py-1 rounded-full bg-surface-container-highest">
-                  <Text className="font-sans font-medium text-label-md text-on-surface-variant">
-                    Monochrome Base
+                  <Text className="font-sans text-label-md text-on-surface-variant">
+                    Date: {dailyDetail.date}
                   </Text>
                 </View>
               </View>
-            </View>
-          </Pressable>
 
-          {/* Insights Bento Section */}
-          <View className="flex-row flex-wrap gap-4">
-            {/* Utilization Circular Progress */}
-            <View className="flex-1 min-w-[45%] p-5 rounded-3xl bg-white border border-outline-variant/30 items-center justify-center text-center shadow-sm">
-              <View className="relative w-24 h-24 mb-4 justify-center items-center">
-                <Svg width={96} height={96} className="absolute rotate-[-90deg]">
-                  {/* Background Track Circle */}
-                  <Circle
-                    cx="48"
-                    cy="48"
-                    r={radius}
-                    fill="transparent"
-                    stroke="#e5e9e7"
-                    strokeWidth={strokeWidth}
-                  />
-                  {/* Active Progress Circle */}
-                  <Circle
-                    cx="48"
-                    cy="48"
-                    r={radius}
-                    fill="transparent"
-                    stroke="#005c55"
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={circumference}
-                    strokeDashoffset={progressOffset}
-                    strokeLinecap="round"
-                  />
-                </Svg>
-                <Text className="font-sans font-bold text-headline-md text-on-surface">{displayUtilization}%</Text>
-              </View>
-              <Text className="font-sans font-medium text-label-md text-on-surface-variant">
-                Wardrobe Utilization
-              </Text>
-            </View>
+              {dailyDetail.outfit && (
+                <Pressable
+                  onPress={() =>
+                    router.push({
+                      pathname: '/outfit-detail',
+                      params: {
+                        outfit_id: dailyDetail.outfit?.outfit_id
+                          ? String(dailyDetail.outfit.outfit_id)
+                          : undefined,
+                        title: dailyDetail.outfit?.title || 'Planned Outfit',
+                        image: dailyDetail.outfit?.image_url || '',
+                      },
+                    })
+                  }
+                  className="flex-row items-center gap-4 bg-surface-container-low p-3 rounded-xl border border-outline-variant/20 active:scale-95"
+                >
+                  <View className="w-16 h-16 rounded-lg overflow-hidden bg-slate-100">
+                    <Image
+                      source={resolveImageUrl(dailyDetail.outfit.image_url)}
+                      style={{ width: '100%', height: '100%' }}
+                      contentFit="cover"
+                    />
+                  </View>
 
-            {/* AI Suggestion Box */}
-            <View className="flex-1 min-w-[45%] p-5 rounded-3xl bg-primary-container/20 border border-primary/20 justify-between shadow-sm">
-              <View className="w-10 h-10 rounded-xl bg-primary/10 items-center justify-center mb-4">
-                <Lightbulb size={20} className="text-primary" />
-              </View>
-              <View>
-                <Text className="font-sans font-bold text-label-sm text-primary uppercase mb-1">
-                  AI Insight
-                </Text>
-                <Text className="font-sans text-body-md text-on-surface-variant leading-tight">
-                  {unwornMessage}{' '}
-                  <Text className="text-primary font-bold">Sell or Restyle?</Text>
-                </Text>
-              </View>
+                  <View className="flex-1">
+                    <Text className="font-sans font-bold text-body-lg text-on-surface">
+                      {dailyDetail.outfit.title}
+                    </Text>
+                    <Text className="font-sans text-label-md text-on-surface-variant">
+                      {dailyDetail.outfit.style_type || 'Custom Style'}
+                    </Text>
+                  </View>
+                </Pressable>
+              )}
             </View>
+          )}
 
-            {/* Weather Card */}
-            <View className="w-full p-5 rounded-3xl bg-surface-container-low border border-outline-variant/30 flex-row items-center gap-4 shadow-sm">
+          {/* AI Style Insights Banner */}
+          {calendarInsightsData && (
+            <View className="bg-primary/10 p-5 rounded-2xl border border-primary/20 mb-6 flex-row items-start gap-3">
+              <Lightbulb size={22} color="#005c55" className="mt-0.5" />
               <View className="flex-1">
-                <Text className="font-sans font-medium text-label-md text-on-surface-variant mb-2">
-                  Next 3-Day Forecast
+                <Text className="font-sans font-bold text-title-md text-primary mb-1">
+                  AI Style Insight
                 </Text>
-                <View className="flex-row gap-4">
-                  {forecast.slice(0, 3).map((item, idx) => (
-                    <View key={idx} className={`items-center ${idx > 0 ? 'opacity-40' : ''}`}>
-                      {idx === 0 ? (
-                        <Cloud size={18} className="text-primary mb-1" />
-                      ) : idx === 1 ? (
-                        <Sun size={18} className="text-on-surface-variant mb-1" />
-                      ) : (
-                        <CloudSun size={18} className="text-on-surface-variant mb-1" />
-                      )}
-                      <Text className="font-sans text-label-sm text-on-surface">{item.temp_c}°C</Text>
-                    </View>
-                  ))}
-                </View>
-              </View>
-              <View className="h-10 w-[1px] bg-outline-variant" />
-              <View className="items-end pl-2">
-                <Text className="font-sans font-bold text-label-sm text-primary uppercase">Impact</Text>
-                <Text className="font-sans font-bold text-headline-md text-on-surface leading-none mt-1">
-                  {weatherImpactLevel}
-                </Text>
-                <Text className="font-sans text-label-sm text-on-surface-variant mt-0.5">
-                  {weatherImpactSummary}
+                <Text className="font-sans text-body-md text-on-surface leading-6">
+                  Weekly outfit styling performance optimized.
                 </Text>
               </View>
             </View>
+          )}
+
+          {/* Upcoming Events List */}
+          <View className="mb-4">
+            <Text className="font-sans font-bold text-headline-xs text-on-surface mb-3">
+              Upcoming Events
+            </Text>
+            {upcomingEventsData && upcomingEventsData.length > 0 ? (
+              upcomingEventsData.map((evt, idx) => (
+                <View
+                  key={idx}
+                  className="p-4 bg-white rounded-xl border border-outline-variant/20 mb-3 flex-row justify-between items-center"
+                >
+                  <View>
+                    <Text className="font-sans font-bold text-body-md text-on-surface">
+                      {evt.event_title || 'Upcoming Event'}
+                    </Text>
+                    <Text className="font-sans text-label-md text-on-surface-variant">
+                      {evt.date}
+                    </Text>
+                  </View>
+                  <CalendarIcon size={20} color="#005c55" />
+                </View>
+              ))
+            ) : (
+              <View className="p-4 bg-surface-container-low rounded-xl border border-outline-variant/20 items-center">
+                <Text className="font-sans text-body-md text-on-surface-variant">
+                  No upcoming events scheduled.
+                </Text>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
-

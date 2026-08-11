@@ -17,7 +17,7 @@ export default function StyleInsightBento() {
     <View className="mt-12 flex-row flex-wrap gap-4">
       <View className="w-full bg-white/80 border-l-4 border-primary/40 border border-outline-variant/30 p-5 rounded-2xl">
         <View className="flex-row items-center gap-3 mb-2">
-          <Lightbulb size={20} className="text-primary" />
+          <Lightbulb size={20} color="#005c55" />
           <Text className="font-sans font-bold text-title-lg text-on-surface">AI Style Insight</Text>
         </View>
         <Text className="font-sans text-body-md text-on-surface-variant leading-relaxed">

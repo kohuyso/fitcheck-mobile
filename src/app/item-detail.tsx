@@ -1,50 +1,56 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-  Alert,
-  Modal,
-  TextInput,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ChevronLeft,
-  Heart,
-  Sparkles,
-  CheckCircle,
-  Check,
-  Calendar,
-  Tag,
-  Shirt,
-  Wand2,
-  Trash2,
   Edit2,
+  Heart,
+  Tag,
+  Trash2,
   X,
+  Sparkles,
 } from 'lucide-react-native';
+import React, { useState } from 'react';
+import {
+  Alert,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
-  getItemDetailApiV1ClosetItemsItemIdGetOptions,
-  toggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostMutation,
   deleteClothingItemApiV1ClosetItemsItemIdDeleteMutation,
-  updateClothingItemApiV1ClosetItemsItemIdPutMutation,
-  getItemPairingsApiV1ClosetItemsItemIdPairingsGetOptions,
-  uploadClothingItemImageApiV1ClosetItemsUploadPostMutation,
-  getMyWardrobeApiV1ClosetItemsGetQueryKey,
+  getItemDetailApiV1ClosetItemsItemIdGetOptions,
   getItemDetailApiV1ClosetItemsItemIdGetQueryKey,
+  getItemPairingsApiV1ClosetItemsItemIdPairingsGetOptions,
+  toggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostMutation,
+  updateClothingItemApiV1ClosetItemsItemIdPutMutation,
+  uploadClothingItemImageApiV1ClosetItemsUploadPostMutation,
 } from '@/api/@tanstack/react-query.gen';
+import { closetKeys } from '@/api/query-keys';
+import { cn } from '@/utils/cn';
+import { useAppNavigation } from '@/context/navigation-history';
+import { resolveImageUrl } from '@/utils/image-url';
 
 export default function ItemDetailScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams();
+  const { goBack } = useAppNavigation();
+  const params = useLocalSearchParams<{
+    id?: string;
+    name?: string;
+    category?: string;
+    color?: string;
+    style?: string;
+    image?: string;
+  }>();
   const queryClient = useQueryClient();
 
   const numericId = Number(params.id);
+  const insets = useSafeAreaInsets();
   const isValidId = !isNaN(numericId) && numericId > 0;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -52,7 +58,7 @@ export default function ItemDetailScreen() {
   const [editStyle, setEditStyle] = useState('Casual');
 
   // Query Backend API for Item Detail
-  const { data: itemDetailData, isLoading } = useQuery({
+  const { data: itemDetailData } = useQuery({
     ...getItemDetailApiV1ClosetItemsItemIdGetOptions({
       path: { item_id: numericId },
     }),
@@ -72,11 +78,11 @@ export default function ItemDetailScreen() {
     uploadClothingItemImageApiV1ClosetItemsUploadPostMutation()
   );
 
-  const name = itemDetailData?.name || (params.name as string) || 'Item';
-  const category = itemDetailData?.category || (params.category as string) || 'Category';
-  const color = itemDetailData?.color_name || (params.color as string) || 'Color';
-  const style = itemDetailData?.style || (params.style as string) || 'Style';
-  const image = itemDetailData?.image_url || (params.image as string) || '';
+  const name = itemDetailData?.name || params.name || 'Clothing Item';
+  const category = itemDetailData?.category || params.category || 'Category';
+  const color = itemDetailData?.color_name || params.color || 'Color';
+  const style = itemDetailData?.style || params.style || 'Style';
+  const image = itemDetailData?.image_url || params.image || '';
 
   const wornCount = itemDetailData?.stats?.worn_count_this_month ?? 0;
   const versatilityScore = itemDetailData?.stats?.versatility_score ?? 0;
@@ -85,7 +91,6 @@ export default function ItemDetailScreen() {
   const aiStylingNote = itemDetailData?.ai_styling_note || '';
 
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isWorn, setIsWorn] = useState(false);
 
   // Mutations
   const toggleFavoriteMutation = useMutation(
@@ -94,57 +99,59 @@ export default function ItemDetailScreen() {
   const deleteItemMutation = useMutation({
     ...deleteClothingItemApiV1ClosetItemsItemIdDeleteMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getMyWardrobeApiV1ClosetItemsGetQueryKey() });
-      router.navigate('/closet' as any);
+      queryClient.invalidateQueries({ queryKey: closetKeys.items() });
+      queryClient.invalidateQueries({ queryKey: closetKeys.summary() });
+      router.replace('/closet');
     },
   });
+
   const updateItemMutation = useMutation({
     ...updateClothingItemApiV1ClosetItemsItemIdPutMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getMyWardrobeApiV1ClosetItemsGetQueryKey() });
-      if (isValidId) {
-        queryClient.invalidateQueries({ queryKey: getItemDetailApiV1ClosetItemsItemIdGetQueryKey({ path: { item_id: numericId } }) });
-      }
+      queryClient.invalidateQueries({
+        queryKey: getItemDetailApiV1ClosetItemsItemIdGetQueryKey({ path: { item_id: numericId } }),
+      });
+      queryClient.invalidateQueries({ queryKey: closetKeys.items() });
       setIsEditing(false);
     },
   });
 
-  const handleToggleFavorite = async () => {
-    setIsFavorite((prev: boolean) => !prev);
+  const handleFavoriteToggle = async () => {
+    setIsFavorite((prev) => !prev);
     if (isValidId) {
       try {
         await toggleFavoriteMutation.mutateAsync({
           path: { item_id: numericId },
         });
-      } catch (err) {
-        console.log('Toggle favorite error:', err);
+      } catch (e) {
+        console.log('Favorite toggle error:', e);
       }
     }
   };
 
-  const handleDeleteItem = () => {
-    Alert.alert('Xóa món đồ', `Bạn có chắc muốn xóa "${name}" khỏi tủ đồ không?`, [
-      { text: 'Hủy', style: 'cancel' },
+  const handleDelete = () => {
+    Alert.alert('Delete Item', 'Are you sure you want to remove this item from your closet?', [
+      { text: 'Cancel', style: 'cancel' },
       {
-        text: 'Xóa',
+        text: 'Delete',
         style: 'destructive',
         onPress: () => {
           if (isValidId) {
             deleteItemMutation.mutate({ path: { item_id: numericId } });
           } else {
-            router.navigate('/closet' as any);
+            router.replace('/closet');
           }
         },
       },
     ]);
   };
 
-  const handleSaveItemEdit = () => {
-    if (isValidId) {
+  const handleSaveEdit = () => {
+    if (isValidId && editName.trim()) {
       updateItemMutation.mutate({
         path: { item_id: numericId },
         body: {
-          name: editName || name,
+          name: editName,
           style_tag: editStyle,
         },
       });
@@ -153,249 +160,193 @@ export default function ItemDetailScreen() {
     }
   };
 
-  const handleWearToday = () => {
-    setIsWorn(true);
-    setTimeout(() => {
-      setIsWorn(false);
-    }, 3000);
-  };
-
-  const handleBuildOutfitWithItem = () => {
-    router.navigate({
-      pathname: '/outfit-detail' as any,
-      params: {
-        title: `${name} Outfit`,
-        image,
-        tags: `${category}, ${style}`,
-        description: `Custom outfit designed around your ${color.toLowerCase()} ${name.toLowerCase()}.`,
-        insight: `"AI styled a complete look anchored around your ${name} for maximum color contrast and silhouette ratio."`,
-      },
-    });
-  };
-
-  const handleBack = () => {
-    router.navigate('/closet' as any);
-  };
-
   return (
-    <SafeAreaView className="flex-1 bg-surface w-full max-w-full overflow-hidden" edges={['top']}>
-      {/* Top Header */}
-      <View className="flex-row justify-between items-center px-margin-mobile h-16 bg-surface/80 border-b border-outline-variant/30 z-50">
+    <SafeAreaView className="flex-1 bg-surface" edges={['top']}>
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-margin-mobile py-3 border-b border-outline-variant/30 bg-surface">
         <Pressable
-          onPress={handleBack}
-          className="w-10 h-10 items-center justify-center rounded-full active:scale-95 transition-transform"
-          hitSlop={8}
+          onPress={() => goBack('/closet')}
+          hitSlop={12}
+          className="p-2 rounded-full active:scale-95 bg-surface-container-low"
         >
-          <ChevronLeft size={24} className="text-on-surface" />
+          <ChevronLeft size={22} color="#181c1c" />
         </Pressable>
 
-        <Text className="font-sans font-bold text-title-lg text-primary tracking-tight">
-          Item Detail
+        <Text className="font-sans font-bold text-title-lg text-on-surface truncate flex-1 mx-4 text-center">
+          {name}
         </Text>
 
         <View className="flex-row items-center gap-2">
           <Pressable
-            onPress={() => {
-              setEditName(name);
-              setEditStyle(style);
-              setIsEditing(true);
-            }}
-            className="w-9 h-9 items-center justify-center rounded-full bg-surface-container active:scale-95"
+            onPress={handleFavoriteToggle}
+            hitSlop={8}
+            className="p-2 rounded-full bg-surface-container-low active:scale-95"
           >
-            <Edit2 size={16} className="text-on-surface-variant" />
+            <Heart size={20} color={isFavorite ? '#ba1a1a' : '#3e4947'} fill={isFavorite ? '#ba1a1a' : 'none'} />
           </Pressable>
           <Pressable
-            onPress={handleDeleteItem}
-            className="w-9 h-9 items-center justify-center rounded-full bg-surface-container active:scale-95"
+            onPress={handleDelete}
+            hitSlop={8}
+            className="p-2 rounded-full bg-surface-container-low active:scale-95"
           >
-            <Trash2 size={16} className="text-rose-600" />
-          </Pressable>
-          <Pressable
-            onPress={handleToggleFavorite}
-            className="w-9 h-9 items-center justify-center rounded-full bg-surface-container active:scale-95"
-          >
-            <Heart
-              size={18}
-              className={isFavorite ? 'text-rose-500 fill-rose-500' : 'text-on-surface-variant'}
-            />
+            <Trash2 size={20} color="#ba1a1a" />
           </Pressable>
         </View>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Item Hero Image Section */}
-        <View className="relative w-full aspect-[4/5] bg-surface-container-low justify-center items-center p-6">
-          {isLoading ? (
-            <ActivityIndicator size="large" color="#005c55" />
-          ) : (
-            <Image source={image} className="w-full h-full" contentFit="contain" />
-          )}
+      <ScrollView className="flex-1 px-margin-mobile pt-4" contentContainerStyle={{ paddingBottom: 40 }}>
+        {/* Main Image Banner */}
+        <View className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 mb-6 relative border border-outline-variant/20 shadow-sm items-center justify-center p-4">
+          <Image
+            source={resolveImageUrl(image, category)}
+            style={{ width: '100%', height: '100%' }}
+            contentFit="contain"
+            transition={200}
+          />
+        </View>
 
-          {/* Style Badge */}
-          <View className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex-row items-center gap-1.5 border border-outline-variant/20 shadow-sm">
-            <Tag size={14} className="text-primary" />
-            <Text className="font-sans font-bold text-label-sm text-primary uppercase">
-              {style}
+        {/* Item Info Summary */}
+        <View className="bg-white p-5 rounded-2xl border border-outline-variant/30 shadow-sm mb-6">
+          <View className="flex-row justify-between items-start mb-3">
+            <View>
+              <Text className="font-sans font-bold text-headline-sm text-on-surface mb-1">{name}</Text>
+              <Text className="font-sans font-semibold text-label-md text-primary uppercase tracking-wider">
+                {category} • {color}
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => {
+                setEditName(name);
+                setEditStyle(style);
+                setIsEditing(true);
+              }}
+              className="p-2 bg-surface-container-low rounded-full active:scale-95 border border-outline-variant/20"
+            >
+              <Edit2 size={18} color="#005c55" />
+            </Pressable>
+          </View>
+
+          <View className="flex-row items-center gap-2 pt-2 border-t border-outline-variant/20">
+            <Tag size={16} color="#707977" />
+            <Text className="font-sans text-label-md text-on-surface-variant">Style Tag: </Text>
+            <Text className="font-sans font-bold text-label-md text-on-surface">{style}</Text>
+          </View>
+        </View>
+
+        {/* Stats Bento */}
+        <View className="flex-row justify-between gap-3 mb-6">
+          <View className="flex-1 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/20 items-center">
+            <Text className="font-sans font-bold text-headline-sm text-primary mb-1">{wornCount}</Text>
+            <Text className="font-sans text-label-xs text-on-surface-variant text-center uppercase">
+              Worn This Month
+            </Text>
+          </View>
+
+          <View className="flex-1 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/20 items-center">
+            <Text className="font-sans font-bold text-headline-sm text-emerald-600 mb-1">
+              {versatilityScore}%
+            </Text>
+            <Text className="font-sans text-label-xs text-on-surface-variant text-center uppercase">
+              Versatility
+            </Text>
+          </View>
+
+          <View className="flex-1 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/20 items-center">
+            <Text className="font-sans font-bold text-headline-sm text-secondary mb-1">
+              {matchingItemsCount}
+            </Text>
+            <Text className="font-sans text-label-xs text-on-surface-variant text-center uppercase">
+              Matching Items
             </Text>
           </View>
         </View>
 
-        {/* Item Info Section */}
-        <View className="px-margin-mobile pt-6">
-          <View className="flex-row justify-between items-start">
+        {/* AI Styling Advice Banner */}
+        {aiStylingNote ? (
+          <View className="bg-primary/10 p-5 rounded-2xl border border-primary/20 mb-6 flex-row items-start gap-3">
+            <Sparkles size={22} color="#005c55" fill="#005c55" className="mt-0.5" />
             <View className="flex-1">
-              <Text className="font-sans font-semibold text-label-sm text-on-surface-variant uppercase tracking-wider">
-                {category}
-              </Text>
-              <Text className="font-sans font-bold text-headline-lg text-on-surface mt-1">
-                {name}
-              </Text>
-              <Text className="font-sans font-semibold text-body-md text-primary mt-1">
-                Color: {color}
-              </Text>
-            </View>
-          </View>
-
-          {/* AI Wear Statistics Bento Cards */}
-          <View className="grid grid-cols-2 gap-3 mt-6 flex-row flex-wrap">
-            <View className="flex-1 min-w-[45%] bg-white p-4 rounded-2xl border border-outline-variant/30 shadow-xs">
-              <View className="flex-row items-center gap-1.5 mb-1">
-                <Calendar size={16} className="text-primary" />
-                <Text className="font-sans font-bold text-label-sm text-on-surface-variant uppercase">
-                  Worn Count
-                </Text>
-              </View>
-              <Text className="font-sans font-bold text-headline-md text-on-surface">
-                {wornCount} times
-              </Text>
-              <Text className="font-sans text-label-sm text-on-surface-variant/70 mt-0.5">
-                This month
-              </Text>
-            </View>
-
-            <View className="flex-1 min-w-[45%] bg-white p-4 rounded-2xl border border-outline-variant/30 shadow-xs">
-              <View className="flex-row items-center gap-1.5 mb-1">
-                <Shirt size={16} className="text-primary" />
-                <Text className="font-sans font-bold text-label-sm text-on-surface-variant uppercase">
-                  Versatility
-                </Text>
-              </View>
-              <Text className="font-sans font-bold text-headline-md text-primary">
-                {versatilityScore}%
-              </Text>
-              <Text className="font-sans text-label-sm text-on-surface-variant/70 mt-0.5">
-                Matches {matchingItemsCount} items
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* AI Pairing Recommendations */}
-        <View className="px-margin-mobile mt-8">
-          <Text className="font-sans font-bold text-title-lg text-on-surface mb-3">
-            Pairs Well With
-          </Text>
-
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-3">
-            {pairsWellWith.map((pair) => (
-              <Pressable
-                key={pair.id}
-                onPress={handleBuildOutfitWithItem}
-                className="w-36 bg-white rounded-2xl overflow-hidden border border-outline-variant/30 p-2.5 mr-3 shadow-xs active:scale-95"
-              >
-                <View className="w-full h-32 bg-surface-container rounded-xl overflow-hidden mb-2">
-                  <Image source={pair.image_url} className="w-full h-full" contentFit="cover" />
-                </View>
-                <Text className="font-sans font-bold text-label-md text-on-surface" numberOfLines={1}>
-                  {pair.name}
-                </Text>
-                <Text className="font-sans text-label-sm text-primary mt-0.5">{pair.category}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* AI Style Advice */}
-        <View className="px-margin-mobile mt-8 mb-32">
-          <View className="bg-white rounded-2xl p-6 border border-primary/20 shadow-sm relative overflow-hidden">
-            <View className="absolute top-0 right-0 p-2 opacity-10">
-              <Sparkles size={80} className="text-primary" />
-            </View>
-
-            <View className="flex-row items-center gap-2 mb-2">
-              <Sparkles size={20} className="text-primary fill-primary" />
-              <Text className="font-sans font-bold text-title-lg text-primary">
+              <Text className="font-sans font-bold text-title-md text-primary mb-1">
                 AI Styling Note
               </Text>
+              <Text className="font-sans text-body-md text-on-surface leading-6">{aiStylingNote}</Text>
             </View>
-
-            <Text className="font-sans italic text-body-md text-on-surface-variant leading-relaxed">
-              "{aiStylingNote}"
-            </Text>
           </View>
+        ) : null}
+
+        {/* Pairs Well With Section */}
+        <View className="mb-6">
+          <Text className="font-sans font-bold text-headline-xs text-on-surface mb-3">
+            Pairs Well With
+          </Text>
+          {pairsWellWith.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-3">
+              {pairsWellWith.map((pair, idx) => (
+                <View
+                  key={idx}
+                  className="w-36 bg-white rounded-xl p-3 border border-outline-variant/20 items-center mr-3 shadow-sm"
+                >
+                  <View className="w-24 h-24 rounded-lg bg-slate-100 overflow-hidden mb-2">
+                    <Image
+                      source={resolveImageUrl(pair.image_url, pair.category)}
+                      style={{ width: '100%', height: '100%' }}
+                      contentFit="cover"
+                    />
+                  </View>
+                  <Text className="font-sans font-bold text-body-sm text-on-surface truncate text-center w-full">
+                    {pair.name}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          ) : (
+            <View className="p-4 bg-surface-container-low rounded-xl border border-outline-variant/20 items-center">
+              <Text className="font-sans text-body-md text-on-surface-variant">
+                Select this item in AI Chat to generate custom outfit pairings.
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 
-      {/* Fixed Action Bar at Bottom */}
-      <View className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-outline-variant/30 px-margin-mobile py-4 z-40 flex-row gap-3">
-        <Pressable
-          onPress={handleBuildOutfitWithItem}
-          className="flex-1 bg-surface-container-high py-4 rounded-2xl flex-row items-center justify-center gap-2 active:scale-95"
-        >
-          <Wand2 size={18} className="text-on-surface" />
-          <Text className="font-sans font-bold text-body-lg text-on-surface">Build Outfit</Text>
-        </Pressable>
-
-        <Pressable
-          onPress={handleWearToday}
-          className={`flex-1 py-4 rounded-2xl flex-row items-center justify-center gap-2 shadow-lg active:scale-95 ${
-            isWorn ? 'bg-emerald-700' : 'bg-primary'
-          }`}
-        >
-          <Text className="font-sans font-bold text-body-lg text-white">
-            {isWorn ? 'Marked Worn' : 'Wear Today'}
-          </Text>
-          {isWorn ? (
-            <Check size={18} className="text-white" />
-          ) : (
-            <CheckCircle size={18} className="text-white" />
-          )}
-        </Pressable>
-      </View>
-
       {/* Edit Item Modal */}
-      <Modal visible={isEditing} animationType="fade" transparent>
-        <View className="flex-1 bg-black/50 justify-center items-center p-5">
-          <View className="bg-white rounded-3xl p-6 w-full max-w-sm border border-outline-variant/30 shadow-2xl">
-            <View className="flex-row justify-between items-center mb-4">
-              <Text className="font-sans font-bold text-title-lg text-on-surface">Edit Item</Text>
-              <Pressable onPress={() => setIsEditing(false)} className="p-1">
-                <X size={20} className="text-on-surface-variant" />
-              </Pressable>
+      <Modal visible={isEditing} animationType="slide" onRequestClose={() => setIsEditing(false)} statusBarTranslucent>
+        <View style={{ paddingTop: Math.max(insets.top, 20) }} className="flex-1 bg-surface p-6">
+          <View className="flex-row justify-between items-center mb-6">
+            <Text className="font-sans font-bold text-headline-sm text-on-surface">Edit Item</Text>
+            <Pressable onPress={() => setIsEditing(false)}>
+              <X size={24} color="#181c1c" />
+            </Pressable>
+          </View>
+
+          <View className="space-y-4">
+            <View className="mb-4">
+              <Text className="font-sans font-semibold text-label-md text-on-surface mb-1.5">
+                Item Name
+              </Text>
+              <TextInput
+                value={editName}
+                onChangeText={setEditName}
+                className="w-full h-12 bg-surface-container-low rounded-xl px-4 font-sans text-body-md border border-outline-variant/30 text-on-surface"
+              />
             </View>
 
-            <Text className="font-sans font-bold text-label-md text-on-surface-variant mb-1">Item Name</Text>
-            <TextInput
-              value={editName}
-              onChangeText={setEditName}
-              placeholder="Item name..."
-              className="bg-surface-container-low p-3.5 rounded-xl border border-outline-variant/30 font-sans text-body-md text-on-surface mb-4"
-            />
-
-            <Text className="font-sans font-bold text-label-md text-on-surface-variant mb-1">Style Tag</Text>
-            <TextInput
-              value={editStyle}
-              onChangeText={setEditStyle}
-              placeholder="e.g. Casual, Formal, Sporty"
-              className="bg-surface-container-low p-3.5 rounded-xl border border-outline-variant/30 font-sans text-body-md text-on-surface mb-6"
-            />
+            <View className="mb-6">
+              <Text className="font-sans font-semibold text-label-md text-on-surface mb-1.5">
+                Style Tag
+              </Text>
+              <TextInput
+                value={editStyle}
+                onChangeText={setEditStyle}
+                className="w-full h-12 bg-surface-container-low rounded-xl px-4 font-sans text-body-md border border-outline-variant/30 text-on-surface"
+              />
+            </View>
 
             <Pressable
-              onPress={handleSaveItemEdit}
-              disabled={updateItemMutation.isPending}
-              className="w-full py-3.5 bg-primary rounded-xl items-center shadow-md active:scale-95"
+              onPress={handleSaveEdit}
+              className="w-full h-14 bg-primary rounded-xl justify-center items-center active:scale-95 shadow-md"
             >
-              <Text className="font-sans font-bold text-body-lg text-white">Save Changes</Text>
+              <Text className="font-sans font-bold text-title-md text-white">Save Changes</Text>
             </Pressable>
           </View>
         </View>
@@ -403,4 +354,3 @@ export default function ItemDetailScreen() {
     </SafeAreaView>
   );
 }
-

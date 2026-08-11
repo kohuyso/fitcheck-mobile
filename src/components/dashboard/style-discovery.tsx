@@ -20,7 +20,7 @@ export default function StyleDiscovery() {
       {/* AI Suggestion Box */}
       <View className="bg-white p-5 rounded-2xl border border-primary/20 shadow-sm mb-4">
         <View className="flex-row items-center gap-2 mb-2">
-          <Sparkles size={18} className="text-primary fill-primary" />
+          <Sparkles size={18} color="#005c55" fill="#005c55" />
           <Text className="font-sans font-bold text-title-lg text-primary">Gợi Ý Thời Trang Cá Nhân</Text>
         </View>
         <Text className="font-sans text-body-md text-on-surface-variant leading-relaxed">
@@ -30,11 +30,11 @@ export default function StyleDiscovery() {
 
       <View className="flex-row gap-4">
         <Pressable className="flex-1 bg-surface-container-high p-4 rounded-2xl flex-col gap-3 active:bg-surface-variant">
-          <Compass size={24} className="text-primary" />
+          <Compass size={24} color="#005c55" />
           <Text className="font-sans font-bold text-title-lg text-on-surface">New Trends</Text>
         </Pressable>
         <Pressable className="flex-1 bg-surface-container-high p-4 rounded-2xl flex-col gap-3 active:bg-surface-variant">
-          <Palette size={24} className="text-primary" />
+          <Palette size={24} color="#005c55" />
           <Text className="font-sans font-bold text-title-lg text-on-surface">Color Theory</Text>
         </Pressable>
       </View>

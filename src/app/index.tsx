@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { Bot, Check, Link2, MapPin, RefreshCw, Sun, Wifi } from 'lucide-react-native';
+import { Bot, Check, Link2, MapPin, RefreshCw, Sun } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   getHomeDashboardApiV1DashboardHomeGetOptions,
@@ -11,6 +11,7 @@ import {
   readRootGetOptions,
   syncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostMutation,
 } from '@/api/@tanstack/react-query.gen';
+import { cn } from '@/utils/cn';
 
 import OutfitCarousel from '@/components/dashboard/outfit-carousel';
 import ScheduleTag from '@/components/dashboard/schedule-tag';
@@ -22,10 +23,11 @@ import WeatherAdvice from '@/components/dashboard/weather-advice';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [isWorn, setIsWorn] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  // Health check API query (Root endpoint)
+  // Health check API query
   const { data: serverHealthData } = useQuery(readRootGetOptions());
 
   // Offline Sync History Mutation
@@ -33,15 +35,12 @@ export default function HomeScreen() {
     syncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostMutation()
   );
 
-  // Auto-sync offline wear actions when app mounts/comes online
   useEffect(() => {
     const syncOffline = async () => {
       try {
-        await syncOfflineMutation.mutateAsync({
-          body: [],
-        });
+        await syncOfflineMutation.mutateAsync({ body: [] });
       } catch (err) {
-        // Offline sync fallback
+        // Fallback for offline sync
       }
     };
     syncOffline();
@@ -82,22 +81,24 @@ export default function HomeScreen() {
       ? `${data.weather.temperature}°C`
       : '--°C';
 
+  const bottomTabBarHeight = 72 + insets.bottom;
+
   return (
     <SafeAreaView className="flex-1 bg-surface w-full max-w-full overflow-hidden" edges={['top']}>
       {/* Top Header */}
       <View className="flex-row justify-between items-center px-margin-mobile py-4 border-b border-outline-variant/30">
         <View className="flex-row items-center gap-2">
-          <MapPin size={22} className="text-primary" />
+          <MapPin size={22} color="#005c55" />
           <Text className="font-sans font-bold text-title-lg text-on-surface">{displayLocation}</Text>
         </View>
         <View className="bg-surface-container-low px-3 py-1.5 rounded-full flex-row items-center gap-2">
-          <Sun size={16} className="text-primary fill-primary" />
+          <Sun size={16} color="#005c55" fill="#005c55" />
           <Text className="font-sans font-medium text-label-md text-on-surface">{displayTemp}</Text>
         </View>
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-margin-mobile pt-6 pb-28">
+        <View style={{ paddingBottom: bottomTabBarHeight + 24 }} className="px-margin-mobile pt-6">
           {/* Weather Advice */}
           <WeatherAdvice
             condition={dashboardData?.weather?.condition}
@@ -116,7 +117,7 @@ export default function HomeScreen() {
             <Text className="font-sans font-bold text-headline-md text-on-surface tracking-tight">
               AI Curated Daily
             </Text>
-            <Pressable onPress={() => router.navigate('/outfit-detail' as any)}>
+            <Pressable onPress={() => router.push('/outfit-detail')}>
               <Text className="text-primary font-sans font-semibold text-label-md">View All</Text>
             </Pressable>
           </View>
@@ -128,17 +129,18 @@ export default function HomeScreen() {
           <View className="flex-col gap-3">
             <Pressable
               onPress={toggleWear}
-              className={`w-full h-14 rounded-xl flex-row items-center justify-center gap-2 active:scale-95 shadow-md ${
+              className={cn(
+                'w-full h-14 rounded-xl flex-row items-center justify-center gap-2 active:scale-95 shadow-md transition-all',
                 isWorn ? 'bg-emerald-600' : 'bg-primary shadow-primary/20'
-              }`}
+              )}
             >
               <Text className="font-sans font-bold text-title-lg text-white">
                 {isWorn ? 'Outfit Selected' : 'Wear This Outfit'}
               </Text>
               {isWorn ? (
-                <Check size={20} className="text-white" />
+                <Check size={20} color="#ffffff" />
               ) : (
-                <Link2 size={20} className="text-white" />
+                <Link2 size={20} color="#ffffff" />
               )}
             </Pressable>
 
@@ -147,7 +149,7 @@ export default function HomeScreen() {
               className="w-full h-14 bg-surface-container rounded-xl flex-row items-center justify-center gap-2 active:scale-95 border border-outline-variant/30"
             >
               <Text className="font-sans font-bold text-title-lg text-on-surface">Replace Item</Text>
-              <RefreshCw size={18} className="text-on-surface" />
+              <RefreshCw size={18} color="#181c1c" />
             </Pressable>
           </View>
 
@@ -161,13 +163,11 @@ export default function HomeScreen() {
 
       {/* Floating Style Assistant FAB */}
       <Pressable
-        onPress={() => {
-          console.log('FAB pressed! Navigating to /chat');
-          router.navigate('/chat');
-        }}
-        className="absolute bottom-24 right-6 w-14 h-14 bg-primary rounded-full shadow-2xl items-center justify-center z-50 active:scale-90"
+        onPress={() => router.push('/chat')}
+        style={{ bottom: bottomTabBarHeight + 16 }}
+        className="absolute right-6 w-14 h-14 bg-primary rounded-full shadow-2xl items-center justify-center z-50 active:scale-90"
       >
-        <Bot size={28} className="text-white" />
+        <Bot size={28} color="#ffffff" />
       </Pressable>
 
       {/* Item Swapping Bottom Sheet */}

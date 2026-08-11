@@ -165,6 +165,10 @@ export type CalendarDayPreview = {
      * Event Title
      */
     event_title?: string | null;
+    /**
+     * Notes
+     */
+    notes?: string | null;
     outfit?: OutfitRecommendation | null;
 };
 
@@ -219,9 +223,17 @@ export type CalendarScheduleRequest = {
      */
     outfit_id: number;
     /**
+     * Event Title
+     */
+    event_title?: string | null;
+    /**
      * Event Name
      */
     event_name?: string | null;
+    /**
+     * Notes
+     */
+    notes?: string | null;
 };
 
 /**
@@ -476,6 +488,41 @@ export type ColorTheoryResponse = {
 };
 
 /**
+ * DailyCalendarResponse
+ */
+export type DailyCalendarResponse = {
+    /**
+     * Date
+     */
+    date: string;
+    /**
+     * Day Name
+     */
+    day_name: string;
+    /**
+     * Is Highlighted
+     */
+    is_highlighted: boolean;
+    /**
+     * Event Title
+     */
+    event_title?: string | null;
+    /**
+     * Notes
+     */
+    notes?: string | null;
+    /**
+     * Weather Status
+     */
+    weather_status?: string | null;
+    /**
+     * Weather Icon
+     */
+    weather_icon?: string | null;
+    outfit?: OutfitRecommendation | null;
+};
+
+/**
  * DashboardResponse
  */
 export type DashboardResponse = {
@@ -508,6 +555,16 @@ export type ExploreTrendsResponse = {
      * Trend Articles
      */
     trend_articles: Array<TrendArticle>;
+};
+
+/**
+ * GoogleLoginRequest
+ */
+export type GoogleLoginRequest = {
+    /**
+     * Id Token
+     */
+    id_token: string;
 };
 
 /**
@@ -644,6 +701,26 @@ export type OutfitRecommendation = {
      * Items
      */
     items: Array<ClothingItemFlat>;
+    /**
+     * Image Url
+     */
+    image_url?: string | null;
+    /**
+     * Title
+     */
+    title?: string | null;
+    /**
+     * Description
+     */
+    description?: string | null;
+    /**
+     * Tags
+     */
+    tags?: Array<string>;
+    /**
+     * Weather Adjusted
+     */
+    weather_adjusted?: boolean | null;
 };
 
 /**
@@ -883,6 +960,10 @@ export type UserResponse = {
      */
     email: string;
     /**
+     * Google Id
+     */
+    google_id?: string | null;
+    /**
      * Full Name
      */
     full_name?: string | null;
@@ -1116,6 +1197,31 @@ export type ChangePasswordApiV1AuthChangePasswordPostResponses = {
      */
     200: unknown;
 };
+
+export type GoogleLoginApiV1AuthGooglePostData = {
+    body: GoogleLoginRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/auth/google';
+};
+
+export type GoogleLoginApiV1AuthGooglePostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GoogleLoginApiV1AuthGooglePostError = GoogleLoginApiV1AuthGooglePostErrors[keyof GoogleLoginApiV1AuthGooglePostErrors];
+
+export type GoogleLoginApiV1AuthGooglePostResponses = {
+    /**
+     * Successful Response
+     */
+    200: Token;
+};
+
+export type GoogleLoginApiV1AuthGooglePostResponse = GoogleLoginApiV1AuthGooglePostResponses[keyof GoogleLoginApiV1AuthGooglePostResponses];
 
 export type ScanClothingCameraApiV1ClosetScanPostData = {
     body: BodyScanClothingCameraApiV1ClosetScanPost;
@@ -1874,9 +1980,27 @@ export type GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse = GetWardr
 export type GetCalendarInsightsApiV1DashboardCalendarInsightsGetData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Lat
+         */
+        lat?: number;
+        /**
+         * Lon
+         */
+        lon?: number;
+    };
     url: '/api/v1/dashboard/calendar/insights';
 };
+
+export type GetCalendarInsightsApiV1DashboardCalendarInsightsGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetCalendarInsightsApiV1DashboardCalendarInsightsGetError = GetCalendarInsightsApiV1DashboardCalendarInsightsGetErrors[keyof GetCalendarInsightsApiV1DashboardCalendarInsightsGetErrors];
 
 export type GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponses = {
     /**
@@ -1920,11 +2044,11 @@ export type GetCalendarByRangeApiV1DashboardCalendarGetData = {
         /**
          * Start Date
          */
-        start_date?: string;
+        start_date?: string | null;
         /**
          * End Date
          */
-        end_date?: string;
+        end_date?: string | null;
     };
     url: '/api/v1/dashboard/calendar';
 };
@@ -1948,6 +2072,44 @@ export type GetCalendarByRangeApiV1DashboardCalendarGetResponses = {
 };
 
 export type GetCalendarByRangeApiV1DashboardCalendarGetResponse = GetCalendarByRangeApiV1DashboardCalendarGetResponses[keyof GetCalendarByRangeApiV1DashboardCalendarGetResponses];
+
+export type GetDailyCalendarDetailApiV1DashboardCalendarDailyGetData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Date
+         */
+        date: string;
+        /**
+         * Lat
+         */
+        lat?: number;
+        /**
+         * Lon
+         */
+        lon?: number;
+    };
+    url: '/api/v1/dashboard/calendar/daily';
+};
+
+export type GetDailyCalendarDetailApiV1DashboardCalendarDailyGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetDailyCalendarDetailApiV1DashboardCalendarDailyGetError = GetDailyCalendarDetailApiV1DashboardCalendarDailyGetErrors[keyof GetDailyCalendarDetailApiV1DashboardCalendarDailyGetErrors];
+
+export type GetDailyCalendarDetailApiV1DashboardCalendarDailyGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: DailyCalendarResponse;
+};
+
+export type GetDailyCalendarDetailApiV1DashboardCalendarDailyGetResponse = GetDailyCalendarDetailApiV1DashboardCalendarDailyGetResponses[keyof GetDailyCalendarDetailApiV1DashboardCalendarDailyGetResponses];
 
 export type DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData = {
     body?: never;
