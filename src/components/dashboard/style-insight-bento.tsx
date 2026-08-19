@@ -10,8 +10,9 @@ export default function StyleInsightBento() {
   );
 
   const utilizationRate = insightsData?.utilization_rate ?? 68;
-  const mainStyleTag = (insightsData as any)?.top_style || (insightsData as any)?.recommended_category || 'Smart Casual';
-  const insightNote = (insightsData as any)?.insight_text || (insightsData as any)?.message || "Since your schedule includes client meetings, this outfit balances casual comfort with professional elegance.";
+  const insightsObj = typeof insightsData === 'object' && insightsData !== null ? (insightsData as Record<string, unknown>) : {};
+  const mainStyleTag = (typeof insightsObj.top_style === 'string' ? insightsObj.top_style : undefined) || (typeof insightsObj.recommended_category === 'string' ? insightsObj.recommended_category : undefined) || 'Smart Casual';
+  const insightNote = (typeof insightsObj.insight_text === 'string' ? insightsObj.insight_text : undefined) || (typeof insightsObj.message === 'string' ? insightsObj.message : undefined) || "Since your schedule includes client meetings, this outfit balances casual comfort with professional elegance.";
 
   return (
     <View className="mt-12 flex-row flex-wrap gap-4">

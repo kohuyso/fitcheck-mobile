@@ -1,22 +1,22 @@
 # FitCheck Mobile - Senior React Native Context & Architecture Guide
 
-Welcome to the **FitCheck Mobile** codebase context. This project is engineered as a modern, high-performance mobile application built with **React Native**, **Expo SDK 57**, **React 19**, and **NativeWind v4**.
+Welcome to the **FitCheck Mobile** codebase context. This project is engineered as a modern, high-performance mobile application built with **React Native**, **Expo SDK 54**, **React 19**, and **NativeWind v4**.
 
 ---
 
 ## 1. TECH STACK MATRIX
 
-| Category | Technology / Library | Description |
-|---|---|---|
-| **Core Framework** | Expo SDK 57 / React Native 0.81 | Expo managed workflow with native module support |
-| **UI Library & CSS** | NativeWind v4 + Tailwind CSS | Utility-first styling with `cn()` merging |
-| **Routing** | Expo Router v6 | File-based navigation inside `src/app/` |
-| **Server State & Caching** | TanStack Query v5 (`@tanstack/react-query`) | Async state management & cache invalidation |
-| **API Client & OpenAPI** | Axios + `@hey-api/openapi-ts` | Generated API SDK and type safety from backend spec |
-| **Form Handling** | React Hook Form + Zod | Controlled form inputs with type-safe schema validation |
-| **Animations & Drawers** | `react-native-reanimated` v4 + `@gorhom/bottom-sheet` | UI thread performance animations & bottom sheets |
-| **Media & Hardware** | `expo-image`, `expo-camera`, `expo-image-picker` | Native image rendering, camera capture, and photo gallery |
-| **Storage & Security** | `expo-secure-store`, `expo-sqlite` | Encrypted token storage & local database |
+| Category                   | Technology / Library                                  | Description                                               |
+| -------------------------- | ----------------------------------------------------- | --------------------------------------------------------- |
+| **Core Framework**         | Expo SDK 54 / React Native 0.81                       | Expo managed workflow with native module support          |
+| **UI Library & CSS**       | NativeWind v4 + Tailwind CSS                          | Utility-first styling with `cn()` merging                 |
+| **Routing**                | Expo Router v6                                        | File-based navigation inside `src/app/`                   |
+| **Server State & Caching** | TanStack Query v5 (`@tanstack/react-query`)           | Async state management & cache invalidation               |
+| **API Client & OpenAPI**   | Axios + `@hey-api/openapi-ts`                         | Generated API SDK and type safety from backend spec       |
+| **Form Handling**          | React Hook Form + Zod                                 | Controlled form inputs with type-safe schema validation   |
+| **Animations & Drawers**   | `react-native-reanimated` v4 + `@gorhom/bottom-sheet` | UI thread performance animations & bottom sheets          |
+| **Media & Hardware**       | `expo-image`, `expo-camera`, `expo-image-picker`      | Native image rendering, camera capture, and photo gallery |
+| **Storage & Security**     | `expo-secure-store`, `expo-sqlite`                    | Encrypted token storage & local database                  |
 
 ---
 
@@ -64,19 +64,25 @@ fitcheck-mobile/
 ## 3. CORE DEVELOPER WORKFLOWS
 
 ### API Regeneration
+
 When the backend API contract (`openapi.json`) updates:
+
 ```bash
 npm run generate-api
 ```
 
 ### TypeScript Validation
+
 Verify zero type errors across all screens and components:
+
 ```bash
 npx tsc --noEmit
 ```
 
 ### Local Dev Backend Connection
+
 The app dynamically inspects `debuggerHost` from Metro server in `src/api/axios.ts`:
+
 - **Android Emulator**: `http://10.0.2.2:8000`
 - **iOS Simulator / Real Device**: `http://<YOUR_COMPUTER_LAN_IP>:8000`
 

@@ -5,7 +5,7 @@ import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
 import { AiStylist, Authentication, Closet__AiScanner, Dashboard__Recommendation, Default, Explore__Trends, type Options } from '../sdk.gen';
-import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostError, ChangePasswordApiV1AuthChangePasswordPostData, ChangePasswordApiV1AuthChangePasswordPostError, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostError, ChatAndModifyOutfitApiV1AiChatPostResponse, ClearChatHistoryApiV1AiChatHistoryDeleteData, CreateCustomOutfitApiV1ClosetOutfitsPostData, CreateCustomOutfitApiV1ClosetOutfitsPostError, CreateCustomOutfitApiV1ClosetOutfitsPostResponse, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteError, DeleteClothingItemApiV1ClosetItemsItemIdDeleteData, DeleteClothingItemApiV1ClosetItemsItemIdDeleteError, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteError, GetCalendarByRangeApiV1DashboardCalendarGetData, GetCalendarByRangeApiV1DashboardCalendarGetError, GetCalendarByRangeApiV1DashboardCalendarGetResponse, GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, GetCalendarInsightsApiV1DashboardCalendarInsightsGetError, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponse, GetChatHistoryApiV1AiChatHistoryGetData, GetChatHistoryApiV1AiChatHistoryGetResponse, GetClosetSummaryApiV1ClosetSummaryGetData, GetClosetSummaryApiV1ClosetSummaryGetResponse, GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponse, GetDailyCalendarDetailApiV1DashboardCalendarDailyGetData, GetDailyCalendarDetailApiV1DashboardCalendarDailyGetError, GetDailyCalendarDetailApiV1DashboardCalendarDailyGetResponse, GetFashionTrendsApiV1ExploreTrendsGetData, GetFashionTrendsApiV1ExploreTrendsGetResponse, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetError, GetHomeDashboardApiV1DashboardHomeGetResponse, GetItemDetailApiV1ClosetItemsItemIdGetData, GetItemDetailApiV1ClosetItemsItemIdGetError, GetItemDetailApiV1ClosetItemsItemIdGetResponse, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetData, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetError, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponse, GetMyOutfitsApiV1ClosetOutfitsGetData, GetMyOutfitsApiV1ClosetOutfitsGetError, GetMyOutfitsApiV1ClosetOutfitsGetResponse, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetError, GetMyWardrobeApiV1ClosetItemsGetResponse, GetOutfitByEventApiV1AiOutfitByEventPostData, GetOutfitByEventApiV1AiOutfitByEventPostError, GetOutfitByEventApiV1AiOutfitByEventPostResponse, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostError, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, GetProfileApiV1AuthProfileGetData, GetProfileApiV1AuthProfileGetResponse, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetError, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetError, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponse, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetData, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetError, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponse, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetData, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponse, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponse, GoogleLoginApiV1AuthGooglePostData, GoogleLoginApiV1AuthGooglePostError, GoogleLoginApiV1AuthGooglePostResponse, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostError, LoginApiV1AuthLoginPostResponse, LogoutApiV1AuthLogoutPostData, ReadRootGetData, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostError, RegisterApiV1AuthRegisterPostResponse, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostError, ScanClothingCameraApiV1ClosetScanPostResponse, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostError, SubmitChatFeedbackApiV1AiChatFeedbackPostData, SubmitChatFeedbackApiV1AiChatFeedbackPostError, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostError, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponse, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostError, TestAiConnectionApiV1AiTestConnectionGetData, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostError, UpdateClothingItemApiV1ClosetItemsItemIdPutData, UpdateClothingItemApiV1ClosetItemsItemIdPutError, UpdateClothingItemApiV1ClosetItemsItemIdPutResponse, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutError, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponse, UpdateProfileApiV1AuthProfilePutData, UpdateProfileApiV1AuthProfilePutError, UpdateProfileApiV1AuthProfilePutResponse, UploadAvatarApiV1AuthProfileAvatarPostData, UploadAvatarApiV1AuthProfileAvatarPostError, UploadAvatarApiV1AuthProfileAvatarPostResponse, UploadClothingItemImageApiV1ClosetItemsUploadPostData, UploadClothingItemImageApiV1ClosetItemsUploadPostError, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostError } from '../types.gen';
+import type { ApproveAndSaveItemApiV1ClosetSavePostData, ApproveAndSaveItemApiV1ClosetSavePostError, ChangePasswordApiV1AuthChangePasswordPostData, ChangePasswordApiV1AuthChangePasswordPostError, ChatAndModifyOutfitApiV1AiChatPostData, ChatAndModifyOutfitApiV1AiChatPostError, ChatAndModifyOutfitApiV1AiChatPostResponse, ClearChatHistoryApiV1AiChatHistoryDeleteData, CreateCustomOutfitApiV1ClosetOutfitsPostData, CreateCustomOutfitApiV1ClosetOutfitsPostError, CreateCustomOutfitApiV1ClosetOutfitsPostResponse, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteData, DeleteCalendarHistoryApiV1DashboardCalendarHistoryIdDeleteError, DeleteClothingItemApiV1ClosetItemsItemIdDeleteData, DeleteClothingItemApiV1ClosetItemsItemIdDeleteError, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData, DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteError, GetCalendarByRangeApiV1DashboardCalendarGetData, GetCalendarByRangeApiV1DashboardCalendarGetError, GetCalendarByRangeApiV1DashboardCalendarGetResponse, GetCalendarInsightsApiV1DashboardCalendarInsightsGetData, GetCalendarInsightsApiV1DashboardCalendarInsightsGetError, GetCalendarInsightsApiV1DashboardCalendarInsightsGetResponse, GetChatHistoryApiV1AiChatHistoryGetData, GetChatHistoryApiV1AiChatHistoryGetResponse, GetClosetSummaryApiV1ClosetSummaryGetData, GetClosetSummaryApiV1ClosetSummaryGetResponse, GetColorTheoryGuidesApiV1ExploreColorTheoryGetData, GetColorTheoryGuidesApiV1ExploreColorTheoryGetResponse, GetDailyCalendarDetailApiV1DashboardCalendarDailyGetData, GetDailyCalendarDetailApiV1DashboardCalendarDailyGetError, GetDailyCalendarDetailApiV1DashboardCalendarDailyGetResponse, GetFashionTrendsApiV1ExploreTrendsGetData, GetFashionTrendsApiV1ExploreTrendsGetResponse, GetHomeDashboardApiV1DashboardHomeGetData, GetHomeDashboardApiV1DashboardHomeGetError, GetHomeDashboardApiV1DashboardHomeGetResponse, GetItemDetailApiV1ClosetItemsItemIdGetData, GetItemDetailApiV1ClosetItemsItemIdGetError, GetItemDetailApiV1ClosetItemsItemIdGetResponse, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetData, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetError, GetItemPairingsApiV1ClosetItemsItemIdPairingsGetResponse, GetMyOutfitsApiV1ClosetOutfitsGetData, GetMyOutfitsApiV1ClosetOutfitsGetError, GetMyOutfitsApiV1ClosetOutfitsGetResponse, GetMyWardrobeApiV1ClosetItemsGetData, GetMyWardrobeApiV1ClosetItemsGetError, GetMyWardrobeApiV1ClosetItemsGetResponse, GetOutfitByEventApiV1AiOutfitByEventPostData, GetOutfitByEventApiV1AiOutfitByEventPostError, GetOutfitByEventApiV1AiOutfitByEventPostResponse, GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetData, GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetError, GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetResponse, GetOutfitFromItemsApiV1AiOutfitFromItemsPostData, GetOutfitFromItemsApiV1AiOutfitFromItemsPostError, GetOutfitFromItemsApiV1AiOutfitFromItemsPostResponse, GetProfileApiV1AuthProfileGetData, GetProfileApiV1AuthProfileGetResponse, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetError, GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetResponse, GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetData, GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetError, GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetResponse, GetStyleSuggestionsApiV1AiStyleSuggestionsGetData, GetStyleSuggestionsApiV1AiStyleSuggestionsGetError, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, GetSwapAlternativesApiV1DashboardSwapAlternativesGetData, GetSwapAlternativesApiV1DashboardSwapAlternativesGetError, GetSwapAlternativesApiV1DashboardSwapAlternativesGetResponse, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetData, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetError, GetTrendArticleDetailApiV1ExploreTrendsArticleIdGetResponse, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetData, GetUpcomingCalendarEventsApiV1DashboardCalendarEventsGetResponse, GetWardrobeStyleInsightsApiV1DashboardInsightsGetData, GetWardrobeStyleInsightsApiV1DashboardInsightsGetResponse, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetData, GetWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetResponse, GoogleLoginApiV1AuthGooglePostData, GoogleLoginApiV1AuthGooglePostError, GoogleLoginApiV1AuthGooglePostResponse, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostError, LoginApiV1AuthLoginPostResponse, LogoutApiV1AuthLogoutPostData, ReadRootGetData, RegisterApiV1AuthRegisterPostData, RegisterApiV1AuthRegisterPostError, RegisterApiV1AuthRegisterPostResponse, ScanClothingCameraApiV1ClosetScanPostData, ScanClothingCameraApiV1ClosetScanPostError, ScanClothingCameraApiV1ClosetScanPostResponse, ScanClothingCameraApiV1ClosetUploadPostData, ScanClothingCameraApiV1ClosetUploadPostError, ScanClothingCameraApiV1ClosetUploadPostResponse, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostData, ScheduleCalendarEventApiV1DashboardCalendarSchedulePostError, SubmitChatFeedbackApiV1AiChatFeedbackPostData, SubmitChatFeedbackApiV1AiChatFeedbackPostError, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostData, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostError, SwapOutfitItemApiV1DashboardOutfitOutfitIdSwapPostResponse, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostData, SyncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostError, TestAiConnectionApiV1AiTestConnectionGetData, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData, ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostData, ToggleFavoriteItemApiV1ClosetItemsItemIdFavoritePostError, UpdateClothingItemApiV1ClosetItemsItemIdPutData, UpdateClothingItemApiV1ClosetItemsItemIdPutError, UpdateClothingItemApiV1ClosetItemsItemIdPutResponse, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutError, UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponse, UpdateProfileApiV1AuthProfilePutData, UpdateProfileApiV1AuthProfilePutError, UpdateProfileApiV1AuthProfilePutResponse, UploadAvatarApiV1AuthProfileAvatarPostData, UploadAvatarApiV1AuthProfileAvatarPostError, UploadAvatarApiV1AuthProfileAvatarPostResponse, UploadClothingItemImageApiV1ClosetItemsUploadPostData, UploadClothingItemImageApiV1ClosetItemsUploadPostError, WearOutfitApiV1DashboardWearOutfitPostData, WearOutfitApiV1DashboardWearOutfitPostError } from '../types.gen';
 
 /**
  * Register
@@ -198,6 +198,25 @@ export const googleLoginApiV1AuthGooglePostMutation = (options?: Partial<Options
  *
  * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Queue / Thread ngầm xử lý.
  */
+export const scanClothingCameraApiV1ClosetUploadPostMutation = (options?: Partial<Options<ScanClothingCameraApiV1ClosetUploadPostData>>): UseMutationOptions<ScanClothingCameraApiV1ClosetUploadPostResponse, AxiosError<ScanClothingCameraApiV1ClosetUploadPostError>, Options<ScanClothingCameraApiV1ClosetUploadPostData>> => {
+    const mutationOptions: UseMutationOptions<ScanClothingCameraApiV1ClosetUploadPostResponse, AxiosError<ScanClothingCameraApiV1ClosetUploadPostError>, Options<ScanClothingCameraApiV1ClosetUploadPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.scanClothingCameraApiV1ClosetUploadPost({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Scan Clothing Camera
+ *
+ * Bước 1: Mobile chụp ảnh gửi lên -> Đẩy ngay việc vào Queue / Thread ngầm xử lý.
+ */
 export const scanClothingCameraApiV1ClosetScanPostMutation = (options?: Partial<Options<ScanClothingCameraApiV1ClosetScanPostData>>): UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> => {
     const mutationOptions: UseMutationOptions<ScanClothingCameraApiV1ClosetScanPostResponse, AxiosError<ScanClothingCameraApiV1ClosetScanPostError>, Options<ScanClothingCameraApiV1ClosetScanPostData>> = {
         mutationFn: async (fnOptions) => {
@@ -211,6 +230,26 @@ export const scanClothingCameraApiV1ClosetScanPostMutation = (options?: Partial<
     };
     return mutationOptions;
 };
+
+export const getScanTaskStatusApiV1ClosetTaskStatusTaskIdGetQueryKey = (options: Options<GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetData>) => createQueryKey('getScanTaskStatusApiV1ClosetTaskStatusTaskIdGet', options);
+
+/**
+ * Get Scan Task Status
+ *
+ * Bước 2: Mobile gọi lại API kiểm tra kết quả xử lý từ Celery AI Worker ngầm.
+ */
+export const getScanTaskStatusApiV1ClosetTaskStatusTaskIdGetOptions = (options: Options<GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetData>) => queryOptions<GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetResponse, AxiosError<GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetError>, GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetResponse, ReturnType<typeof getScanTaskStatusApiV1ClosetTaskStatusTaskIdGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Closet__AiScanner.getScanTaskStatusApiV1ClosetTaskStatusTaskIdGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getScanTaskStatusApiV1ClosetTaskStatusTaskIdGetQueryKey(options)
+});
 
 export const getScanTaskStatusApiV1ClosetScanStatusTaskIdGetQueryKey = (options: Options<GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData>) => createQueryKey('getScanTaskStatusApiV1ClosetScanStatusTaskIdGet', options);
 
@@ -388,25 +427,6 @@ export const createCustomOutfitApiV1ClosetOutfitsPostMutation = (options?: Parti
 };
 
 /**
- * Toggle Bookmark Outfit
- *
- * API Bookmark/Lưu bộ outfit gợi ý vào danh sách yêu thích
- */
-export const toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostMutation = (options?: Partial<Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>>): UseMutationOptions<unknown, AxiosError<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError>, Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>> => {
-    const mutationOptions: UseMutationOptions<unknown, AxiosError<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError>, Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await Closet__AiScanner.toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPost({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-/**
  * Delete Custom Outfit
  *
  * API Xóa một set phối đồ (Outfit) khỏi danh sách cá nhân
@@ -425,6 +445,26 @@ export const deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteMutation = (optio
     return mutationOptions;
 };
 
+export const getOutfitDetailApiV1ClosetOutfitsOutfitIdGetQueryKey = (options: Options<GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetData>) => createQueryKey('getOutfitDetailApiV1ClosetOutfitsOutfitIdGet', options);
+
+/**
+ * Get Outfit Detail
+ *
+ * API Xem chi tiết 1 outfit riêng biệt kèm danh sách món đồ (ClothingItemFlat)
+ */
+export const getOutfitDetailApiV1ClosetOutfitsOutfitIdGetOptions = (options: Options<GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetData>) => queryOptions<GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetResponse, AxiosError<GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetError>, GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetResponse, ReturnType<typeof getOutfitDetailApiV1ClosetOutfitsOutfitIdGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await Closet__AiScanner.getOutfitDetailApiV1ClosetOutfitsOutfitIdGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getOutfitDetailApiV1ClosetOutfitsOutfitIdGetQueryKey(options)
+});
+
 /**
  * Update Custom Outfit
  *
@@ -434,6 +474,25 @@ export const updateCustomOutfitApiV1ClosetOutfitsOutfitIdPutMutation = (options?
     const mutationOptions: UseMutationOptions<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponse, AxiosError<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutError>, Options<UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await Closet__AiScanner.updateCustomOutfitApiV1ClosetOutfitsOutfitIdPut({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Toggle Bookmark Outfit
+ *
+ * API Bookmark/Lưu bộ outfit gợi ý vào danh sách yêu thích
+ */
+export const toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostMutation = (options?: Partial<Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>>): UseMutationOptions<unknown, AxiosError<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError>, Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError>, Options<ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await Closet__AiScanner.toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPost({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -530,8 +589,9 @@ export const getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey = (options?: 
  * Get Style Suggestions
  *
  * API Gợi ý style (AI): Phân tích tủ đồ của người dùng và style yêu thích để đưa ra lời khuyên thời trang.
+ * Hỗ trợ truyền múi giờ qua header X-Timezone hoặc param tz (ví dụ: America/New_York, Asia/Ho_Chi_Minh).
  */
-export const getStyleSuggestionsApiV1AiStyleSuggestionsGetOptions = (options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData>) => queryOptions<GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, AxiosError<DefaultError>, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, ReturnType<typeof getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey>>({
+export const getStyleSuggestionsApiV1AiStyleSuggestionsGetOptions = (options?: Options<GetStyleSuggestionsApiV1AiStyleSuggestionsGetData>) => queryOptions<GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, AxiosError<GetStyleSuggestionsApiV1AiStyleSuggestionsGetError>, GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponse, ReturnType<typeof getStyleSuggestionsApiV1AiStyleSuggestionsGetQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await AiStylist.getStyleSuggestionsApiV1AiStyleSuggestionsGet({
             ...options,
@@ -566,7 +626,7 @@ export const getOutfitFromItemsApiV1AiOutfitFromItemsPostMutation = (options?: P
 /**
  * Get Outfit By Event
  *
- * API Gợi ý Outfit theo sự kiện (AI): Chọn dịp (work, date, party, gym, casual), AI sẽ lọc tủ đồ và phối ngay một set đồ chuẩn cho dịp đó.
+ * API Gợi ý Outfit theo sự kiện (AI RAG): Tìm kiếm ngữ nghĩa các món đồ phù hợp nhất với sự kiện và thời tiết.
  */
 export const getOutfitByEventApiV1AiOutfitByEventPostMutation = (options?: Partial<Options<GetOutfitByEventApiV1AiOutfitByEventPostData>>): UseMutationOptions<GetOutfitByEventApiV1AiOutfitByEventPostResponse, AxiosError<GetOutfitByEventApiV1AiOutfitByEventPostError>, Options<GetOutfitByEventApiV1AiOutfitByEventPostData>> => {
     const mutationOptions: UseMutationOptions<GetOutfitByEventApiV1AiOutfitByEventPostResponse, AxiosError<GetOutfitByEventApiV1AiOutfitByEventPostError>, Options<GetOutfitByEventApiV1AiOutfitByEventPostData>> = {

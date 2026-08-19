@@ -1,10 +1,10 @@
 import "../global.css";
 
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   useFonts,
@@ -13,19 +13,15 @@ import {
   Inter_600SemiBold,
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Slot } from 'expo-router';
 
 import '@/api/axios';
-
-
-import { StatusBar } from 'expo-status-bar';
-
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
 import WelcomeScreen from '@/components/welcome-screen';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import { NavigationHistoryProvider } from '@/context/navigation-history';
-
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -42,9 +38,27 @@ const FitCheckTheme = {
   },
 };
 
-function AppContent() {
-  const colorScheme = useColorScheme();
+function AuthGate() {
   const { hasStarted, initialAuthMode, login } = useAuth();
+
+  if (hasStarted) return null;
+
+  return (
+    <View style={[StyleSheet.absoluteFill, { zIndex: 9999, backgroundColor: '#f6faf8' }]}>
+      <WelcomeScreen
+        onGetStarted={login}
+        initialAuthMode={initialAuthMode}
+      />
+    </View>
+  );
+}
+
+/**
+ * Root Layout — chỉ chứa providers và <Slot>.
+ * <Tabs> được đặt trong src/app/(tabs)/_layout.tsx theo Expo Router convention.
+ * Expo Router tự quản lý NavigationContainer và routing.
+ */
+export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     Inter: Inter_400Regular,
     'Inter-Regular': Inter_400Regular,
@@ -59,34 +73,22 @@ function AppContent() {
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={FitCheckTheme}>
-      <StatusBar style="dark" animated />
-      <AnimatedSplashOverlay />
-      {!hasStarted ? (
-        <WelcomeScreen
-          onGetStarted={login}
-          initialAuthMode={initialAuthMode}
-        />
-      ) : (
-        <AppTabs />
-      )}
-    </ThemeProvider>
-  );
-}
-
-export default function TabLayout() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#f6faf8' }}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <NavigationHistoryProvider>
-              <AppContent />
+              <ThemeProvider value={FitCheckTheme}>
+                <StatusBar style="dark" animated />
+                {fontsLoaded && <AnimatedSplashOverlay />}
+                {/*
+                 * <Slot> renders the matched child route.
+                 * Expo Router will render (tabs)/_layout.tsx here when navigating to tab screens.
+                 */}
+                <Slot />
+                <AuthGate />
+              </ThemeProvider>
             </NavigationHistoryProvider>
           </AuthProvider>
         </QueryClientProvider>

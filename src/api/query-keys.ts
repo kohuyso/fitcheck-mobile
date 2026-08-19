@@ -11,6 +11,7 @@ import {
   getItemPairingsApiV1ClosetItemsItemIdPairingsGetQueryKey,
   getClosetSummaryApiV1ClosetSummaryGetQueryKey,
   getMyOutfitsApiV1ClosetOutfitsGetQueryKey,
+  getOutfitDetailApiV1ClosetOutfitsOutfitIdGetQueryKey,
   getWeeklyCalendarStripApiV1DashboardCalendarWeeklyGetQueryKey,
   getDailyCalendarDetailApiV1DashboardCalendarDailyGetQueryKey,
   getUpcomingCalendarEventsApiV1DashboardCalendarEventsGetQueryKey,
@@ -38,6 +39,8 @@ export const closetKeys = {
   itemPairings: getItemPairingsApiV1ClosetItemsItemIdPairingsGetQueryKey,
   summary: getClosetSummaryApiV1ClosetSummaryGetQueryKey,
   outfits: getMyOutfitsApiV1ClosetOutfitsGetQueryKey,
+  outfitDetail: getOutfitDetailApiV1ClosetOutfitsOutfitIdGetQueryKey,
+  activeOutfit: (id?: string | number) => ['closet', 'active-outfit', String(id || 'current')] as const,
 };
 
 export const calendarKeys = {

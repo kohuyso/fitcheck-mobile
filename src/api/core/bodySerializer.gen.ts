@@ -21,13 +21,8 @@ export type QuerySerializerOptions = QuerySerializerOptionsObject & {
 };
 
 const serializeFormDataPair = (data: FormData, key: string, value: unknown): void => {
-  if (typeof value === 'string') {
+  if (typeof value === 'string' || value instanceof Blob) {
     data.append(key, value);
-  } else if (value instanceof Blob) {
-    const fileName = (value as File).name || 'upload.jpg';
-    data.append(key, value, fileName);
-  } else if (typeof value === 'object' && value !== null && 'uri' in value) {
-    data.append(key, value as any);
   } else if (value instanceof Date) {
     data.append(key, value.toISOString());
   } else {

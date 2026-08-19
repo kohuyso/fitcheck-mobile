@@ -32,13 +32,20 @@ import { useMutation } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { NativeModules } from "react-native";
 
-let GoogleSignin: any = null;
-let statusCodes: any = {};
-let isErrorWithCode: (error: any) => boolean = () => false;
+// Dynamic type definition for native Google Signin module
+type GoogleSigninType = {
+  configure?: (config: Record<string, unknown>) => void;
+  hasPlayServices?: (options?: Record<string, unknown>) => Promise<boolean>;
+  signIn?: () => Promise<{ data?: { idToken?: string }; idToken?: string }>;
+} | null;
+
+let GoogleSignin: GoogleSigninType = null;
+let statusCodes: Record<string, unknown> = {};
+let isErrorWithCode: (error: unknown) => boolean = () => false;
 
 const isExpoGo =
   Constants.appOwnership === "expo" ||
-  (Constants as any).executionEnvironment === "storeClient";
+  (Constants as unknown as { executionEnvironment?: string }).executionEnvironment === "storeClient";
 const hasNativeGoogleSignin =
   Boolean(NativeModules?.RNGoogleSignin) && !isExpoGo;
 
@@ -177,7 +184,7 @@ export default function AuthModal({
         }
       }
       return false;
-    } catch (err: any) {
+    } catch (err) {
       console.log("Web Google Sign In fallback error:", err);
       return false;
     }
@@ -191,20 +198,18 @@ export default function AuthModal({
 
     if (!useFallback) {
       try {
-        // Chỉ check Play Services khi ở trên Android
         if (Platform.OS === "android") {
-          await GoogleSignin.hasPlayServices({
+          await GoogleSignin?.hasPlayServices?.({
             showPlayServicesUpdateDialog: true,
           });
         }
 
-        const response = await GoogleSignin.signIn();
-        const idToken = response.data?.idToken || (response as any).idToken;
+        const response = await GoogleSignin?.signIn?.();
+        const idToken = response?.data?.idToken || (response as { idToken?: string } | undefined)?.idToken;
 
         if (!idToken) {
           useFallback = true;
         } else {
-          // Call Backend API: POST /api/v1/auth/google
           const apiRes = await api.post("/api/v1/auth/google", {
             id_token: idToken,
           });
@@ -218,13 +223,14 @@ export default function AuthModal({
             useFallback = true;
           }
         }
-      } catch (error: any) {
+      } catch (error) {
+        const errObj = error as { code?: unknown };
         if (isErrorWithCode && isErrorWithCode(error)) {
-          if (error.code === statusCodes?.SIGN_IN_CANCELLED) {
+          if (errObj.code === statusCodes?.SIGN_IN_CANCELLED) {
             setIsGoogleLoading(false);
             return;
           }
-          if (error.code === statusCodes?.PLAY_SERVICES_NOT_AVAILABLE) {
+          if (errObj.code === statusCodes?.PLAY_SERVICES_NOT_AVAILABLE) {
             useFallback = true;
           }
         } else {
@@ -298,18 +304,19 @@ export default function AuthModal({
       // On success
       onSuccess();
       onClose();
-    } catch (err: any) {
-      console.log("Auth Error:", err?.response?.data || err?.message || err);
-      const detail = err?.response?.data?.detail;
+    } catch (err) {
+      const errorObj = err as { response?: { data?: { detail?: unknown } }; message?: string };
+      console.log("Auth Error:", errorObj?.response?.data || errorObj?.message || err);
+      const detail = errorObj?.response?.data?.detail;
       if (typeof detail === "string") {
         setErrorMessage(detail);
       } else if (Array.isArray(detail) && detail.length > 0) {
-        setErrorMessage(detail[0]?.msg || "Thông tin nhập vào không hợp lệ.");
+        setErrorMessage((detail[0] as { msg?: string })?.msg || "Thông tin nhập vào không hợp lệ.");
       } else {
         setErrorMessage(
           mode === "login"
-            ? "Đăng nhập thất bại. Vui lòng kiểm tra lại email/mật khẩu."
-            : "Đăng ký thất bại. Email có thể đã được sử dụng.",
+            ? "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu."
+            : "Đăng ký thất bại. Email có thể đã được sử dụng."
         );
       }
     }

@@ -3,7 +3,7 @@ import { View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Check, Sparkles } from 'lucide-react-native';
 import { cn } from '@/utils/cn';
-import { resolveImageUrl } from '@/utils/image-url';
+import { resolveImageUrl, DEFAULT_BLURHASH } from '@/utils/image-url';
 
 export interface WardrobeItemData {
   id: string;
@@ -59,7 +59,9 @@ export function WardrobeCard({
           source={resolveImageUrl(item.image, item.category)}
           style={{ width: '100%', height: '100%' }}
           contentFit="contain"
-          transition={200}
+          cachePolicy="memory-disk"
+          placeholder={{ blurhash: DEFAULT_BLURHASH }}
+          transition={150}
         />
         {item.isAiFixed && !isSelectionMode && (
           <View className="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full border border-black/5">

@@ -55,17 +55,33 @@ export const api = axios.create({
   timeout: 15000,
 });
 
-// Interceptor tự động thêm Bearer token vào Request Header cho mọi API request
+// Dynamic local device IANA timezone detector (e.g. "Asia/Ho_Chi_Minh", "America/New_York")
+export const getUserTimezone = (): string => {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Ho_Chi_Minh';
+  } catch {
+    return 'Asia/Ho_Chi_Minh';
+  }
+};
+
+// Interceptor tự động thêm Bearer token & X-Timezone vào Request Header cho mọi API request
 api.interceptors.request.use(
   async (config) => {
     try {
+      config.headers = config.headers || {};
+      
+      // Auto attach X-Timezone header for backend date/time synchronization
+      const userTimezone = getUserTimezone();
+      if (userTimezone) {
+        config.headers['X-Timezone'] = userTimezone;
+      }
+
       const token = await getStoredToken();
       if (token) {
-        config.headers = config.headers || {};
         config.headers['Authorization'] = `Bearer ${token}`;
       }
     } catch (error) {
-      console.error('[API Interceptor] Error retrieving auth token:', error);
+      console.error('[API Interceptor] Error setting request headers:', error);
     }
     return config;
   },

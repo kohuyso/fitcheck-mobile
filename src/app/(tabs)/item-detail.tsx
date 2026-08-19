@@ -34,7 +34,7 @@ import {
 import { closetKeys } from '@/api/query-keys';
 import { cn } from '@/utils/cn';
 import { useAppNavigation } from '@/context/navigation-history';
-import { resolveImageUrl } from '@/utils/image-url';
+import { resolveImageUrl, DEFAULT_BLURHASH } from '@/utils/image-url';
 
 export default function ItemDetailScreen() {
   const router = useRouter();
@@ -46,7 +46,17 @@ export default function ItemDetailScreen() {
     color?: string;
     style?: string;
     image?: string;
+    from?: string;
+    outfit_id?: string;
   }>();
+
+  const handleBack = () => {
+    if (params.from === "/outfit-detail" || params.outfit_id) {
+      goBack("/outfit-detail");
+    } else {
+      goBack("/closet");
+    }
+  };
   const queryClient = useQueryClient();
 
   const numericId = Number(params.id);
@@ -165,7 +175,7 @@ export default function ItemDetailScreen() {
       {/* Header */}
       <View className="flex-row items-center justify-between px-margin-mobile py-3 border-b border-outline-variant/30 bg-surface">
         <Pressable
-          onPress={() => goBack('/closet')}
+          onPress={handleBack}
           hitSlop={12}
           className="p-2 rounded-full active:scale-95 bg-surface-container-low"
         >
@@ -201,6 +211,8 @@ export default function ItemDetailScreen() {
             source={resolveImageUrl(image, category)}
             style={{ width: '100%', height: '100%' }}
             contentFit="contain"
+            cachePolicy="memory-disk"
+            placeholder={{ blurhash: DEFAULT_BLURHASH }}
             transition={200}
           />
         </View>
@@ -291,6 +303,9 @@ export default function ItemDetailScreen() {
                       source={resolveImageUrl(pair.image_url, pair.category)}
                       style={{ width: '100%', height: '100%' }}
                       contentFit="cover"
+                      cachePolicy="memory-disk"
+                      placeholder={{ blurhash: DEFAULT_BLURHASH }}
+                      transition={150}
                     />
                   </View>
                   <Text className="font-sans font-bold text-body-sm text-on-surface truncate text-center w-full">

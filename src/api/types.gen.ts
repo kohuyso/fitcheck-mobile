@@ -126,6 +126,16 @@ export type BodyScanClothingCameraApiV1ClosetScanPost = {
 };
 
 /**
+ * Body_scan_clothing_camera_api_v1_closet_upload_post
+ */
+export type BodyScanClothingCameraApiV1ClosetUploadPost = {
+    /**
+     * File
+     */
+    file: Blob | File;
+};
+
+/**
  * Body_upload_avatar_api_v1_auth_profile_avatar_post
  */
 export type BodyUploadAvatarApiV1AuthProfileAvatarPost = {
@@ -149,6 +159,14 @@ export type BodyUploadClothingItemImageApiV1ClosetItemsUploadPost = {
  * CalendarDayPreview
  */
 export type CalendarDayPreview = {
+    /**
+     * Id
+     */
+    id?: number | null;
+    /**
+     * History Id
+     */
+    history_id?: number | null;
     /**
      * Date
      */
@@ -491,6 +509,14 @@ export type ColorTheoryResponse = {
  * DailyCalendarResponse
  */
 export type DailyCalendarResponse = {
+    /**
+     * Id
+     */
+    id?: number | null;
+    /**
+     * History Id
+     */
+    history_id?: number | null;
     /**
      * Date
      */
@@ -1223,6 +1249,31 @@ export type GoogleLoginApiV1AuthGooglePostResponses = {
 
 export type GoogleLoginApiV1AuthGooglePostResponse = GoogleLoginApiV1AuthGooglePostResponses[keyof GoogleLoginApiV1AuthGooglePostResponses];
 
+export type ScanClothingCameraApiV1ClosetUploadPostData = {
+    body: BodyScanClothingCameraApiV1ClosetUploadPost;
+    path?: never;
+    query?: never;
+    url: '/api/v1/closet/upload';
+};
+
+export type ScanClothingCameraApiV1ClosetUploadPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ScanClothingCameraApiV1ClosetUploadPostError = ScanClothingCameraApiV1ClosetUploadPostErrors[keyof ScanClothingCameraApiV1ClosetUploadPostErrors];
+
+export type ScanClothingCameraApiV1ClosetUploadPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: ScanInitiateResponse;
+};
+
+export type ScanClothingCameraApiV1ClosetUploadPostResponse = ScanClothingCameraApiV1ClosetUploadPostResponses[keyof ScanClothingCameraApiV1ClosetUploadPostResponses];
+
 export type ScanClothingCameraApiV1ClosetScanPostData = {
     body: BodyScanClothingCameraApiV1ClosetScanPost;
     path?: never;
@@ -1247,6 +1298,36 @@ export type ScanClothingCameraApiV1ClosetScanPostResponses = {
 };
 
 export type ScanClothingCameraApiV1ClosetScanPostResponse = ScanClothingCameraApiV1ClosetScanPostResponses[keyof ScanClothingCameraApiV1ClosetScanPostResponses];
+
+export type GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetData = {
+    body?: never;
+    path: {
+        /**
+         * Task Id
+         */
+        task_id: string;
+    };
+    query?: never;
+    url: '/api/v1/closet/task-status/{task_id}';
+};
+
+export type GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetError = GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetErrors[keyof GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetErrors];
+
+export type GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: TaskStatusResponse;
+};
+
+export type GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetResponse = GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetResponses[keyof GetScanTaskStatusApiV1ClosetTaskStatusTaskIdGetResponses];
 
 export type GetScanTaskStatusApiV1ClosetScanStatusTaskIdGetData = {
     body?: never;
@@ -1522,34 +1603,6 @@ export type CreateCustomOutfitApiV1ClosetOutfitsPostResponses = {
 
 export type CreateCustomOutfitApiV1ClosetOutfitsPostResponse = CreateCustomOutfitApiV1ClosetOutfitsPostResponses[keyof CreateCustomOutfitApiV1ClosetOutfitsPostResponses];
 
-export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData = {
-    body?: never;
-    path: {
-        /**
-         * Outfit Id
-         */
-        outfit_id: number;
-    };
-    query?: never;
-    url: '/api/v1/closet/outfits/{outfit_id}/bookmark';
-};
-
-export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError = ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors[keyof ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors];
-
-export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostResponses = {
-    /**
-     * Successful Response
-     */
-    200: unknown;
-};
-
 export type DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteData = {
     body?: never;
     path: {
@@ -1577,6 +1630,36 @@ export type DeleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteResponses = {
      */
     200: unknown;
 };
+
+export type GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetData = {
+    body?: never;
+    path: {
+        /**
+         * Outfit Id
+         */
+        outfit_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/outfits/{outfit_id}';
+};
+
+export type GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetError = GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetErrors[keyof GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetErrors];
+
+export type GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: OutfitRecommendation;
+};
+
+export type GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetResponse = GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetResponses[keyof GetOutfitDetailApiV1ClosetOutfitsOutfitIdGetResponses];
 
 export type UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutData = {
     body: OutfitUpdateRequest;
@@ -1607,6 +1690,34 @@ export type UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses = {
 };
 
 export type UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponse = UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses[keyof UpdateCustomOutfitApiV1ClosetOutfitsOutfitIdPutResponses];
+
+export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostData = {
+    body?: never;
+    path: {
+        /**
+         * Outfit Id
+         */
+        outfit_id: number;
+    };
+    query?: never;
+    url: '/api/v1/closet/outfits/{outfit_id}/bookmark';
+};
+
+export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostError = ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors[keyof ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostErrors];
+
+export type ToggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type UploadClothingItemImageApiV1ClosetItemsUploadPostData = {
     body: BodyUploadClothingItemImageApiV1ClosetItemsUploadPost;
@@ -1695,10 +1806,34 @@ export type TestAiConnectionApiV1AiTestConnectionGetResponses = {
 
 export type GetStyleSuggestionsApiV1AiStyleSuggestionsGetData = {
     body?: never;
+    headers?: {
+        /**
+         * X-Timezone
+         */
+        'X-Timezone'?: string | null;
+    };
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Force Refresh
+         */
+        force_refresh?: boolean;
+        /**
+         * Tz
+         */
+        tz?: string | null;
+    };
     url: '/api/v1/ai/style-suggestions';
 };
+
+export type GetStyleSuggestionsApiV1AiStyleSuggestionsGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetStyleSuggestionsApiV1AiStyleSuggestionsGetError = GetStyleSuggestionsApiV1AiStyleSuggestionsGetErrors[keyof GetStyleSuggestionsApiV1AiStyleSuggestionsGetErrors];
 
 export type GetStyleSuggestionsApiV1AiStyleSuggestionsGetResponses = {
     /**

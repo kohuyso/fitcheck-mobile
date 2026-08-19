@@ -49,7 +49,7 @@ export function Button({
     <Pressable
       disabled={disabled || isLoading}
       className={cn(
-        'flex-row items-center justify-center gap-2 active:scale-95 transition-all',
+        'flex-row items-center justify-center gap-2 active:scale-95',
         sizeStyles[size],
         variantStyles[variant],
         (disabled || isLoading) && 'opacity-60',

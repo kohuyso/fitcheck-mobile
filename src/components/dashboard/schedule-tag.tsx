@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator } from 'react-native';
-import { Calendar, Briefcase, Heart, PartyPopper, Dumbbell, Coffee, Sparkles } from 'lucide-react-native';
+import { Calendar, Briefcase, Heart, PartyPopper, Dumbbell, Coffee } from 'lucide-react-native';
 import { useMutation } from '@tanstack/react-query';
 import { getOutfitByEventApiV1AiOutfitByEventPostMutation } from '@/api/@tanstack/react-query.gen';
+import { cn } from '@/utils/cn';
+
+import { OutfitRecommendation } from '@/api/types.gen';
 
 interface ScheduleTagProps {
   schedule?: string;
-  onEventOutfitGenerated?: (outfit: any) => void;
+  onEventOutfitGenerated?: (outfit: OutfitRecommendation) => void;
 }
 
 const EVENTS = [
@@ -30,7 +33,7 @@ export default function ScheduleTag({ schedule, onEventOutfitGenerated }: Schedu
     try {
       const res = await outfitByEventMutation.mutateAsync({
         body: {
-          event_type: eventId as any,
+          event_type: eventId,
           weather_condition: 'Cool & Sunny',
         },
       });
@@ -67,17 +70,19 @@ export default function ScheduleTag({ schedule, onEventOutfitGenerated }: Schedu
             <Pressable
               key={evt.id}
               onPress={() => handleSelectEvent(evt.id)}
-              className={`flex-row items-center gap-2 px-3.5 py-2.5 rounded-full mr-2 border active:opacity-80 ${
+              className={cn(
+                'flex-row items-center gap-2 px-3.5 py-2.5 rounded-full mr-2 border active:scale-95',
                 isSelected
                   ? 'bg-primary border-primary shadow-sm'
                   : 'bg-surface-container-low border-outline-variant/30'
-              }`}
+              )}
             >
               <IconComp size={15} color={isSelected ? '#ffffff' : '#3e4947'} />
               <Text
-                className={`font-sans font-bold text-label-md ${
+                className={cn(
+                  'font-sans font-bold text-label-md',
                   isSelected ? 'text-white' : 'text-on-surface'
-                }`}
+                )}
               >
                 {evt.label}
               </Text>

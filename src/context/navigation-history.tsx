@@ -55,7 +55,7 @@ export function NavigationHistoryProvider({ children }: { children: React.ReactN
 
   const goBack = (fallbackPath: string = '/') => {
     if (historyRef.current.length > 1) {
-      // Pop current screen
+      // Pop current screen from history stack
       historyRef.current.pop();
       const prevEntry = historyRef.current[historyRef.current.length - 1];
       isInternalNavigationRef.current = true;
