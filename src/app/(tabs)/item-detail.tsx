@@ -14,6 +14,7 @@ import React, { useState } from 'react';
 import {
   Alert,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   Text,
@@ -140,6 +141,18 @@ export default function ItemDetailScreen() {
   };
 
   const handleDelete = () => {
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('Are you sure you want to remove this item from your closet?');
+      if (confirmed) {
+        if (isValidId) {
+          deleteItemMutation.mutate({ path: { item_id: numericId } });
+        } else {
+          router.replace('/closet');
+        }
+      }
+      return;
+    }
+
     Alert.alert('Delete Item', 'Are you sure you want to remove this item from your closet?', [
       { text: 'Cancel', style: 'cancel' },
       {

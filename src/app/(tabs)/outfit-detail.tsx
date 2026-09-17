@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
+import { View, Text, ScrollView, Pressable, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
@@ -208,6 +208,18 @@ export default function OutfitDetailScreen() {
   }, [router, outfitId]);
 
   const handleDeleteOutfit = useCallback(() => {
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm(`Bạn có chắc chắn muốn xóa outfit "${title}" khỏi danh sách?`);
+      if (confirmed) {
+        if (isValidOutfitId) {
+          deleteOutfitMutation.mutate({ path: { outfit_id: outfitId } });
+        } else {
+          goBack('/closet');
+        }
+      }
+      return;
+    }
+
     Alert.alert('Xóa Outfit này?', `Bạn có chắc chắn muốn xóa outfit "${title}" khỏi danh sách?`, [
       { text: 'Hủy', style: 'cancel' },
       {

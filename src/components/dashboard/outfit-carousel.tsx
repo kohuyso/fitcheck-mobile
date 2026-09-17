@@ -11,7 +11,8 @@ const CARD_WIDTH = SCREEN_WIDTH * 0.82;
 const CARD_SPACING = 16;
 
 interface OutfitCarouselProps {
-  outfits?: Array<OutfitRecommendation>;
+  outfits?: OutfitRecommendation[];
+  isCuratedFallback?: boolean;
   onIndexChanged?: (index: number) => void;
 }
 
@@ -51,9 +52,15 @@ const DEFAULT_OUTFITS: CarouselItem[] = [
   },
 ];
 
-export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarouselProps) {
+export default function OutfitCarousel({
+  outfits,
+  isCuratedFallback,
+  onIndexChanged,
+}: OutfitCarouselProps) {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const isFallback = Boolean(isCuratedFallback || !outfits || outfits.length === 0);
 
   // Map API recommended outfits or fallback to high quality demo outfits
   const data: CarouselItem[] =
@@ -73,6 +80,15 @@ export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarous
 
   return (
     <View className="mb-4">
+      {isFallback && (
+        <View className="mb-2 px-1 flex-row items-center gap-1.5">
+          <Sparkles size={13} color="#005c55" />
+          <Text className="font-sans font-semibold text-label-xs text-primary">
+            Gợi ý phong cách mẫu theo thời tiết hôm nay
+          </Text>
+        </View>
+      )}
+
       <FlatList
         data={data}
         horizontal
@@ -119,12 +135,17 @@ export default function OutfitCarousel({ outfits, onIndexChanged }: OutfitCarous
                   placeholder={{ blurhash: DEFAULT_BLURHASH }}
                   transition={150}
                 />
-                {item.isBestMatch && (
+                {isFallback ? (
+                  <View className="absolute top-4 right-4 bg-primary/90 px-3 py-1 rounded-full flex-row items-center gap-1.5 shadow-sm">
+                    <Sparkles size={12} color="#ffffff" fill="#ffffff" />
+                    <Text className="font-sans font-bold text-[11px] text-white">GỢI Ý MẪU</Text>
+                  </View>
+                ) : item.isBestMatch ? (
                   <View className="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-full flex-row items-center gap-1.5 shadow-sm">
                     <Sparkles size={14} color="#005c55" fill="#005c55" />
                     <Text className="font-sans font-bold text-[11px] text-primary">BEST MATCH</Text>
                   </View>
-                )}
+                ) : null}
               </View>
               <View className="p-6">
                 <View className="flex-row items-center gap-2 mb-2">

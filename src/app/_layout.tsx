@@ -2,7 +2,7 @@ import "../global.css";
 
 import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DefaultTheme, ThemeProvider } from "expo-router/react-navigation";
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

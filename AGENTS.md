@@ -7,9 +7,9 @@ This document defines the core rules, architectural guidelines, and engineering 
 ## 1. EXPO & REACT NATIVE (MOBILE CORE)
 
 ### SDK & Versioning
-- **Expo SDK 54**: Target Expo SDK v54. Refer strictly to Expo docs at https://docs.expo.dev/versions/v54.0.0/.
-- **Expo Router**: Use directory-based routing inside `src/app/`. Navigation MUST use `expo-router` (`useRouter`, `<Link>`, `<Stack>`, `<Tabs>`, `useLocalSearchParams`).
-- **React 19 & React Native 0.81**: Adhere strictly to React 19 rules (hooks dependency management, async transitions, non-mutative state updates). Avoid deprecated React Native API patterns.
+- **Expo SDK 57**: Target Expo SDK v57. Refer strictly to Expo docs at https://docs.expo.dev/versions/v57.0.0/.
+- **Expo Router**: Use directory-based routing inside `src/app/`. Navigation MUST use `expo-router` (`useRouter`, `<Link>`, `<Stack>`, `<Tabs>`, `useLocalSearchParams`). Note: in SDK 56+, React Navigation primitives are imported via `expo-router/react-navigation` and `expo-router/js-tabs`.
+- **React 19 & React Native 0.86**: Adhere strictly to React 19 rules (hooks dependency management, async transitions, non-mutative state updates). Avoid deprecated React Native API patterns.
 
 ### UI & Styling (NativeWind v4)
 - **NativeWind v4**: Use `className` attributes for styling React Native primitives (`View`, `Text`, `Pressable`, `ScrollView`, `TextInput`).

@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FlatList, Pressable, Text, TextInput, View, Alert } from 'react-native';
+import { FlatList, Pressable, Text, TextInput, View, Alert, Platform } from 'react-native';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { MapPin, Search, SlidersHorizontal, Wand2, X, Sparkles } from 'lucide-react-native';
+import { MapPin, Search, SlidersHorizontal, Wand2, X, Sparkles, Shirt } from 'lucide-react-native';
 
 import {
   getMyWardrobeApiV1ClosetItemsGetOptions,
@@ -22,6 +22,8 @@ import { CategoryFilterBar } from '@/components/closet/category-filter-bar';
 import { ClosetTabs } from '@/components/closet/closet-tabs';
 import { OutfitRecommendation } from '@/api/types.gen';
 import { prefetchImages } from '@/utils/image-url';
+import { EmptyState } from '@/components/ui/empty-state';
+import { CapsuleStarterModal } from '@/components/closet/capsule-starter-modal';
 
 const CATEGORIES = ['All', 'Shirts', 'Pants', 'Shoes', 'Jackets', 'Accessories'];
 
@@ -70,6 +72,7 @@ export default function ClosetScreen() {
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
   const [selectedOutfitToSchedule, setSelectedOutfitToSchedule] = useState<{ id: number; title: string } | null>(null);
+  const [capsuleModalVisible, setCapsuleModalVisible] = useState(false);
 
   const bottomTabBarHeight = 72 + insets.bottom;
 
@@ -106,15 +109,28 @@ export default function ClosetScreen() {
     ...deleteCustomOutfitApiV1ClosetOutfitsOutfitIdDeleteMutation(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: closetKeys.outfits() });
-      Alert.alert('Thành công', 'Đã xóa outfit thành công!');
+      if (Platform.OS === 'web') {
+        window.alert('Đã xóa outfit thành công!');
+      } else {
+        Alert.alert('Thành công', 'Đã xóa outfit thành công!');
+      }
     },
-    onError: () => Alert.alert('Lỗi', 'Không thể xóa outfit. Vui lòng thử lại.'),
+    onError: (err) => {
+      console.error('Delete outfit error:', err);
+      if (Platform.OS === 'web') {
+        window.alert('Không thể xóa outfit. Vui lòng thử lại.');
+      } else {
+        Alert.alert('Lỗi', 'Không thể xóa outfit. Vui lòng thử lại.');
+      }
+    },
   });
 
   const toggleBookmarkMutation = useMutation({
     ...toggleBookmarkOutfitApiV1ClosetOutfitsOutfitIdBookmarkPostMutation(),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: closetKeys.outfits() }),
   });
+
+  const isWardrobeEmpty = wardrobeData !== undefined && wardrobeData.length === 0;
 
   const itemsList: WardrobeItemData[] =
     wardrobeData && wardrobeData.length > 0
@@ -128,6 +144,8 @@ export default function ClosetScreen() {
           image: item.image_url || '',
           isAiFixed: item.is_ai_fixed ?? false,
         }))
+      : isWardrobeEmpty
+      ? []
       : DEFAULT_WARDROBE_ITEMS;
 
   const filteredItems = itemsList.filter((item) => {
@@ -281,44 +299,75 @@ export default function ClosetScreen() {
             onSelectCategory={setActiveCategory}
           />
 
-          <FlatList
-            data={filteredItems}
-            numColumns={2}
-            columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 20 }}
-            contentContainerStyle={{
-              paddingBottom: bottomTabBarHeight + (isSelectionMode ? 100 : 24),
-            }}
-            renderItem={({ item }) => {
-              const isSelected = selectedItemIds.includes(item.id);
-              return (
-                <WardrobeCard
-                  item={item}
-                  isSelectionMode={isSelectionMode}
-                  isSelected={isSelected}
-                  onPress={() => {
-                    if (isSelectionMode) {
-                      setSelectedItemIds((prev) =>
-                        prev.includes(item.id) ? prev.filter((id) => id !== item.id) : [...prev, item.id]
-                      );
-                    } else {
-                      router.push({
-                        pathname: '/item-detail',
-                        params: {
-                          id: item.id,
-                          name: item.name,
-                          category: item.category,
-                          color: item.color,
-                          style: item.style,
-                          image: item.image,
-                        },
-                      });
-                    }
-                  }}
-                />
-              );
-            }}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
-          />
+          {isWardrobeEmpty ? (
+            <View className="flex-1 px-margin-mobile justify-center">
+              <EmptyState
+                icon={Shirt}
+                badgeText="Tủ đồ chưa có trang phục"
+                title="Bắt đầu tủ đồ thông minh của bạn"
+                description="Thêm từ 3 món đồ (Áo, Quần, Giày) để AI có thể tự động gợi ý các bản phối chuẩn gu mỗi ngày."
+                actionLabel="📷 Quét món đồ đầu tiên bằng AI"
+                onAction={() => router.push('/scan')}
+                secondaryActionLabel="✨ Thêm nhanh từ Tủ đồ cơ bản (1-chạm)"
+                onSecondaryAction={() => setCapsuleModalVisible(true)}
+                tipText="💡 Mẹo: Bạn có thể chọn nhanh các món cơ bản có sẵn mà không cần phải đứng dậy chụp ảnh!"
+                variant="fullscreen"
+              />
+            </View>
+          ) : filteredItems.length === 0 ? (
+            <View className="flex-1 px-margin-mobile justify-center">
+              <EmptyState
+                icon={Search}
+                title="Không tìm thấy món đồ"
+                description={`Không có món đồ nào trong danh mục hoặc khớp với từ khóa "${searchQuery}".`}
+                actionLabel="Xóa bộ lọc"
+                onAction={() => {
+                  setSearchQuery('');
+                  setActiveCategory('All');
+                }}
+                variant="fullscreen"
+              />
+            </View>
+          ) : (
+            <FlatList
+              data={filteredItems}
+              numColumns={2}
+              columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 20 }}
+              contentContainerStyle={{
+                paddingBottom: bottomTabBarHeight + (isSelectionMode ? 100 : 24),
+              }}
+              renderItem={({ item }) => {
+                const isSelected = selectedItemIds.includes(item.id);
+                return (
+                  <WardrobeCard
+                    item={item}
+                    isSelectionMode={isSelectionMode}
+                    isSelected={isSelected}
+                    onPress={() => {
+                      if (isSelectionMode) {
+                        setSelectedItemIds((prev) =>
+                          prev.includes(item.id) ? prev.filter((id) => id !== item.id) : [...prev, item.id]
+                        );
+                      } else {
+                        router.push({
+                          pathname: '/item-detail',
+                          params: {
+                            id: item.id,
+                            name: item.name,
+                            category: item.category,
+                            color: item.color,
+                            style: item.style,
+                            image: item.image,
+                          },
+                        });
+                      }
+                    }}
+                  />
+                );
+              }}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
+            />
+          )}
         </>
       )}
 
@@ -360,25 +409,25 @@ export default function ClosetScreen() {
               )}
             />
           ) : (
-            <View className="flex-1 items-center justify-center p-6 bg-surface-container-low rounded-3xl border border-outline-variant/20 my-4">
-              <Sparkles size={48} color="#005c55" className="mb-3" />
-              <Text className="font-sans font-bold text-headline-xs text-on-surface mb-2 text-center">
-                Chưa có Outfit nào được tạo
-              </Text>
-              <Text className="font-sans text-body-md text-on-surface-variant text-center mb-6 leading-6">
-                Hãy chuyển sang tab "Món đồ" và ấn "Tạo Outfit" để tự phối đồ theo phong cách của bạn!
-              </Text>
-              <Pressable
-                onPress={() => {
+            <EmptyState
+              icon={Sparkles}
+              badgeText="Chưa có bản phối"
+              title="Chưa có Outfit nào được tạo"
+              description="Hãy ghép các món đồ trong tủ hoặc nhờ AI Stylist đề xuất công thức mặc đẹp cho bạn."
+              actionLabel={itemsList.length > 0 ? '🪄 Tự tạo Outfit ngay' : '✨ Thêm đồ vào tủ trước'}
+              onAction={() => {
+                if (itemsList.length > 0) {
                   setActiveTab('items');
                   setIsSelectionMode(true);
-                }}
-                className="px-6 py-3 bg-primary rounded-2xl flex-row items-center gap-2 active:scale-95 shadow-md"
-              >
-                <Wand2 size={18} color="#ffffff" />
-                <Text className="font-sans font-bold text-label-lg text-white">Tạo Outfit Đầu Tiên</Text>
-              </Pressable>
-            </View>
+                } else {
+                  setCapsuleModalVisible(true);
+                }
+              }}
+              secondaryActionLabel="💬 Nhờ Stylist AI tư vấn"
+              onSecondaryAction={() => router.push('/chat')}
+              tipText="💡 Mẹo: Tạo sẵn outfit theo từng dịp (Đi làm, Đi chơi, Hẹn hò) để không mất thời gian mỗi sáng."
+              variant="card"
+            />
           )}
         </View>
       )}
@@ -404,6 +453,16 @@ export default function ClosetScreen() {
           }}
         />
       )}
+
+      {/* Capsule Starter Modal */}
+      <CapsuleStarterModal
+        visible={capsuleModalVisible}
+        onClose={() => setCapsuleModalVisible(false)}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: closetKeys.items() });
+          queryClient.invalidateQueries({ queryKey: closetKeys.outfits() });
+        }}
+      />
     </SafeAreaView>
   );
 }

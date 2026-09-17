@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Pressable, Alert } from 'react-native';
+import { View, Text, Pressable, Alert, Platform } from 'react-native';
 import { Image } from 'expo-image';
 import { Bookmark, Calendar as CalendarIcon, Trash2, Sparkles, ChevronRight } from 'lucide-react-native';
 import { OutfitRecommendation } from '@/api/types.gen';
@@ -28,6 +28,14 @@ export function OutfitCard({
   const title = outfit.title || outfit.style_type || `Outfit #${outfit.outfit_id}`;
 
   const handleDeletePress = () => {
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm(`Bạn có chắc chắn muốn xóa outfit "${title}" khỏi danh sách?`);
+      if (confirmed) {
+        onDelete && onDelete();
+      }
+      return;
+    }
+
     Alert.alert(
       'Xóa Outfit',
       `Bạn có chắc chắn muốn xóa outfit "${title}" khỏi danh sách?`,

@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
-import { Bookmark, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react-native';
+import Markdown from 'react-native-markdown-display';
+import { ArrowRight, Bookmark, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react-native';
 import { OutfitRecommendation } from '@/api/types.gen';
 import { cn } from '@/utils/cn';
 import { resolveImageUrl } from '@/utils/image-url';
@@ -50,64 +51,174 @@ export function ChatBubble({
             : 'bg-primary rounded-tr-sm'
         )}
       >
-        <Text
-          className={cn(
-            'font-sans text-body-md leading-6',
-            isAssistant ? 'text-on-surface' : 'text-white font-medium'
-          )}
-        >
-          {message.text}
-        </Text>
+        {isAssistant ? (
+          <Markdown
+            style={{
+              body: {
+                color: '#191c1d',
+                fontSize: 15,
+                lineHeight: 22,
+              },
+              heading1: {
+                color: '#005c55',
+                fontSize: 18,
+                fontWeight: '700',
+                marginVertical: 4,
+              },
+              heading2: {
+                color: '#005c55',
+                fontSize: 16,
+                fontWeight: '700',
+                marginVertical: 4,
+              },
+              heading3: {
+                color: '#191c1d',
+                fontSize: 15,
+                fontWeight: '700',
+                marginVertical: 3,
+              },
+              paragraph: {
+                marginTop: 0,
+                marginBottom: 6,
+              },
+              strong: {
+                fontWeight: '700',
+                color: '#005c55',
+              },
+              bullet_list: {
+                marginTop: 2,
+                marginBottom: 4,
+              },
+              ordered_list: {
+                marginTop: 2,
+                marginBottom: 4,
+              },
+              list_item: {
+                marginVertical: 2,
+              },
+              code_inline: {
+                backgroundColor: '#e6ecea',
+                color: '#005c55',
+                borderRadius: 4,
+                paddingHorizontal: 4,
+                fontSize: 13,
+              },
+            }}
+          >
+            {message.text}
+          </Markdown>
+        ) : (
+          <Text className="font-sans text-body-md leading-6 text-white font-medium">
+            {message.text}
+          </Text>
+        )}
 
         {/* AI Suggested Outfit Card inline */}
         {isAssistant && message.suggestedOutfit && (
-          <Pressable
-            onPress={() => message.suggestedOutfit && onOutfitPress?.(message.suggestedOutfit)}
-            className="mt-3 p-3 bg-surface-container-low rounded-xl border border-outline-variant/20 flex-row gap-3 active:scale-95"
-          >
-            <View className="w-16 h-20 rounded-lg overflow-hidden bg-slate-100">
-              <Image
-                source={resolveImageUrl(message.suggestedOutfit.image_url)}
-                style={{ width: '100%', height: '100%' }}
-                contentFit="cover"
-              />
-            </View>
-
-            <View className="flex-1 justify-between py-0.5">
-              <View>
-                <View className="flex-row items-center gap-1 mb-1">
-                  <Sparkles size={12} color="#005c55" fill="#005c55" />
-                  <Text className="font-sans font-bold text-label-xs text-primary uppercase">
-                    AI Suggested
-                  </Text>
-                </View>
-                <Text className="font-sans font-bold text-body-md text-on-surface truncate">
-                  {message.suggestedOutfit.title || 'Outfit Recommendation'}
+          <View className="mt-3 p-3.5 bg-surface-container-low rounded-2xl border border-outline-variant/30 shadow-sm">
+            {/* Card Header: AI Badge + Bookmark */}
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center gap-1.5 bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+                <Sparkles size={13} color="#005c55" />
+                <Text className="font-sans font-bold text-[11px] text-primary uppercase tracking-wider">
+                  AI Curated Outfit
                 </Text>
               </View>
 
-              <View className="flex-row items-center justify-between">
-                <Text className="font-sans text-label-sm text-on-surface-variant">
-                  {message.suggestedOutfit.items?.length || 3} items
-                </Text>
-                {message.suggestedOutfit.outfit_id && (
-                  <Pressable
-                    onPress={() =>
-                      message.suggestedOutfit?.outfit_id &&
-                      onToggleBookmark?.(message.suggestedOutfit.outfit_id)
-                    }
-                    hitSlop={8}
+              {message.suggestedOutfit.outfit_id && (
+                <Pressable
+                  onPress={() =>
+                    message.suggestedOutfit?.outfit_id &&
+                    onToggleBookmark?.(message.suggestedOutfit.outfit_id)
+                  }
+                  hitSlop={8}
+                  className="p-1 rounded-full active:scale-90"
+                >
+                  <Bookmark
+                    size={18}
+                    color="#005c55"
+                    fill={isBookmarked ? '#005c55' : 'none'}
+                  />
+                </Pressable>
+              )}
+            </View>
+
+            {/* Style Type / Title */}
+            <Text className="font-sans font-bold text-base text-on-surface mb-1">
+              {message.suggestedOutfit.style_type || message.suggestedOutfit.title || 'Outfit Recommendation'}
+            </Text>
+
+            {/* Tags Row */}
+            {message.suggestedOutfit.tags && message.suggestedOutfit.tags.length > 0 && (
+              <View className="flex-row flex-wrap gap-1.5 mb-2.5">
+                {message.suggestedOutfit.tags.map((tag, idx) => (
+                  <View key={idx} className="bg-surface-container-high px-2 py-0.5 rounded-md border border-outline-variant/20">
+                    <Text className="font-sans text-[11px] font-medium text-on-surface-variant">
+                      #{tag}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* Items Row / List */}
+            {message.suggestedOutfit.items && message.suggestedOutfit.items.length > 0 ? (
+              <View className="flex-col gap-2 mb-3">
+                {message.suggestedOutfit.items.map((item) => (
+                  <View
+                    key={item.id}
+                    className="flex-row items-center gap-2.5 p-2 bg-white rounded-xl border border-outline-variant/20 shadow-xs"
                   >
-                    <Bookmark
-                      size={18}
-                      color="#005c55"
-                      fill={isBookmarked ? '#005c55' : 'none'}
-                    />
-                  </Pressable>
-                )}
+                    <View className="w-12 h-12 rounded-lg overflow-hidden bg-surface-container">
+                      <Image
+                        source={resolveImageUrl(item.image_url, item.category)}
+                        style={{ width: '100%', height: '100%' }}
+                        contentFit="cover"
+                      />
+                    </View>
+                    <View className="flex-1">
+                      <Text className="font-sans font-semibold text-xs text-on-surface" numberOfLines={1}>
+                        {item.name || item.category}
+                      </Text>
+                      <View className="flex-row items-center gap-1.5 mt-0.5">
+                        <View
+                          className="w-2.5 h-2.5 rounded-full border border-black/10"
+                          style={{ backgroundColor: item.color_code || '#000000' }}
+                        />
+                        <Text className="font-sans text-[11px] text-on-surface-variant">
+                          {item.color_name || item.category}
+                        </Text>
+                        {item.style && (
+                          <Text className="font-sans text-[10px] text-outline">
+                            • {item.style}
+                          </Text>
+                        )}
+                      </View>
+                    </View>
+                  </View>
+                ))}
               </View>
-            </View>
-          </Pressable>
+            ) : message.suggestedOutfit.image_url ? (
+              <View className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 mb-3">
+                <Image
+                  source={resolveImageUrl(message.suggestedOutfit.image_url)}
+                  style={{ width: '100%', height: '100%' }}
+                  contentFit="cover"
+                />
+              </View>
+            ) : null}
+
+            {/* View Details Action Button */}
+            <Pressable
+              onPress={() => message.suggestedOutfit && onOutfitPress?.(message.suggestedOutfit)}
+              className="w-full py-2.5 px-3 bg-primary rounded-xl flex-row items-center justify-center gap-2 active:scale-95 shadow-sm"
+            >
+              <Text className="font-sans font-bold text-xs text-white">
+                Xem chi tiết ({message.suggestedOutfit.items?.length || 0} món)
+              </Text>
+              <ArrowRight size={14} color="#ffffff" />
+            </Pressable>
+          </View>
         )}
       </View>
 

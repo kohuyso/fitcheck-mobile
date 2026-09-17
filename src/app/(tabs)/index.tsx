@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { Bot, Check, Link2, MapPin, Sun } from "lucide-react-native";
+import { Bot, Check, Link2, MapPin, Sun, Sparkles } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
   Pressable,
@@ -19,7 +19,10 @@ import {
   readRootGetOptions,
   syncOfflineHistoryApiV1DashboardSyncOfflineHistoryPostMutation,
   wearOutfitApiV1DashboardWearOutfitPostMutation,
+  getMyWardrobeApiV1ClosetItemsGetOptions,
+  getMyOutfitsApiV1ClosetOutfitsGetOptions,
 } from "@/api/@tanstack/react-query.gen";
+import { closetKeys } from "@/api/query-keys";
 import { cn } from "@/utils/cn";
 import { prefetchImages } from "@/utils/image-url";
 
@@ -30,12 +33,29 @@ import StyleDiscovery from "@/components/dashboard/style-discovery";
 import StyleInsightBento from "@/components/dashboard/style-insight-bento";
 import SwapItemSheet from "@/components/dashboard/swap-item-sheet";
 import WeatherAdvice from "@/components/dashboard/weather-advice";
+import { OnboardingChecklistCard } from "@/components/dashboard/onboarding-checklist-card";
+import { CapsuleStarterModal } from "@/components/closet/capsule-starter-modal";
 
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [isWorn, setIsWorn] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isCapsuleModalOpen, setIsCapsuleModalOpen] = useState(false);
+
+  // Queries for user's wardrobe & outfits to evaluate onboarding progress
+  const { data: wardrobeData } = useQuery({
+    ...getMyWardrobeApiV1ClosetItemsGetOptions(),
+    queryKey: closetKeys.items(),
+  });
+
+  const { data: myOutfitsData } = useQuery({
+    ...getMyOutfitsApiV1ClosetOutfitsGetOptions(),
+    queryKey: closetKeys.outfits(),
+  });
+
+  const wardrobeCount = wardrobeData?.length ?? 0;
+  const outfitsCount = myOutfitsData?.length ?? 0;
 
   // Health check API query
   const { data: serverHealthData } = useQuery(readRootGetOptions());
@@ -162,6 +182,13 @@ export default function HomeScreen() {
             recommendation={dashboardData?.weather?.recommendation}
           />
 
+          {/* Onboarding Checklist Card */}
+          <OnboardingChecklistCard
+            wardrobeCount={wardrobeCount}
+            outfitsCount={outfitsCount}
+            onOpenCapsuleModal={() => setIsCapsuleModalOpen(true)}
+          />
+
           {/* Schedule Tag */}
           <ScheduleTag schedule={dashboardData?.schedule} />
 
@@ -169,30 +196,66 @@ export default function HomeScreen() {
           <StyleAssistantBanner />
 
           {/* Carousel */}
-          <OutfitCarousel outfits={dashboardData?.recommended_outfits} />
+          <OutfitCarousel
+            outfits={dashboardData?.recommended_outfits}
+            isCuratedFallback={wardrobeCount === 0}
+          />
 
           {/* Interaction Buttons */}
-          <View className="flex-col gap-3">
-            <Pressable
-              onPress={toggleWear}
-              className={cn(
-                "w-full h-14 rounded-xl flex-row items-center justify-center gap-2 active:scale-95 shadow-md",
-                isWorn ? "bg-emerald-600" : "bg-primary shadow-primary/20",
-              )}
-            >
-              <Text className="font-sans font-bold text-title-lg text-white">
-                {isWorn ? "Outfit Selected" : "Wear This Outfit"}
-              </Text>
-              {isWorn ? (
-                <Check size={20} color="#ffffff" />
-              ) : (
-                <Link2 size={20} color="#ffffff" />
-              )}
-            </Pressable>
+          <View className="flex-col gap-2.5 mb-2">
+            {wardrobeCount === 0 ? (
+              <>
+                <Pressable
+                  onPress={() => setIsCapsuleModalOpen(true)}
+                  className="w-full h-14 rounded-2xl flex-row items-center justify-center gap-2 active:scale-95 shadow-md bg-primary shadow-primary/25"
+                >
+                  <Sparkles size={20} color="#ffffff" />
+                  <Text className="font-sans font-bold text-title-md text-white">
+                    Thêm đồ vào tủ để AI phối đồ
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => {
+                    const firstOutfit = dashboardData?.recommended_outfits?.[0];
+                    router.push({
+                      pathname: "/outfit-detail",
+                      params: {
+                        outfit_id: firstOutfit?.outfit_id ? String(firstOutfit.outfit_id) : "demo-outfit-1",
+                        title: firstOutfit?.style_type || "Smart Business Casual",
+                        image: firstOutfit?.image_url || "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80",
+                      },
+                    });
+                  }}
+                  className="w-full h-11 rounded-2xl flex-row items-center justify-center gap-2 active:scale-95 bg-surface-container-low border border-outline-variant/30"
+                >
+                  <Text className="font-sans font-semibold text-label-md text-primary">
+                    Xem chi tiết bản phối mẫu
+                  </Text>
+                </Pressable>
+              </>
+            ) : (
+              <Pressable
+                onPress={toggleWear}
+                className={cn(
+                  "w-full h-14 rounded-2xl flex-row items-center justify-center gap-2 active:scale-95 shadow-md",
+                  isWorn ? "bg-emerald-600" : "bg-primary shadow-primary/20",
+                )}
+              >
+                <Text className="font-sans font-bold text-title-lg text-white">
+                  {isWorn ? "Đã Chọn Mặc Hôm Nay" : "Mặc Bộ Trang Phục Này"}
+                </Text>
+                {isWorn ? (
+                  <Check size={20} color="#ffffff" />
+                ) : (
+                  <Link2 size={20} color="#ffffff" />
+                )}
+              </Pressable>
+            )}
           </View>
 
           {/* AI Style Insight Section */}
-          <StyleInsightBento />
+          <StyleInsightBento wardrobeCount={wardrobeCount} />
 
           {/* Style Discovery */}
           <StyleDiscovery />
@@ -212,6 +275,15 @@ export default function HomeScreen() {
       <SwapItemSheet
         isOpen={isSheetOpen}
         onClose={() => setIsSheetOpen(false)}
+      />
+
+      {/* Capsule Starter Modal */}
+      <CapsuleStarterModal
+        visible={isCapsuleModalOpen}
+        onClose={() => setIsCapsuleModalOpen(false)}
+        onSuccess={() => {
+          queryClient.invalidateQueries();
+        }}
       />
     </SafeAreaView>
   );

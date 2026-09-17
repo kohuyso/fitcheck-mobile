@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, Pressable, ActivityIndicator, StyleSheet, Alert } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator, StyleSheet, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { CameraView, useCameraPermissions } from 'expo-camera';
@@ -16,11 +16,11 @@ import {
 } from 'react-native-reanimated';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { X, Bolt, RotateCcw } from 'lucide-react-native';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from "expo-router/react-navigation";
 
 import {
   approveAndSaveItemApiV1ClosetSavePostMutation,
-  getScanTaskStatusApiV1ClosetScanStatusTaskIdGetOptions,
+  getScanTaskStatusApiV1ClosetTaskStatusTaskIdGetOptions,
   scanClothingCameraApiV1ClosetScanPostMutation,
 } from '@/api/@tanstack/react-query.gen';
 import { closetKeys } from '@/api/query-keys';
@@ -48,6 +48,7 @@ export default function ScanScreen() {
   const [scanStep, setScanStep] = useState<'idle' | 'scanning' | 'result'>('idle');
   const [taskId, setTaskId] = useState<string | null>(null);
   const [capturedUri, setCapturedUri] = useState<string | null>(null);
+  const [pollCount, setPollCount] = useState<number>(0);
 
   const scanMutation = useMutation(scanClothingCameraApiV1ClosetScanPostMutation());
   const saveMutation = useMutation(approveAndSaveItemApiV1ClosetSavePostMutation());
@@ -63,15 +64,24 @@ export default function ScanScreen() {
   );
 
   const { data: scanTaskData } = useQuery({
-    ...getScanTaskStatusApiV1ClosetScanStatusTaskIdGetOptions({
+    ...getScanTaskStatusApiV1ClosetTaskStatusTaskIdGetOptions({
       path: { task_id: taskId || '' },
     }),
     enabled: !!taskId && scanStep === 'scanning',
     refetchInterval: (query) => {
-      if (query.state.data?.status === 'COMPLETED' || query.state.data?.status === 'FAILED') {
+      const data = query.state.data as any;
+      if (
+        data?.status === 'COMPLETED' ||
+        data?.status === 'FAILED' ||
+        data?.state === 'SUCCESS' ||
+        data?.state === 'FAILED'
+      ) {
         return false;
       }
-      return 2000;
+      if (pollCount >= 10) {
+        return false;
+      }
+      return 8000;
     },
   });
 
@@ -107,15 +117,16 @@ export default function ScanScreen() {
     getFallbackImage(categoryResult);
 
   // Animation Shared Values
-  const scanLineY = useSharedValue(-120);
+  const scanLineY = useSharedValue(0);
   const trackingPulse1 = useSharedValue(0.4);
   const trackingPulse2 = useSharedValue(0.4);
   const trackingPulse3 = useSharedValue(0.4);
 
   useEffect(() => {
     if (scanStep === 'scanning') {
+      scanLineY.value = 0;
       scanLineY.value = withRepeat(
-        withSequence(withTiming(160, { duration: 1500 }), withTiming(-120, { duration: 1500 })),
+        withSequence(withTiming(340, { duration: 1600 }), withTiming(0, { duration: 1600 })),
         -1,
         false
       );
@@ -139,14 +150,31 @@ export default function ScanScreen() {
   }, [scanStep, scanLineY, trackingPulse1, trackingPulse2, trackingPulse3]);
 
   useEffect(() => {
-    if (scanStep === 'scanning' && (scanTaskData?.status === 'COMPLETED' || scanTaskData?.status === 'FAILED')) {
-      setScanStep('result');
+    const data = scanTaskData as any;
+    if (scanStep === 'scanning') {
+      if (
+        data?.status === 'COMPLETED' ||
+        data?.status === 'FAILED' ||
+        data?.state === 'SUCCESS' ||
+        data?.state === 'FAILED'
+      ) {
+        setScanStep('result');
+      } else if (scanTaskData) {
+        setPollCount((prev) => {
+          const next = prev + 1;
+          if (next >= 10) {
+            setScanStep('result');
+          }
+          return next;
+        });
+      }
     }
   }, [scanTaskData, scanStep]);
 
   useEffect(() => {
     if (scanStep === 'scanning') {
-      const fallbackTimer = setTimeout(() => setScanStep('result'), 18000);
+      // 10 polls * 8s = 80s fallback maximum
+      const fallbackTimer = setTimeout(() => setScanStep('result'), 80000);
       return () => clearTimeout(fallbackTimer);
     }
   }, [scanStep]);
@@ -154,6 +182,7 @@ export default function ScanScreen() {
   const handleRetake = useCallback(() => {
     setCapturedUri(null);
     setTaskId(null);
+    setPollCount(0);
     setScanStep('idle');
     setIsSaved(false);
     setIsSaving(false);
@@ -167,22 +196,30 @@ export default function ScanScreen() {
 
   const startScanProcess = async (imageUri: string) => {
     setCapturedUri(imageUri);
+    setPollCount(0);
     setScanStep('scanning');
     try {
-      const filename = imageUri.split('/').pop()?.split('?')[0] || 'scan.jpg';
-      const match = /\.(\w+)$/.exec(filename);
-      const ext = match ? match[1].toLowerCase() : 'jpg';
+      const filename = imageUri.split('/').pop()?.split('?')[0] || 'photo.jpg';
+      const cleanExt = filename.includes('.') ? filename.split('.').pop()?.toLowerCase() : 'jpg';
+      const ext = ['png', 'jpg', 'jpeg', 'webp'].includes(cleanExt || '') ? cleanExt : 'jpg';
       const mimeType = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
+      const finalFilename = filename.includes('.') ? filename : `scan_${Date.now()}.${ext}`;
 
-      let fileObj: Blob;
-      try {
+      let filePayload: unknown;
+
+      if (Platform.OS === 'web') {
         const response = await fetch(imageUri);
-        fileObj = await response.blob();
-      } catch {
-        fileObj = { uri: imageUri, name: filename, type: mimeType } as unknown as Blob;
+        const blob = await response.blob();
+        filePayload = new File([blob], finalFilename, { type: mimeType });
+      } else {
+        filePayload = {
+          uri: Platform.OS === 'ios' ? imageUri.replace('file://', '') : imageUri,
+          name: finalFilename,
+          type: mimeType,
+        };
       }
 
-      const res = await scanMutation.mutateAsync({ body: { file: fileObj } });
+      const res = await scanMutation.mutateAsync({ body: { file: filePayload as unknown as Blob } });
       if (res?.task_id) setTaskId(res.task_id);
     } catch (err) {
       console.log('Scan initiate error:', err);
@@ -325,16 +362,17 @@ export default function ScanScreen() {
         {shouldShowCamera ? (
           <CameraView
             ref={cameraRef}
-            style={StyleSheet.absoluteFillObject}
+            style={StyleSheet.absoluteFill}
             facing={facing}
             enableTorch={facing === 'back' ? flash : false}
           />
         ) : (
-          <Image source={displayImageSource} style={StyleSheet.absoluteFillObject} contentFit="cover" />
+          <Image source={displayImageSource} style={StyleSheet.absoluteFill} contentFit="cover" />
         )}
 
         <ScanHudOverlay
           scanStep={scanStep}
+          progressMessage={(scanTaskData as any)?.progress_message}
           scanLineAnimatedStyle={scanLineAnimatedStyle}
           pulseStyle1={pulseStyle1}
           pulseStyle2={pulseStyle2}

@@ -3,6 +3,7 @@ import { View, Text, Modal, Pressable, TextInput, Alert, ScrollView } from 'reac
 import { X, Calendar as CalendarIcon, Shirt, Check } from 'lucide-react-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 
 import {
   getMyOutfitsApiV1ClosetOutfitsGetOptions,
@@ -26,6 +27,7 @@ export function ScheduleModal({
   onClose,
   onSuccess,
 }: ScheduleModalProps) {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const getTodayStr = () => new Date().toISOString().split('T')[0];
@@ -40,7 +42,7 @@ export function ScheduleModal({
   const [notes, setNotes] = useState<string>('');
   const [selectedOutfitId, setSelectedOutfitId] = useState<number | undefined>(outfitId);
 
-  const { data: myOutfitsData } = useQuery({
+  const { data: myOutfitsData, isLoading: isOutfitsLoading } = useQuery({
     ...getMyOutfitsApiV1ClosetOutfitsGetOptions(),
     enabled: visible,
   });
@@ -172,11 +174,37 @@ export function ScheduleModal({
                   );
                 })}
               </ScrollView>
-            ) : (
+            ) : outfitTitle ? (
+              <View className="p-3 bg-surface-container-low rounded-xl border border-outline-variant/20 mb-4 items-center">
+                <Text className="font-sans font-semibold text-body-sm text-on-surface">
+                  Outfit đã chọn: {outfitTitle}
+                </Text>
+              </View>
+            ) : isOutfitsLoading ? (
               <View className="p-3 bg-surface-container-low rounded-xl border border-outline-variant/20 mb-4 items-center">
                 <Text className="font-sans text-body-sm text-on-surface-variant">
-                  {outfitTitle ? `Outfit đã chọn: ${outfitTitle}` : 'Đang tải danh sách outfits...'}
+                  Đang tải danh sách outfits...
                 </Text>
+              </View>
+            ) : (
+              <View className="p-4 bg-primary/5 rounded-2xl border border-primary/20 mb-4 items-center">
+                <Text className="font-sans font-bold text-body-md text-on-surface mb-1 text-center">
+                  Chưa có outfit nào để lên lịch
+                </Text>
+                <Text className="font-sans text-label-sm text-on-surface-variant text-center mb-3">
+                  Hãy tạo hoặc lưu ít nhất 1 outfit trong tủ đồ trước khi lên lịch mặc.
+                </Text>
+                <Pressable
+                  onPress={() => {
+                    onClose();
+                    router.push('/closet');
+                  }}
+                  className="px-4 py-2 bg-primary rounded-xl active:scale-95 shadow-sm"
+                >
+                  <Text className="font-sans font-bold text-label-sm text-white">
+                    Đến Tủ Đồ Tạo Outfit
+                  </Text>
+                </Pressable>
               </View>
             )}
 

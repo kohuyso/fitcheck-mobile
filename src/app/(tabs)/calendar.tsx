@@ -15,9 +15,10 @@ import { resolveImageUrl } from "@/utils/image-url";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { ChevronLeft, ChevronRight, Lightbulb, RotateCcw, Trash2 } from "lucide-react-native";
+import { ChevronLeft, ChevronRight, Lightbulb, RotateCcw, Trash2, Calendar as CalendarIcon } from "lucide-react-native";
 import React, { useCallback, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -439,19 +440,16 @@ export default function CalendarScreen() {
                 </View>
               ))
             ) : (
-              <View className="bg-white p-5 rounded-2xl border border-outline-variant/30 shadow-sm mb-6 items-center">
-                <Text className="font-sans text-body-sm text-on-surface-variant text-center mb-3">
-                  Chưa có outfit nào được lên lịch cho ngày này.
-                </Text>
-                <Pressable
-                  onPress={() => setScheduleModalVisible(true)}
-                  className="px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 active:scale-95"
-                >
-                  <Text className="font-sans font-semibold text-label-md text-primary">
-                    + Lên lịch cho ngày này
-                  </Text>
-                </Pressable>
-              </View>
+              <EmptyState
+                icon={CalendarIcon}
+                badgeText={selectedDateStr === todayStr ? "Hôm nay" : `Ngày ${selectedDateStr}`}
+                title="Chưa có outfit cho ngày này"
+                description="Lên lịch trang phục trước giúp bạn luôn chủ động, tự tin và tiết kiệm 15 phút đắn đo mỗi sáng."
+                actionLabel="+ Lên lịch Outfit ngay"
+                onAction={() => setScheduleModalVisible(true)}
+                tipText="💡 Mẹo: Bạn có thể lên lịch trước cho cả tuần dựa trên dự báo thời tiết!"
+                variant="card"
+              />
             )}
           </View>
 

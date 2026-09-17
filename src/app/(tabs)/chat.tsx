@@ -29,12 +29,13 @@ import { useAppNavigation } from '@/context/navigation-history';
 import { ChatBubble, ChatMessage } from '@/components/chat/chat-bubble';
 import { ChatHeader } from '@/components/chat/chat-header';
 import { ChatQuickPrompts } from '@/components/chat/chat-quick-prompts';
+import { cleanChatResponse } from '@/utils/chat-parser';
 
 const QUICK_SUGGESTIONS = [
-  'Need outfit for job interview',
-  'Casual Friday at office',
-  'Rainy day styling tips',
-  'Match my leather jacket',
+  'Gợi ý 5 món đồ basic ai cũng nên có',
+  'Tone da nào nên phối màu gì?',
+  'Phối đồ Smart Casual đi làm',
+  'Mẹo phối đồ thời tiết hôm nay',
 ];
 
 export default function ChatScreen() {
@@ -60,7 +61,7 @@ export default function ChatScreen() {
         {
           id: 'init-1',
           role: 'assistant',
-          text: 'Chat history cleared. What outfit shall we curate today?',
+          text: 'Lịch sử chat đã được làm mới. Hôm nay bạn muốn tư vấn phong cách gì?',
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -86,7 +87,7 @@ export default function ChatScreen() {
         return {
           id: String(msg.id),
           role: (msg.role as 'user' | 'assistant') || 'assistant',
-          text: msg.content || '',
+          text: cleanChatResponse(msg.content) || '',
           time: timeStr,
           suggestedOutfit: null,
         };
@@ -97,7 +98,7 @@ export default function ChatScreen() {
         {
           id: 'welcome-1',
           role: 'assistant',
-          text: 'Hello! I am your AI FitCheck Stylist. How can I help you assemble your look today?',
+          text: 'Xin chào! Mình là FitCheck Stylist cá nhân của bạn 👗. Dù tủ đồ của bạn mới bắt đầu hay đã đầy ắp, mình luôn sẵn sàng tư vấn cách phối đồ và xây dựng phong cách riêng cho bạn. Hôm nay bạn muốn tìm phong cách gì?',
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -135,12 +136,16 @@ export default function ChatScreen() {
         const assistantMsgId = `ast-${Date.now()}`;
         const assistantTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+        const rawText = res.reply || res.reply_text || '';
+        const cleanedText = cleanChatResponse(rawText) || 'Here is your styled recommendation!';
+        const suggestedOutfit = (res.suggested_outfit || res.recommended_outfit || null) as OutfitRecommendation | null;
+
         const newAssistantMessage: ChatMessage = {
           id: assistantMsgId,
           role: 'assistant',
-          text: res.reply || res.reply_text || 'Here is your styled recommendation!',
+          text: cleanedText,
           time: assistantTime,
-          suggestedOutfit: res.suggested_outfit || null,
+          suggestedOutfit,
         };
 
         setMessages((prev) => [...prev, newAssistantMessage]);
@@ -209,7 +214,7 @@ export default function ChatScreen() {
         pathname: '/outfit-detail',
         params: {
           outfit_id: outfit.outfit_id ? String(outfit.outfit_id) : undefined,
-          title: outfit.title || 'AI Recommendation',
+          title: outfit.style_type || outfit.title || 'AI Recommendation',
           image: outfit.image_url || '',
           description: outfit.description || '',
           tags: outfit.tags ? outfit.tags.join(',') : '',
